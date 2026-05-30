@@ -19,3 +19,8 @@ Route::post('/dashboard/card', [DashboardController::class, 'createCard'])->name
 Route::post('/dashboard/card/{id}/toggle', [DashboardController::class, 'toggleCardStatus'])->name('dashboard.card.toggle');
 
 Route::post('/contact', [DashboardController::class, 'submitContact'])->name('contact.submit');
+
+// Thank You Page
+Route::get('/thank-you', function () {
+    return view('thankyou');
+})->name('thankyou');

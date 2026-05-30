@@ -202,7 +202,7 @@
                         <h3 class="text-2xl font-bold text-[#0B1C30] tracking-tight">Ready to Start?</h3>
                         <p class="text-sm text-[#464555] mt-1 mb-6">Get a detailed proposal within 24 hours.</p>
 
-                        <form class="space-y-4" x-data="{ name: '', company: '', email: '', phone: '', budget: 'AED 15,000 - 30,000', submitted: false, loading: false }" @submit.prevent="loading = true; fetch('/contact', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ name, company, email, phone, budget }) }).then(res => { loading = false; if (res.ok) { submitted = true; } else { alert('Failed to send. Please check fields or try again.'); } }).catch(err => { loading = false; alert('Network error. Please try again.'); })">
+                        <form class="space-y-4" x-data="{ name: '', company: '', email: '', phone: '', budget: 'AED 15,000 - 30,000', submitted: false, loading: false }" @submit.prevent="loading = true; fetch('/contact', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ name, company, email, phone, budget }) }).then(res => { loading = false; if (res.ok) { window.location.href = '/thank-you'; } else { alert('Failed to send. Please check fields or try again.'); } }).catch(err => { loading = false; alert('Network error. Please try again.'); })">
                             <div x-show="!submitted" class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Name</label>
