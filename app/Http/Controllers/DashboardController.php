@@ -280,7 +280,7 @@ class DashboardController extends Controller
                 "Phone: {$details['phone']}\n" .
                 "Budget: {$details['budget']}\n",
                 function ($message) use ($details) {
-                    $message->to('manjot@ajath.com')
+                    $message->to(['info@ajath.ae', 'manjot@ajath.com', 'shachisheh@gmail.com'])
                             ->subject("New Lead Proposal: {$details['name']} ({$details['company']})")
                             ->from(config('mail.from.address'), config('mail.from.name'));
                 }
