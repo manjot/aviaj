@@ -58,7 +58,7 @@
             animation: float 6s ease-in-out infinite;
         }
     </style>
-    @if(request()->getHost() === 'lp.ajath.ae')
+    @if(str_contains(request()->getHost(), 'lp.ajath.ae'))
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-719050402"></script>
     <script>
