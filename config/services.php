@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'google' => [
+        'tag_id' => env('GOOGLE_TAG_ID'),
+    ],
+
 ];
