@@ -11,14 +11,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if(env('GOOGLE_TAG_ID'))
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-719050402"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_TAG_ID') }}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'AW-719050402');
+      gtag('config', "{{ env('GOOGLE_TAG_ID') }}");
     </script>
+    @endif
 </head>
 <body class="font-sans text-brand-900 bg-brand-50 selection:bg-brand-200 antialiased overflow-x-hidden" x-data="{ activeTab: 'travel', showExpenseModal: false, showCardModal: false }">
 

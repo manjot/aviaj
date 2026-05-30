@@ -58,14 +58,16 @@
             animation: float 6s ease-in-out infinite;
         }
     </style>
+    @if(env('GOOGLE_TAG_ID'))
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-719050402"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_TAG_ID') }}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'AW-719050402');
+      gtag('config', "{{ env('GOOGLE_TAG_ID') }}");
     </script>
+    @endif
 </head>
 <body class="bg-[#F8F9FF] text-[#464555] antialiased overflow-x-hidden" x-data="{ mobileMenuOpen: false }">
 
