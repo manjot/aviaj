@@ -58,7 +58,6 @@
             animation: float 6s ease-in-out infinite;
         }
     </style>
-    @if(str_contains(request()->getHost(), 'lp.ajath.ae'))
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-719050402"></script>
     <script>
@@ -67,7 +66,6 @@
       gtag('js', new Date());
       gtag('config', 'AW-719050402');
     </script>
-    @endif
 </head>
 <body class="bg-[#F8F9FF] text-[#464555] antialiased overflow-x-hidden" x-data="{ mobileMenuOpen: false }">
 
