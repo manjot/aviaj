@@ -21,6 +21,11 @@
       gtag('config', 'AW-719050402');
     </script>
     
+    <!-- Event snippet for Submit lead form conversion page -->
+    <script>
+      gtag('event', 'conversion', {'send_to': 'AW-719050402/v5dTCKvui7YcEKKt79YC'});
+    </script>
+    
     <style>
         body { font-family: 'Inter', sans-serif; }
         h1, h2, h3, h4, .font-heading { font-family: 'Outfit', sans-serif; }
