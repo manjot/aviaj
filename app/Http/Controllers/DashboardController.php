@@ -258,4 +258,38 @@ class DashboardController extends Controller
         Auth::login($user);
         return redirect()->route('dashboard');
     }
+
+    public function submitContact(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'company' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:100',
+            'budget' => 'required|string|max:255',
+        ]);
+
+        $details = $request->only(['name', 'company', 'email', 'phone', 'budget']);
+
+        try {
+            \Illuminate\Support\Facades\Mail::raw(
+                "New Lead Proposal Request Received:\n\n" .
+                "Name: {$details['name']}\n" .
+                "Company: {$details['company']}\n" .
+                "Email: {$details['email']}\n" .
+                "Phone: {$details['phone']}\n" .
+                "Budget: {$details['budget']}\n",
+                function ($message) use ($details) {
+                    $message->to('info@ajath.ae')
+                            ->subject("New Lead Proposal: {$details['name']} ({$details['company']})")
+                            ->from(config('mail.from.address'), config('mail.from.name'));
+                }
+            );
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send contact email: " . $e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
 }

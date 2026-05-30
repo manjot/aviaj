@@ -194,35 +194,36 @@
                         <h3 class="text-2xl font-bold text-[#0B1C30] tracking-tight">Ready to Start?</h3>
                         <p class="text-sm text-[#464555] mt-1 mb-6">Get a detailed proposal within 24 hours.</p>
 
-                        <form class="space-y-4" x-data="{ submitted: false }" @submit.prevent="submitted = true">
+                        <form class="space-y-4" x-data="{ name: '', company: '', email: '', phone: '', budget: 'AED 15,000 - 30,000', submitted: false, loading: false }" @submit.prevent="loading = true; fetch('/contact', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ name, company, email, phone, budget }) }).then(res => { loading = false; if (res.ok) { submitted = true; } else { alert('Failed to send. Please check fields or try again.'); } }).catch(err => { loading = false; alert('Network error. Please try again.'); })">
                             <div x-show="!submitted" class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Name</label>
-                                    <input type="text" placeholder="Your Name" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
+                                    <input type="text" x-model="name" placeholder="Your Name" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Company</label>
-                                    <input type="text" placeholder="Company Name" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
+                                    <input type="text" x-model="company" placeholder="Company Name" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Email Address</label>
-                                    <input type="email" placeholder="email@company.com" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
+                                    <input type="email" x-model="email" placeholder="email@company.com" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Phone / WhatsApp</label>
-                                    <input type="tel" placeholder="+971 50 XXX XXXX" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
+                                    <input type="tel" x-model="phone" placeholder="+971 50 XXX XXXX" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Project Budget (AED)</label>
-                                    <select class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
+                                    <select x-model="budget" class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
                                         <option>AED 15,000 - 30,000</option>
                                         <option>AED 30,000 - 50,000</option>
                                         <option>AED 50,000 - 100,000</option>
                                         <option>AED 100,000+</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="w-full py-4 text-center text-sm font-bold text-white bg-gradient-to-r from-[#3525CD] to-[#6B00B7] rounded-xl hover:from-[#4F46E5] hover:to-[#A855F7] shadow-lg shadow-indigo-600/15 hover:shadow-xl hover:scale-[1.01] transition-all">
-                                    Send Proposal Request
+                                <button type="submit" :disabled="loading" class="w-full py-4 text-center text-sm font-bold text-white bg-gradient-to-r from-[#3525CD] to-[#6B00B7] rounded-xl hover:from-[#4F46E5] hover:to-[#A855F7] shadow-lg shadow-indigo-600/15 hover:shadow-xl hover:scale-[1.01] transition-all disabled:opacity-50">
+                                    <span x-show="!loading">Send Proposal Request</span>
+                                    <span x-show="loading" style="display: none;">Sending...</span>
                                 </button>
                                 <p class="text-[11px] text-center text-slate-500 mt-2">We respect your privacy. All inquiries are covered by NDA.</p>
                             </div>

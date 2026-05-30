@@ -17,3 +17,5 @@ Route::post('/dashboard/book', [DashboardController::class, 'bookTravel'])->name
 Route::post('/dashboard/expense', [DashboardController::class, 'addExpense'])->name('dashboard.expense');
 Route::post('/dashboard/card', [DashboardController::class, 'createCard'])->name('dashboard.card');
 Route::post('/dashboard/card/{id}/toggle', [DashboardController::class, 'toggleCardStatus'])->name('dashboard.card.toggle');
+
+Route::post('/contact', [DashboardController::class, 'submitContact'])->name('contact.submit');
