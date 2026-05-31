@@ -416,11 +416,7 @@
                     <p class="text-xs text-[#64748B] leading-relaxed max-w-xs font-light">
                         Precise corporate travel and expense management for modern teams.
                     </p>
-                    <div class="flex space-x-3 pt-2">
-                        <a href="https://github.com/manjot/aviaj" class="w-8 h-8 rounded-full border border-slate-200 hover:border-[#3A9F9F] hover:text-[#3A9F9F] flex items-center justify-center text-[#64748B] transition-all">
-                            <span class="font-bold text-xs font-mono">GH</span>
-                        </a>
-                    </div>
+
                 </div>
 
                 <!-- Product Links -->
@@ -473,7 +469,7 @@
                 </p>
                 <div class="flex space-x-6 text-[11px] text-[#64748B] font-light">
                     <a href="{{ route('demo-login') }}" class="hover:text-[#0F172A]">Enter Demo App</a>
-                    <a href="https://github.com/manjot/aviaj" class="hover:text-[#0F172A]">GitHub</a>
+
                 </div>
             </div>
 
