@@ -7,11 +7,11 @@ env_paths = [
 
 updates = {
     'MAIL_MAILER': 'smtp',
-    'MAIL_SCHEME': 'smtps',
+    'MAIL_SCHEME': 'null',
     'MAIL_HOST': 'ajath.ae',
-    'MAIL_PORT': '465',
-    'MAIL_USERNAME': 'info@ajath.ae',
-    'MAIL_PASSWORD': '"Ajath@#007!$&"',
+    'MAIL_PORT': '25',
+    'MAIL_USERNAME': 'null',
+    'MAIL_PASSWORD': 'null',
     'MAIL_FROM_ADDRESS': 'info@ajath.ae',
     'MAIL_FROM_NAME': '"Ajath UAE"'
 }
