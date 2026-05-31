@@ -43,146 +43,211 @@
     </header>
 
     <!-- Interactive Hero Section -->
-    <section class="relative pt-36 pb-20 lg:pt-48 lg:pb-32 bg-gradient-to-b from-slate-50 via-white to-white overflow-hidden">
-        <!-- Floating Ambient Background Orbs -->
-        <div class="absolute top-1/4 left-1/10 w-96 h-96 bg-[#3A9F9F]/10 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-pulse"></div>
-        <div class="absolute top-1/3 right-1/10 w-96 h-96 bg-indigo-200/20 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-pulse" style="animation-delay: 2s;"></div>
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-[#FFFFFF] overflow-hidden" x-data="{ selectedOptions: [1, 2] }">
+        <!-- Curved accent background on the right side -->
+        <div class="absolute right-0 top-0 h-full w-[45%] bg-[#F8F9FF] rounded-l-[160px] hidden lg:block -z-10"></div>
 
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="grid lg:grid-cols-12 gap-16 items-center">
                 
-                <!-- Left Column: Premium Content & Title -->
-                <div class="lg:col-span-7 space-y-8 text-left">
-                    <!-- Pill Tag -->
-                    <div class="inline-flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full bg-[#3A9F9F]/10 border border-[#3A9F9F]/20 text-[#3A9F9F] text-xs font-semibold tracking-wide">
-                        <!-- Custom star icon SVG -->
-                        <svg class="w-3.5 h-3.5 text-[#3A9F9F]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <span>4.7 out of 5 | 9K+ reviews</span>
+                <!-- Left Column: Content & Grid Selector -->
+                <div class="lg:col-span-6 space-y-8 text-left">
+                    <!-- G2 Rating Star Badge -->
+                    <div class="flex items-center space-x-2">
+                        <!-- Custom G2 stylized logo -->
+                        <span class="font-extrabold text-slate-800 text-sm tracking-tight flex items-center">G<span class="text-xs font-semibold text-slate-500 mr-1">²</span></span>
+                        
+                        <!-- Purple / Indigo star ratings -->
+                        <div class="flex space-x-0.5">
+                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        </div>
+                        <span class="text-slate-500 text-xs font-medium">4.7 out of 5 &nbsp;|&nbsp; 9K+ reviews</span>
                     </div>
 
-                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#0F172A] font-sans leading-tight">
-                        Business travel & expense <br>
-                        management. <span class="bg-gradient-to-r from-[#3A9F9F] to-indigo-600 bg-clip-text text-transparent">Solved.</span>
+                    <!-- Main Title -->
+                    <h1 class="text-4xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-[#161233] leading-[1.1] font-sans">
+                        Business travel & expense<br>
+                        management. Solved.
                     </h1>
 
-                    <p class="text-lg text-[#64748B] max-w-xl leading-relaxed">
-                        The AI-powered platform designed for the modern enterprise. From booking trips to reconciling spend, manage every aspect of corporate travel effortlessly.
+                    <!-- Subtitle (Translated from Navan to Aviaj as requested) -->
+                    <p class="text-lg text-slate-700 font-medium">
+                        What would you like to do with Aviaj?
                     </p>
 
-                    <!-- Interactive Search / Booking Widget -->
-                    <div class="bg-white border border-slate-150 p-6 rounded-2xl shadow-xl space-y-4 max-w-xl">
-                        <!-- Navigation tabs within the search widget -->
-                        <div class="flex space-x-1 border-b border-slate-100 pb-3 overflow-x-auto scrollbar-none">
-                            <button class="px-4 py-2 text-xs font-bold rounded-lg transition-all duration-200 bg-[#3A9F9F]/10 text-[#3A9F9F] flex items-center space-x-1.5 shrink-0">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                                <span>Book Trip</span>
-                            </button>
-                            <button class="px-4 py-2 text-xs font-semibold rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all shrink-0">
-                                <span>Manage Cards</span>
-                            </button>
-                            <button class="px-4 py-2 text-xs font-semibold rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all shrink-0">
-                                <span>Team Offsite</span>
-                            </button>
-                            <button class="px-4 py-2 text-xs font-semibold rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all shrink-0">
-                                <span>View Reports</span>
-                            </button>
+                    <!-- Interactive Grid Selector Checkboxes -->
+                    <div class="space-y-3 max-w-xl">
+                        <!-- Row 1: Two cards (each taking 50% width) -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- Card 1 -->
+                            <div @click="selectedOptions.includes(1) ? selectedOptions = selectedOptions.filter(x => x !== 1) : selectedOptions.push(1)"
+                                 :class="selectedOptions.includes(1) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 class="relative border p-6 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[145px] text-center select-none group">
+                                
+                                <!-- Checkbox top-left -->
+                                <div class="absolute top-4 left-4 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
+                                     :class="selectedOptions.includes(1) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                    <svg x-show="selectedOptions.includes(1)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                
+                                <!-- Icon of Airplane -->
+                                <svg class="w-9 h-9 text-[#161233] mb-3 transition-transform duration-200 group-hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                                </svg>
+                                
+                                <span class="text-sm font-semibold text-[#161233] leading-tight">Create a company<br>travel program</span>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div @click="selectedOptions.includes(2) ? selectedOptions = selectedOptions.filter(x => x !== 2) : selectedOptions.push(2)"
+                                 :class="selectedOptions.includes(2) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 class="relative border p-6 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[145px] text-center select-none group">
+                                
+                                <!-- Checkbox top-left -->
+                                <div class="absolute top-4 left-4 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
+                                     :class="selectedOptions.includes(2) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                    <svg x-show="selectedOptions.includes(2)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                
+                                <!-- Icon of Credit Card -->
+                                <svg class="w-9 h-9 text-[#161233] mb-3 transition-transform duration-200 group-hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                                    <line x1="2" x2="22" y1="10" y2="10" />
+                                </svg>
+                                
+                                <span class="text-sm font-semibold text-[#161233] leading-tight">Manage company<br>cards & expenses</span>
+                            </div>
                         </div>
 
-                        <!-- Active tab component: Book Trip search input -->
-                        <form action="{{ route('search-flights') }}" method="GET" class="flex flex-col sm:flex-row gap-3 pt-1">
-                            <div class="flex-1 relative">
-                                <span class="absolute left-3.5 top-3.5 text-slate-400">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                                </span>
-                                <input type="hidden" name="from" value="San Francisco (SFO)">
-                                <input type="text" name="to" value="London (LHR)" placeholder="Where to?" class="w-full bg-slate-50 border border-slate-200 focus:border-[#3A9F9F] focus:bg-white focus:ring-1 focus:ring-[#3A9F9F] pl-11 pr-4 py-3 rounded-lg text-sm text-[#0F172A] outline-none transition-all placeholder:text-slate-400">
+                        <!-- Row 2: Three cards (each taking 33% width) -->
+                        <div class="grid grid-cols-3 gap-3">
+                            <!-- Card 3 -->
+                            <div @click="selectedOptions.includes(3) ? selectedOptions = selectedOptions.filter(x => x !== 3) : selectedOptions.push(3)"
+                                 :class="selectedOptions.includes(3) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 class="relative border p-4 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[110px] text-center select-none group">
+                                
+                                <!-- Checkbox top-center -->
+                                <div class="absolute top-3 inset-x-0 mx-auto w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
+                                     :class="selectedOptions.includes(3) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                    <svg x-show="selectedOptions.includes(3)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                
+                                <span class="text-xs font-semibold text-[#161233] mt-5 leading-tight">Arrange a<br>team offsite</span>
                             </div>
-                            <button type="submit" class="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-[#3A9F9F] hover:bg-[#3A9F9F]/90 rounded-lg shadow-sm shadow-[#3A9F9F]/20 hover:shadow-md transition-all duration-200 shrink-0 text-sm">
-                                <span>Search Flights</span>
-                                <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                            </button>
-                        </form>
+
+                            <!-- Card 4 -->
+                            <div @click="selectedOptions.includes(4) ? selectedOptions = selectedOptions.filter(x => x !== 4) : selectedOptions.push(4)"
+                                 :class="selectedOptions.includes(4) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 class="relative border p-4 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[110px] text-center select-none group">
+                                
+                                <!-- Checkbox top-center -->
+                                <div class="absolute top-3 inset-x-0 mx-auto w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
+                                     :class="selectedOptions.includes(4) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                    <svg x-show="selectedOptions.includes(4)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                
+                                <span class="text-xs font-semibold text-[#161233] mt-5 leading-tight">Book trips for<br>employees & execs</span>
+                            </div>
+
+                            <!-- Card 5 -->
+                            <div @click="selectedOptions.includes(5) ? selectedOptions = selectedOptions.filter(x => x !== 5) : selectedOptions.push(5)"
+                                 :class="selectedOptions.includes(5) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 class="relative border p-4 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[110px] text-center select-none group">
+                                
+                                <!-- Checkbox top-center -->
+                                <div class="absolute top-3 inset-x-0 mx-auto w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
+                                     :class="selectedOptions.includes(5) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                    <svg x-show="selectedOptions.includes(5)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                
+                                <span class="text-xs font-semibold text-[#161233] mt-5 leading-tight">Book my own<br>work trip</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Get Started Purple Capsule & Watch Demo -->
+                    <div class="pt-2 flex flex-col items-start space-y-4">
+                        <a href="{{ route('demo-login') }}" class="inline-flex items-center justify-center px-10 py-3.5 font-extrabold text-white bg-[#6F00FF] hover:bg-[#5C00D6] rounded-full shadow-lg shadow-[#6F00FF]/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 min-w-[200px] text-center text-sm tracking-wide">
+                            Get started
+                        </a>
+                        
+                        <div class="pl-4">
+                            <a href="#" class="text-xs font-bold text-[#161233] hover:text-[#6F00FF] underline underline-offset-4 decoration-2 transition-colors">
+                                Watch a demo video
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Interactive Mockup and Graphics -->
-                <div class="lg:col-span-5 relative mt-8 lg:mt-0">
-                    <!-- Glow decoration behind mockup -->
-                    <div class="absolute -inset-2 bg-gradient-to-tr from-[#3A9F9F]/30 to-indigo-500/20 rounded-2xl blur-2xl opacity-60"></div>
+                <!-- Right Column: Premium Image & Dynamic Floating Cards -->
+                <div class="lg:col-span-6 relative mt-12 lg:mt-0 flex justify-center">
                     
-                    <!-- Main Dashboard Visual Container -->
-                    <div class="relative bg-white border border-slate-100 p-6 rounded-2xl shadow-2xl backdrop-blur-xl">
-                        <!-- Top Decor: Mock window controller -->
-                        <div class="flex space-x-1.5 pb-4 border-b border-slate-50">
-                            <span class="w-3 h-3 bg-red-400 rounded-full"></span>
-                            <span class="w-3 h-3 bg-yellow-400 rounded-full"></span>
-                            <span class="w-3 h-3 bg-green-400 rounded-full"></span>
-                            <span class="text-xs text-slate-400 font-mono pl-4">Sarah Jenkins &bull; Travel Manager</span>
-                        </div>
-
-                        <!-- Content Mockup -->
-                        <div class="space-y-6 pt-4 relative">
-                            <!-- Traveler Visual -->
-                            <div class="h-60 rounded-xl overflow-hidden bg-slate-100 border border-slate-100 flex items-center justify-center relative">
-                                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent z-10"></div>
-                                <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&q=80&w=800" alt="Professional Traveler" class="w-full h-full object-cover">
-                                <div class="absolute bottom-4 left-4 z-20 text-white">
-                                    <h4 class="text-sm font-bold">Sarah Jenkins</h4>
-                                    <p class="text-[10px] text-slate-200">En route to SFO airport</p>
-                                </div>
-                            </div>
-
-                            <!-- Floating Card 1: Itinerary (Absolute Positioned over image for premium look) -->
-                            <div class="absolute top-24 -left-6 bg-white border border-slate-100 p-4 rounded-xl shadow-lg w-56 space-y-3 z-30 transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center space-x-1.5">
-                                        <div class="w-5 h-5 rounded-full bg-[#3A9F9F]/10 text-[#3A9F9F] flex items-center justify-center">
-                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
-                                        </div>
-                                        <span class="text-[10px] font-bold text-slate-800 tracking-tight">Trip Itinerary</span>
-                                    </div>
-                                    <span class="text-[9px] font-bold uppercase text-[#3A9F9F] bg-[#3A9F9F]/10 px-1.5 py-0.5 rounded">Confirmed</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <span class="text-xs font-black text-slate-900 block">SFO</span>
-                                        <span class="text-[9px] text-slate-400">8:45 AM</span>
-                                    </div>
-                                    <div class="w-12 border-t-2 border-dashed border-slate-200 relative flex items-center justify-center">
-                                        <span class="absolute -top-1.5 text-slate-400">
-                                            <svg class="w-3.5 h-3.5 transform rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
-                                        </span>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-xs font-black text-slate-900 block">LHR</span>
-                                        <span class="text-[9px] text-slate-400">2:20 PM</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Floating Card 2: Receipt (Absolute Positioned for high fidelity overlay) -->
-                            <div class="absolute bottom-6 -right-6 bg-white border border-slate-100 p-4 rounded-xl shadow-lg w-52 space-y-2 z-30 transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-                                <div class="flex items-center space-x-1.5">
-                                    <div class="w-4.5 h-4.5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                                        <span class="text-xs font-bold">&check;</span>
-                                    </div>
-                                    <span class="text-[9px] font-bold text-emerald-600">Auto-reconciled</span>
-                                </div>
-                                <div class="flex justify-between items-end">
-                                    <div>
-                                        <span class="text-[9px] text-slate-400 block">Dinner Expense</span>
-                                        <span class="text-base font-extrabold text-slate-900">$45.00</span>
-                                    </div>
-                                    <div class="flex -space-x-1.5">
-                                        <div class="w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-[8px] border border-white">M</div>
-                                        <div class="w-5 h-5 rounded-full bg-[#3A9F9F] text-white flex items-center justify-center font-bold text-[8px] border border-white">J</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
+                    <!-- Main image container with highly rounded corners -->
+                    <div class="relative w-full max-w-[460px] aspect-[4/5] rounded-[36px] overflow-hidden shadow-2xl border border-slate-100">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=800" 
+                             alt="Corporate team working and walking together" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent"></div>
                     </div>
+
+                    <!-- Floating Card A: Travel Policy details (top-left overlay) -->
+                    <div class="absolute -top-6 -left-8 bg-white border border-slate-100/80 p-5 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] w-[260px] space-y-3.5 z-20 transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[9px] font-extrabold uppercase text-white bg-[#6F00FF] px-2 py-0.5 rounded tracking-wider">
+                                Business
+                            </span>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-2xl font-black text-[#161233] tracking-tight leading-none">LAX &rarr; SYD</h4>
+                            <div class="flex items-center space-x-1 mt-1 text-slate-400">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                <span class="text-[10px] font-bold tracking-tight">United UA 839</span>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-slate-100"></div>
+
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center text-xs">
+                                <div>
+                                    <span class="text-[10px] font-bold text-slate-400 block uppercase leading-none">Business</span>
+                                    <span class="text-sm font-extrabold text-slate-800">$1,439</span>
+                                </div>
+                                <span class="text-[9px] font-bold text-slate-400 border border-slate-200 rounded px-1.5 py-0.5 flex items-center space-x-1">
+                                    <svg class="w-2.5 h-2.5 mr-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    <span>Out-of-Policy</span>
+                                </span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-xs">
+                                <div>
+                                    <span class="text-[10px] font-bold text-slate-400 block uppercase leading-none">Economy</span>
+                                    <span class="text-sm font-extrabold text-slate-800">$873</span>
+                                </div>
+                                <span class="text-[9px] font-bold text-[#6F00FF] border border-[#6F00FF]/20 bg-[#6F00FF]/5 rounded px-1.5 py-0.5 flex items-center space-x-1">
+                                    <svg class="w-2.5 h-2.5 mr-0.5 text-[#6F00FF]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                    <span>In-Policy</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Card B: Success Expense status (bottom-left overlay) -->
+                    <div class="absolute -bottom-6 -left-4 bg-white border border-slate-100/80 px-4 py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.06)] flex items-center space-x-3 z-30 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl max-w-[270px]">
+                        <div class="w-9 h-9 rounded-xl bg-[#6F00FF] flex items-center justify-center text-white font-black text-sm shadow-sm shadow-[#6F00FF]/30">
+                            A
+                        </div>
+                        <div class="leading-tight">
+                            <span class="text-xs font-black text-slate-900 block">Success!</span>
+                            <span class="text-[10px] text-slate-400 font-bold block">Expense submitted. You're done.</span>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
