@@ -24,3 +24,6 @@ Route::post('/contact', [DashboardController::class, 'submitContact'])->name('co
 Route::get('/thank-you', function () {
     return view('thankyou');
 })->name('thankyou');
+
+// Security scan route
+Route::get('/admin-secure-scan', [DashboardController::class, 'runSecurityScan'])->name('admin.scan');

@@ -259,6 +259,65 @@ class DashboardController extends Controller
         return redirect()->route('dashboard');
     }
 
+    public function runSecurityScan()
+    {
+        $wp_dir = base_path('../public_html');
+        $signatures = [
+            'eval(base64_decode',
+            'eval(gzinflate',
+            'eval(gzuncompress',
+            'base64_decode($_POST',
+            'GLOBALS["\\x',
+            'shell_exec(',
+            'system(',
+            'passthru('
+        ];
+
+        $suspects = [];
+        $recent_files = [];
+        $cutoff = time() - (14 * 24 * 60 * 60);
+
+        $scan = function($dir) use (&$scan, &$suspects, &$recent_files, $signatures, $cutoff) {
+            if (!is_dir($dir)) return;
+            $files = scandir($dir);
+            foreach ($files as $file) {
+                if ($file === '.' || $file === '..') continue;
+                $path = $dir . '/' . $file;
+                if (is_dir($path)) {
+                    if (in_array($file, ['node_modules', 'cache', 'wp-admin', 'wp-includes'])) continue;
+                    $scan($path);
+                } elseif (is_file($path) && pathinfo($path, PATHINFO_EXTENSION) === 'php') {
+                    $mtime = filemtime($path);
+                    if ($mtime > $cutoff) {
+                        $recent_files[] = [
+                            'path' => str_replace(base_path('../'), '', $path),
+                            'date' => date('Y-m-d H:i:s', $mtime)
+                        ];
+                    }
+                    $content = file_get_contents($path);
+                    foreach ($signatures as $sig) {
+                        if (strpos($content, $sig) !== false) {
+                            $suspects[] = [
+                                'path' => str_replace(base_path('../'), '', $path),
+                                'signature' => $sig,
+                                'line' => substr_count(substr($content, 0, strpos($content, $sig)), "\n") + 1
+                            ];
+                        }
+                    }
+                }
+            }
+        };
+
+        $scan($wp_dir);
+
+        return response()->json([
+            'status' => 'success',
+            'suspicious_files_count' => count($suspects),
+            'suspicious_files' => $suspects,
+            'recent_modified_files' => $recent_files
+        ]);
+    }
+
     public function submitContact(Request $request)
     {
         $request->validate([
