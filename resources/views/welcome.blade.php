@@ -59,11 +59,11 @@
                         
                         <!-- Purple / Indigo star ratings -->
                         <div class="flex space-x-0.5">
-                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            <svg class="w-3.5 h-3.5 text-[#6F00FF] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-3.5 h-3.5 text-[#59BABA] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-3.5 h-3.5 text-[#59BABA] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-3.5 h-3.5 text-[#59BABA] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-3.5 h-3.5 text-[#59BABA] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-3.5 h-3.5 text-[#59BABA] fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                         </div>
                         <span class="text-slate-500 text-xs font-medium">4.7 out of 5 &nbsp;|&nbsp; 9K+ reviews</span>
                     </div>
@@ -85,12 +85,12 @@
                         <div class="grid grid-cols-2 gap-3">
                             <!-- Card 1 -->
                             <div @click="selectedOptions.includes(1) ? selectedOptions = selectedOptions.filter(x => x !== 1) : selectedOptions.push(1)"
-                                 :class="selectedOptions.includes(1) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 :class="selectedOptions.includes(1) ? 'border-[#59BABA] bg-[#F5FBFB]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
                                  class="relative border p-6 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[145px] text-center select-none group">
                                 
                                 <!-- Checkbox top-left -->
                                 <div class="absolute top-4 left-4 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
-                                     :class="selectedOptions.includes(1) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                     :class="selectedOptions.includes(1) ? 'border-[#59BABA] bg-[#59BABA] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
                                     <svg x-show="selectedOptions.includes(1)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                 </div>
                                 
@@ -104,12 +104,12 @@
 
                             <!-- Card 2 -->
                             <div @click="selectedOptions.includes(2) ? selectedOptions = selectedOptions.filter(x => x !== 2) : selectedOptions.push(2)"
-                                 :class="selectedOptions.includes(2) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 :class="selectedOptions.includes(2) ? 'border-[#59BABA] bg-[#F5FBFB]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
                                  class="relative border p-6 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[145px] text-center select-none group">
                                 
                                 <!-- Checkbox top-left -->
                                 <div class="absolute top-4 left-4 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
-                                     :class="selectedOptions.includes(2) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                     :class="selectedOptions.includes(2) ? 'border-[#59BABA] bg-[#59BABA] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
                                     <svg x-show="selectedOptions.includes(2)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                 </div>
                                 
@@ -127,12 +127,12 @@
                         <div class="grid grid-cols-3 gap-3">
                             <!-- Card 3 -->
                             <div @click="selectedOptions.includes(3) ? selectedOptions = selectedOptions.filter(x => x !== 3) : selectedOptions.push(3)"
-                                 :class="selectedOptions.includes(3) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 :class="selectedOptions.includes(3) ? 'border-[#59BABA] bg-[#F5FBFB]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
                                  class="relative border p-4 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[110px] text-center select-none group">
                                 
                                 <!-- Checkbox top-center -->
                                 <div class="absolute top-3 inset-x-0 mx-auto w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
-                                     :class="selectedOptions.includes(3) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                     :class="selectedOptions.includes(3) ? 'border-[#59BABA] bg-[#59BABA] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
                                     <svg x-show="selectedOptions.includes(3)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                 </div>
                                 
@@ -141,12 +141,12 @@
 
                             <!-- Card 4 -->
                             <div @click="selectedOptions.includes(4) ? selectedOptions = selectedOptions.filter(x => x !== 4) : selectedOptions.push(4)"
-                                 :class="selectedOptions.includes(4) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 :class="selectedOptions.includes(4) ? 'border-[#59BABA] bg-[#F5FBFB]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
                                  class="relative border p-4 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[110px] text-center select-none group">
                                 
                                 <!-- Checkbox top-center -->
                                 <div class="absolute top-3 inset-x-0 mx-auto w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
-                                     :class="selectedOptions.includes(4) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                     :class="selectedOptions.includes(4) ? 'border-[#59BABA] bg-[#59BABA] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
                                     <svg x-show="selectedOptions.includes(4)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                 </div>
                                 
@@ -155,12 +155,12 @@
 
                             <!-- Card 5 -->
                             <div @click="selectedOptions.includes(5) ? selectedOptions = selectedOptions.filter(x => x !== 5) : selectedOptions.push(5)"
-                                 :class="selectedOptions.includes(5) ? 'border-[#6F00FF] bg-[#F1F0FF]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
+                                 :class="selectedOptions.includes(5) ? 'border-[#59BABA] bg-[#F5FBFB]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
                                  class="relative border p-4 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[110px] text-center select-none group">
                                 
                                 <!-- Checkbox top-center -->
                                 <div class="absolute top-3 inset-x-0 mx-auto w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"
-                                     :class="selectedOptions.includes(5) ? 'border-[#6F00FF] bg-[#6F00FF] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
+                                     :class="selectedOptions.includes(5) ? 'border-[#59BABA] bg-[#59BABA] text-white' : 'border-slate-300 bg-white group-hover:border-slate-400'">
                                     <svg x-show="selectedOptions.includes(5)" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                 </div>
                                 
@@ -171,12 +171,12 @@
 
                     <!-- Get Started Purple Capsule & Watch Demo -->
                     <div class="pt-2 flex flex-col items-start space-y-4">
-                        <a href="{{ route('demo-login') }}" class="inline-flex items-center justify-center px-10 py-3.5 font-extrabold text-white bg-[#6F00FF] hover:bg-[#5C00D6] rounded-full shadow-lg shadow-[#6F00FF]/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 min-w-[200px] text-center text-sm tracking-wide">
+                        <a href="{{ route('demo-login') }}" class="inline-flex items-center justify-center px-10 py-3.5 font-extrabold text-white bg-[#59BABA] hover:bg-[#48A5A5] rounded-full shadow-lg shadow-[#59BABA]/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 min-w-[200px] text-center text-sm tracking-wide">
                             Get started
                         </a>
                         
                         <div class="pl-4">
-                            <a href="#" class="text-xs font-bold text-[#161233] hover:text-[#6F00FF] underline underline-offset-4 decoration-2 transition-colors">
+                            <a href="#" class="text-xs font-bold text-[#161233] hover:text-[#59BABA] underline underline-offset-4 decoration-2 transition-colors">
                                 Watch a demo video
                             </a>
                         </div>
@@ -197,7 +197,7 @@
                     <!-- Floating Card A: Travel Policy details (top-left overlay) -->
                     <div class="absolute -top-6 -left-8 bg-white border border-slate-100/80 p-5 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] w-[260px] space-y-3.5 z-20 transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl">
                         <div class="flex justify-between items-center">
-                            <span class="text-[9px] font-extrabold uppercase text-white bg-[#6F00FF] px-2 py-0.5 rounded tracking-wider">
+                            <span class="text-[9px] font-extrabold uppercase text-white bg-[#59BABA] px-2 py-0.5 rounded tracking-wider">
                                 Business
                             </span>
                         </div>
@@ -229,8 +229,8 @@
                                     <span class="text-[10px] font-bold text-slate-400 block uppercase leading-none">Economy</span>
                                     <span class="text-sm font-extrabold text-slate-800">$873</span>
                                 </div>
-                                <span class="text-[9px] font-bold text-[#6F00FF] border border-[#6F00FF]/20 bg-[#6F00FF]/5 rounded px-1.5 py-0.5 flex items-center space-x-1">
-                                    <svg class="w-2.5 h-2.5 mr-0.5 text-[#6F00FF]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                <span class="text-[9px] font-bold text-[#59BABA] border border-[#59BABA]/20 bg-[#59BABA]/5 rounded px-1.5 py-0.5 flex items-center space-x-1">
+                                    <svg class="w-2.5 h-2.5 mr-0.5 text-[#59BABA]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                     <span>In-Policy</span>
                                 </span>
                             </div>
@@ -239,7 +239,7 @@
 
                     <!-- Floating Card B: Success Expense status (bottom-left overlay) -->
                     <div class="absolute -bottom-6 -left-4 bg-white border border-slate-100/80 px-4 py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.06)] flex items-center space-x-3 z-30 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl max-w-[270px]">
-                        <div class="w-9 h-9 rounded-xl bg-[#6F00FF] flex items-center justify-center text-white font-black text-sm shadow-sm shadow-[#6F00FF]/30">
+                        <div class="w-9 h-9 rounded-xl bg-[#59BABA] flex items-center justify-center text-white font-black text-sm shadow-sm shadow-[#59BABA]/30">
                             A
                         </div>
                         <div class="leading-tight">
