@@ -4,7 +4,7 @@ $mail = new PHPMailer();
 $mail->CharSet = "utf-8";
 $mail->IsSMTP();
 $mail->SMTPAuth = false;
-$mail->Host = "localhost";
+$mail->Host = "ajath.ae";
 $mail->Port = "25";
 $mail->SMTPDebug  = 2;
 $mail->setFrom('info@ajath.ae', 'Ajath UAE');
