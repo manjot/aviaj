@@ -187,7 +187,7 @@ class DashboardController extends Controller
             'status' => 'confirmed',
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Trip booked successfully through Navan corporate travel!');
+        return redirect()->route('dashboard')->with('success', 'Trip booked successfully through Aviaj corporate travel!');
     }
 
     public function addExpense(Request $request)

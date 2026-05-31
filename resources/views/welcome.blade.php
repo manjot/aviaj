@@ -21,7 +21,7 @@
             <!-- Brand Logo with Figma Color Accent -->
             <a href="/" class="flex items-center space-x-2 text-2xl font-extrabold tracking-tight text-[#0F172A] transition-transform duration-300 hover:scale-102">
                 <span class="bg-gradient-to-r from-[#3A9F9F] to-indigo-600 bg-clip-text text-transparent">AVIAJ</span>
-                <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-[#3A9F9F]/10 text-[#3A9F9F] tracking-widest">Navan Style</span>
+                <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-[#3A9F9F]/10 text-[#3A9F9F] tracking-widest">Premium Style</span>
             </a>
 
             <!-- Navigation Links -->
