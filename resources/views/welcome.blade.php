@@ -59,12 +59,12 @@
         }
     </style>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-719050402"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16651354905"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'AW-719050402');
+      gtag('config', 'AW-16651354905');
     </script>
 </head>
 <body class="bg-[#F8F9FF] text-[#464555] antialiased overflow-x-hidden" x-data="{ mobileMenuOpen: false }">
