@@ -258,4 +258,15 @@ class DashboardController extends Controller
         Auth::login($user);
         return redirect()->route('dashboard');
     }
+
+
+    public function searchFlights(Request $request)
+    {
+        $from = $request->input("from", "San Francisco (SFO)");
+        $to = $request->input("to", "London (LHR)");
+        $dates = $request->input("dates", "Oct 24 - Oct 28");
+        $travelers = $request->input("travelers", "1 Adult, Economy");
+
+        return view("search-results", compact("from", "to", "dates", "travelers"));
+    }
 }

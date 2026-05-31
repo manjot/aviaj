@@ -8,6 +8,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Flight Search Results Page
+Route::get('/search-flights', [DashboardController::class, 'searchFlights'])->name('search-flights');
+
 // Demo login shortcut
 Route::get('/demo-login', [DashboardController::class, 'demoLogin'])->name('demo-login');
 

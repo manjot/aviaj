@@ -89,18 +89,19 @@
                         </div>
 
                         <!-- Active tab component: Book Trip search input -->
-                        <div class="flex flex-col sm:flex-row gap-3 pt-1">
+                        <form action="{{ route('search-flights') }}" method="GET" class="flex flex-col sm:flex-row gap-3 pt-1">
                             <div class="flex-1 relative">
                                 <span class="absolute left-3.5 top-3.5 text-slate-400">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 </span>
-                                <input type="text" placeholder="Where to?" class="w-full bg-slate-50 border border-slate-200 focus:border-[#3A9F9F] focus:bg-white focus:ring-1 focus:ring-[#3A9F9F] pl-11 pr-4 py-3 rounded-lg text-sm text-[#0F172A] outline-none transition-all placeholder:text-slate-400">
+                                <input type="hidden" name="from" value="San Francisco (SFO)">
+                                <input type="text" name="to" value="London (LHR)" placeholder="Where to?" class="w-full bg-slate-50 border border-slate-200 focus:border-[#3A9F9F] focus:bg-white focus:ring-1 focus:ring-[#3A9F9F] pl-11 pr-4 py-3 rounded-lg text-sm text-[#0F172A] outline-none transition-all placeholder:text-slate-400">
                             </div>
-                            <a href="{{ route('demo-login') }}" class="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-[#3A9F9F] hover:bg-[#3A9F9F]/90 rounded-lg shadow-sm shadow-[#3A9F9F]/20 hover:shadow-md transition-all duration-200 shrink-0 text-sm">
+                            <button type="submit" class="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-[#3A9F9F] hover:bg-[#3A9F9F]/90 rounded-lg shadow-sm shadow-[#3A9F9F]/20 hover:shadow-md transition-all duration-200 shrink-0 text-sm">
                                 <span>Search Flights</span>
                                 <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                            </a>
-                        </div>
+                            </button>
+                        </form>
                     </div>
                 </div>
 
