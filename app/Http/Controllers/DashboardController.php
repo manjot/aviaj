@@ -269,4 +269,10 @@ class DashboardController extends Controller
 
         return view("search-results", compact("from", "to", "dates", "travelers"));
     }
+
+
+    public function expenseManagement()
+    {
+        return view("expense-management");
+    }
 }

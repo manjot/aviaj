@@ -290,7 +290,7 @@
                     </div>
 
                     <div class="pt-2">
-                        <a href="{{ route('demo-login') }}" class="inline-flex items-center space-x-2 text-xs font-bold text-[#3A9F9F] hover:text-[#3A9F9F]/80 transition-colors">
+                        <a href="{{ route('expense-management') }}" class="inline-flex items-center space-x-2 text-xs font-bold text-[#3A9F9F] hover:text-[#3A9F9F]/80 transition-colors">
                             <span>Explore Expense Management</span>
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </a>

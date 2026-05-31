@@ -11,6 +11,9 @@ Route::get('/', function () {
 // Flight Search Results Page
 Route::get('/search-flights', [DashboardController::class, 'searchFlights'])->name('search-flights');
 
+// Expense Management Dashboard
+Route::get('/expense-management', [DashboardController::class, 'expenseManagement'])->name('expense-management');
+
 // Demo login shortcut
 Route::get('/demo-login', [DashboardController::class, 'demoLogin'])->name('demo-login');
 
