@@ -14,6 +14,11 @@ Route::get('/search-flights', [DashboardController::class, 'searchFlights'])->na
 // Expense Management Dashboard
 Route::get('/expense-management', [DashboardController::class, 'expenseManagement'])->name('expense-management');
 
+// Custom High-Fidelity Get Started Registration
+Route::get('/get-started', function () {
+    return view('get-started');
+})->name('get-started');
+
 // Demo login shortcut
 Route::get('/demo-login', [DashboardController::class, 'demoLogin'])->name('demo-login');
 
