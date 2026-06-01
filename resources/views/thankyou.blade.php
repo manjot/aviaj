@@ -13,17 +13,17 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16651354905"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NK097QPKWC"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'AW-16651354905');
+      gtag('config', 'G-NK097QPKWC');
     </script>
     
     <!-- Event snippet for Submit lead form conversion page -->
     <script>
-      gtag('event', 'conversion', {'send_to': 'AW-16651354905/v5dTCKvui7YcEKKt79YC'});
+      gtag('event', 'conversion', {'send_to': 'G-NK097QPKWC/v5dTCKvui7YcEKKt79YC'});
     </script>
     
     <style>
