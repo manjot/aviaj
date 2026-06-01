@@ -117,6 +117,85 @@ class DashboardController extends Controller
             ]);
         }
 
+        // Seed Team Members Marcus and Elena under same Company
+        $marcus = User::where('email', 'marcus@aviaj.com')->first();
+        if (!$marcus) {
+            $marcus = User::create([
+                'name' => 'Marcus Vance',
+                'email' => 'marcus@aviaj.com',
+                'password' => Hash::make('password'),
+                'role' => 'employee',
+                'company_name' => 'Acme Corp',
+                'phone' => '+1 (555) 012-3456',
+                'avatar' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150',
+            ]);
+
+            Trip::create([
+                'user_id' => $marcus->id,
+                'type' => 'flight',
+                'title' => 'Flight to Chicago (ORD)',
+                'details' => [
+                    'airline' => 'United Airlines',
+                    'flight_number' => 'UA 891',
+                    'class' => 'Economy Premium',
+                    'departure' => 'San Francisco (SFO) - 01:15 PM',
+                    'arrival' => 'Chicago (ORD) - 07:30 PM',
+                ],
+                'start_date' => now()->addDays(12)->toDateString(),
+                'price' => 450.00,
+                'status' => 'pending',
+            ]);
+
+            Expense::create([
+                'user_id' => $marcus->id,
+                'merchant' => 'Hertz Car Rental',
+                'amount' => 120.50,
+                'category' => 'Travel',
+                'date' => now()->subDays(3)->toDateString(),
+                'status' => 'pending',
+                'description' => 'Corporate discount EV rental for client meeting',
+            ]);
+        }
+
+        $elena = User::where('email', 'elena@aviaj.com')->first();
+        if (!$elena) {
+            $elena = User::create([
+                'name' => 'Elena Rostova',
+                'email' => 'elena@aviaj.com',
+                'password' => Hash::make('password'),
+                'role' => 'employee',
+                'company_name' => 'Acme Corp',
+                'phone' => '+1 (555) 018-9901',
+                'avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+            ]);
+
+            Trip::create([
+                'user_id' => $elena->id,
+                'type' => 'flight',
+                'title' => 'Flight to London (LHR)',
+                'details' => [
+                    'airline' => 'British Airways',
+                    'flight_number' => 'BA 286',
+                    'class' => 'First Class',
+                    'departure' => 'San Francisco (SFO) - 06:45 PM',
+                    'arrival' => 'London (LHR) - 01:00 PM',
+                ],
+                'start_date' => now()->addDays(20)->toDateString(),
+                'price' => 3200.00,
+                'status' => 'pending',
+            ]);
+
+            Expense::create([
+                'user_id' => $elena->id,
+                'merchant' => 'The French Laundry',
+                'amount' => 850.00,
+                'category' => 'Meals',
+                'date' => now()->subDays(1)->toDateString(),
+                'status' => 'pending',
+                'description' => 'Client appreciation dinner',
+            ]);
+        }
+
         return $user;
     }
 
@@ -136,9 +215,47 @@ class DashboardController extends Controller
         $activeCardSpent = $cards->where('status', 'active')->sum('spent_amount');
         $availableLimit = max(0, $activeCardLimit - $activeCardSpent);
 
+        // Fetch Manager Approvals if Role is manager
+        $pendingTeamTrips = collect();
+        $pendingTeamExpenses = collect();
+        $teamApprovedTotal = 0;
+        $policyViolationsCount = 0;
+
+        if ($user->role === 'manager') {
+            // Find all pending trips from other employees
+            $pendingTeamTrips = Trip::where('status', 'pending')
+                ->where('user_id', '!=', $user->id)
+                ->with('user')
+                ->get();
+
+            // Find all pending expenses from other employees
+            $pendingTeamExpenses = Expense::where('status', 'pending')
+                ->where('user_id', '!=', $user->id)
+                ->with('user')
+                ->get();
+
+            // Monthly team spend calculation (approved team expenses)
+            $teamApprovedTotal = Expense::where('status', 'approved')
+                ->where('user_id', '!=', $user->id)
+                ->sum('amount');
+
+            // Count items breaking policy constraints
+            foreach ($pendingTeamTrips as $t) {
+                if (isset($t->details['class']) && str_contains(strtolower($t->details['class']), 'business') || str_contains(strtolower($t->details['class']), 'first')) {
+                    $policyViolationsCount++;
+                }
+            }
+            foreach ($pendingTeamExpenses as $e) {
+                if ($e->category === 'Meals' && $e->amount > 150) {
+                    $policyViolationsCount++;
+                }
+            }
+        }
+
         return view('dashboard', compact(
             'user', 'trips', 'expenses', 'cards', 
-            'totalTripsCount', 'totalSpent', 'availableLimit', 'activeCardSpent'
+            'totalTripsCount', 'totalSpent', 'availableLimit', 'activeCardSpent',
+            'pendingTeamTrips', 'pendingTeamExpenses', 'teamApprovedTotal', 'policyViolationsCount'
         ));
     }
 
@@ -259,6 +376,51 @@ class DashboardController extends Controller
         return redirect()->route('dashboard');
     }
 
+
+    public function toggleRole()
+    {
+        $user = Auth::user() ?? $this->getOrCreateDemoUser();
+        $user->role = $user->role === 'manager' ? 'employee' : 'manager';
+        $user->save();
+
+        return redirect()->route('dashboard')->with('success', "Switched role view to " . strtoupper($user->role) . " mode!");
+    }
+
+    public function approveTrip($id)
+    {
+        $trip = Trip::findOrFail($id);
+        $trip->status = 'confirmed';
+        $trip->save();
+
+        return redirect()->route('dashboard')->with('success', "Travel request for " . $trip->user->name . " was successfully APPROVED!");
+    }
+
+    public function rejectTrip($id)
+    {
+        $trip = Trip::findOrFail($id);
+        $trip->status = 'rejected';
+        $trip->save();
+
+        return redirect()->route('dashboard')->with('success', "Travel request for " . $trip->user->name . " has been DECLINED.");
+    }
+
+    public function approveExpense($id)
+    {
+        $expense = Expense::findOrFail($id);
+        $expense->status = 'approved';
+        $expense->save();
+
+        return redirect()->route('dashboard')->with('success', "Expense claim for $" . number_format($expense->amount, 2) . " from " . $expense->user->name . " was APPROVED.");
+    }
+
+    public function rejectExpense($id)
+    {
+        $expense = Expense::findOrFail($id);
+        $expense->status = 'rejected';
+        $expense->save();
+
+        return redirect()->route('dashboard')->with('success', "Expense claim from " . $expense->user->name . " has been REJECTED.");
+    }
 
     public function searchFlights(Request $request)
     {

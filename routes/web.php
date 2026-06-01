@@ -28,3 +28,10 @@ Route::post('/dashboard/book', [DashboardController::class, 'bookTravel'])->name
 Route::post('/dashboard/expense', [DashboardController::class, 'addExpense'])->name('dashboard.expense');
 Route::post('/dashboard/card', [DashboardController::class, 'createCard'])->name('dashboard.card');
 Route::post('/dashboard/card/{id}/toggle', [DashboardController::class, 'toggleCardStatus'])->name('dashboard.card.toggle');
+
+// Manager Role & Approvals Portal Routes
+Route::post('/dashboard/toggle-role', [DashboardController::class, 'toggleRole'])->name('dashboard.toggle-role');
+Route::post('/dashboard/approve/trip/{id}', [DashboardController::class, 'approveTrip'])->name('dashboard.approve.trip');
+Route::post('/dashboard/reject/trip/{id}', [DashboardController::class, 'rejectTrip'])->name('dashboard.reject.trip');
+Route::post('/dashboard/approve/expense/{id}', [DashboardController::class, 'approveExpense'])->name('dashboard.approve.expense');
+Route::post('/dashboard/reject/expense/{id}', [DashboardController::class, 'rejectExpense'])->name('dashboard.reject.expense');
