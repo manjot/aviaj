@@ -101,8 +101,6 @@
             <div class="border-t border-slate-100 pt-6 mt-12 text-[10px] text-slate-400 leading-normal">
                 *Aviaj Travel is free for eligible companies with up to 300 employees
             </div>
-        </div>
-
         </main>
 
         <!-- Right Half: Carousel / Slides Slider -->
@@ -197,7 +195,6 @@
                     <span>OKTA</span>
                 </div>
             </div>
-
         </aside>
 
     </div>
