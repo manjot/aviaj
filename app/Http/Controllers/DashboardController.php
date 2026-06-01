@@ -21,7 +21,7 @@ class DashboardController extends Controller
                 'name' => 'Sarah Jenkins',
                 'email' => 'demo@aviaj.com',
                 'password' => Hash::make('password'),
-                'role' => 'employee',
+                'role' => 'manager',
                 'company_name' => 'Acme Corp',
                 'phone' => '+1 (555) 019-2834',
                 'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150',
@@ -124,7 +124,7 @@ class DashboardController extends Controller
                 'name' => 'Marcus Vance',
                 'email' => 'marcus@aviaj.com',
                 'password' => Hash::make('password'),
-                'role' => 'employee',
+                'role' => 'manager',
                 'company_name' => 'Acme Corp',
                 'phone' => '+1 (555) 012-3456',
                 'avatar' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150',
@@ -163,7 +163,7 @@ class DashboardController extends Controller
                 'name' => 'Elena Rostova',
                 'email' => 'elena@aviaj.com',
                 'password' => Hash::make('password'),
-                'role' => 'employee',
+                'role' => 'manager',
                 'company_name' => 'Acme Corp',
                 'phone' => '+1 (555) 018-9901',
                 'avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
@@ -202,6 +202,11 @@ class DashboardController extends Controller
     public function index()
     {
         $user = $this->getOrCreateDemoUser();
+        // Force manager role by default so Figma design is visible immediately
+        if ($user->email === 'demo@aviaj.com' && $user->role !== 'manager') {
+            $user->role = 'manager';
+            $user->save();
+        }
         Auth::login($user);
 
         $trips = Trip::where('user_id', $user->id)->orderBy('start_date', 'asc')->get();
