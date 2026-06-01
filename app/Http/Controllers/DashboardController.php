@@ -437,6 +437,55 @@ class DashboardController extends Controller
         return view("search-results", compact("from", "to", "dates", "travelers"));
     }
 
+    public function submitEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $email = $request->input('email');
+        
+        $subject = "Aviaj - New Account Registration";
+        $message = "Hi, <br><br>Thank you for getting started with Aviaj. A new account registration request has been received for email: <strong>" . htmlspecialchars($email) . "</strong>.<br><br>Best regards,<br>Aviaj Team";
+
+        $mailFile = '/home4/ajathufs/ajath.co.in/mail/class.phpmailer.php';
+        if (file_exists($mailFile)) {
+            try {
+                require_once($mailFile);
+                $mail = new \PHPMailer();
+                $mail->CharSet = "utf-8";
+                $mail->IsSMTP();
+                $mail->SMTPAuth = true;
+                $mail->Username = "info@aviaj.com";
+                $mail->Password = "P@sssw0rd1111";
+                $mail->SMTPSecure = "ssl";  
+                $mail->Host = "ajath.com";
+                $mail->Port = "465";
+                
+                $mail->setFrom('info@aviaj.com', 'Aviaj');
+                $mail->AddAddress('manjot@ajath.com', 'Manjot');
+                $mail->AddAddress('shachisheh@gmail.com', 'Shachish');
+                
+                // Also add the registered email so they get the confirmation
+                $mail->AddAddress($email);
+                
+                $mail->Subject = $subject;
+                $mail->IsHTML(true);
+                $mail->Body = $message;
+                
+                $mail->Send();
+            } catch (\Exception $e) {
+                \Log::error("Mail exception: " . $e->getMessage());
+            }
+        } else {
+            \Log::error("PHPMailer file not found at " . $mailFile);
+        }
+
+        $user = $this->getOrCreateDemoUser();
+        \Auth::login($user);
+        return redirect()->route('dashboard')->with('success', 'Account registered and confirmation email sent!');
+    }
+
 
     public function expenseManagement()
     {

@@ -47,10 +47,11 @@
                 </p>
 
                 <!-- Input field -->
-                <form action="{{ route('demo-login') }}" method="GET" class="space-y-4 pt-4">
+                <form action="{{ route('get-started.submit') }}" method="POST" class="space-y-4 pt-4">
+                    @csrf
                     <div class="relative">
                         <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Work Email (name@company.com)</label>
-                        <input type="email" id="email-input" required placeholder="name@company.com" class="w-full bg-[#FCFDFE] border border-slate-200 focus:border-[#59BABA] focus:ring-1 focus:ring-[#59BABA] pl-4 pr-4 py-3.5 rounded-lg text-sm text-[#0F172A] outline-none transition-all">
+                        <input type="email" name="email" id="email-input" required placeholder="name@company.com" class="w-full bg-[#FCFDFE] border border-slate-200 focus:border-[#59BABA] focus:ring-1 focus:ring-[#59BABA] pl-4 pr-4 py-3.5 rounded-lg text-sm text-[#0F172A] outline-none transition-all">
                     </div>
                     
                     <p class="text-[10px] text-slate-400 leading-normal">

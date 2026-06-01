@@ -18,6 +18,7 @@ Route::get('/expense-management', [DashboardController::class, 'expenseManagemen
 Route::get('/get-started', function () {
     return view('get-started');
 })->name('get-started');
+Route::post('/get-started', [DashboardController::class, 'submitEmail'])->name('get-started.submit');
 
 // Demo login shortcut
 Route::get('/demo-login', [DashboardController::class, 'demoLogin'])->name('demo-login');
