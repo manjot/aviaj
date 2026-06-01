@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviaj | Corporate Portal</title>
+    <title>Corporate Travel & Expense Dashboard | Aviaj</title>
+    <meta name="description" content="Manage corporate travel bookings, expense requests, and virtual cards in Aviaj Corporate Portal.">
     
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +27,7 @@
                         <div class="flex items-center space-x-3">
                             <div class="w-8 h-8 rounded-lg bg-[#59BABA] flex items-center justify-center text-white font-black text-sm shadow-md">A</div>
                             <div>
-                                <h1 class="text-lg font-black tracking-tight text-slate-900 font-outfit uppercase">AVIAJ</h1>
+                                <div class="text-lg font-black tracking-tight text-slate-900 font-outfit uppercase">AVIAJ</div>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Approval Hub</p>
                             </div>
                         </div>
@@ -34,7 +35,7 @@
                         <!-- Role View Switcher -->
                         <form action="{{ route('dashboard.toggle-role') }}" method="POST">
                             @csrf
-                            <button type="submit" class="w-full flex items-center justify-between bg-slate-50 hover:bg-[#59BABA]/5 px-3 py-2 rounded-xl border border-slate-100 transition-all text-xs font-bold text-slate-700 shadow-sm active:scale-98">
+                            <button type="submit" id="manager-view-toggle" class="w-full flex items-center justify-between bg-slate-50 hover:bg-[#59BABA]/5 px-3 py-2 rounded-xl border border-slate-100 transition-all text-xs font-bold text-slate-700 shadow-sm active:scale-98">
                                 <span class="text-slate-400 font-medium">Mode:</span>
                                 <span class="px-2 py-0.5 rounded text-[9px] uppercase font-black tracking-wider bg-[#59BABA] text-brand-950 shadow-sm">
                                     Manager View
@@ -98,7 +99,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                     <div class="relative w-full max-w-md">
                         <svg class="w-5 h-5 absolute left-4 top-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                        <input type="text" placeholder="Search requests, travelers..." class="w-full pl-12 pr-4 py-3 rounded-2xl bg-white border border-slate-100 text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#59BABA] transition-all shadow-sm">
+                        <input type="text" id="manager-search-input" placeholder="Search requests, travelers..." class="w-full pl-12 pr-4 py-3 rounded-2xl bg-white border border-slate-100 text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#59BABA] transition-all shadow-sm">
                     </div>
                     
                     <div class="flex items-center space-x-4 text-xs font-bold text-slate-500">
@@ -120,14 +121,14 @@
                 <!-- Page Welcome Title -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                        <h2 class="text-3xl font-extrabold text-slate-900 font-outfit leading-none">Pending Approvals</h2>
+                        <h1 class="text-3xl font-extrabold text-slate-900 font-outfit leading-none">Pending Approvals</h1>
                         <p class="text-sm text-slate-400 font-semibold mt-2">Review and action outstanding travel requests.</p>
                     </div>
                     <div class="flex space-x-2">
-                        <button class="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-sm uppercase tracking-wide transition-colors">
+                        <button id="btn-bulk-action" class="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-sm uppercase tracking-wide transition-colors">
                             Bulk Action
                         </button>
-                        <button class="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-sm uppercase tracking-wide transition-colors">
+                        <button id="btn-filter" class="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-sm uppercase tracking-wide transition-colors">
                             Filter
                         </button>
                     </div>
@@ -453,7 +454,7 @@
                 <div class="flex items-center space-x-4">
                     <form action="{{ route('dashboard.toggle-role') }}" method="POST" class="mr-2">
                         @csrf
-                        <button type="submit" class="flex items-center space-x-2 bg-brand-900/90 hover:bg-brand-800 px-4 py-2.5 rounded-xl border border-brand-800 transition-all text-xs font-bold tracking-wider shadow-sm active:scale-98">
+                        <button type="submit" id="employee-view-toggle" class="flex items-center space-x-2 bg-brand-900/90 hover:bg-brand-800 px-4 py-2.5 rounded-xl border border-brand-800 transition-all text-xs font-bold tracking-wider shadow-sm active:scale-98">
                             <span class="text-brand-300 font-medium">Mode:</span>
                             <span class="px-2 py-0.5 rounded text-[10px] uppercase font-black tracking-widest bg-[#59BABA] text-brand-950 shadow-inner">
                                 Employee View
@@ -535,10 +536,10 @@
                 <div class="lg:col-span-8 space-y-8">
                     <!-- Navigation Tabs -->
                     <div class="bg-white p-2 rounded-2xl border border-brand-200/50 shadow-sm flex space-x-2">
-                        <button @click="activeTab = 'travel'" :class="activeTab === 'travel' ? 'bg-brand-950 text-white' : 'text-brand-700 hover:bg-brand-50'" class="flex-1 py-3 px-4 rounded-xl font-bold transition-all">
+                        <button @click="activeTab = 'travel'" id="tab-travel" :class="activeTab === 'travel' ? 'bg-brand-950 text-white' : 'text-brand-700 hover:bg-brand-50'" class="flex-1 py-3 px-4 rounded-xl font-bold transition-all">
                             Corporate Travel
                         </button>
-                        <button @click="activeTab = 'expenses'" :class="activeTab === 'expenses' ? 'bg-brand-950 text-white' : 'text-brand-700 hover:bg-brand-50'" class="flex-1 py-3 px-4 rounded-xl font-bold transition-all">
+                        <button @click="activeTab = 'expenses'" id="tab-expenses" :class="activeTab === 'expenses' ? 'bg-brand-950 text-white' : 'text-brand-700 hover:bg-brand-50'" class="flex-1 py-3 px-4 rounded-xl font-bold transition-all">
                             Expenses Ledger
                         </button>
                     </div>
@@ -548,13 +549,13 @@
                         
                         <!-- Quick Travel Booking Form -->
                         <div class="bg-white p-8 rounded-3xl border border-brand-200/50 shadow-sm space-y-6">
-                            <h2 class="text-xl font-extrabold text-brand-950 tracking-tight font-sans">Book New Travel</h2>
+                            <h1 class="text-xl font-extrabold text-brand-950 tracking-tight font-sans">Book New Travel</h1>
                             
                             <form action="{{ route('dashboard.book') }}" method="POST" class="grid sm:grid-cols-3 gap-6">
                                 @csrf
                                 <div>
                                     <label class="block text-xs font-bold uppercase text-brand-500 mb-2">Service Type</label>
-                                    <select name="type" class="w-full p-3 rounded-xl border border-brand-200 bg-brand-50 font-medium text-brand-900 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                    <select name="type" id="booking-type" class="w-full p-3 rounded-xl border border-brand-200 bg-brand-50 font-medium text-brand-900 focus:outline-none focus:ring-2 focus:ring-brand-500">
                                         <option value="flight">Flight Segment</option>
                                         <option value="hotel">Stay / Hotel</option>
                                         <option value="car">Car Rental (EV/SUV)</option>
@@ -562,18 +563,18 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase text-brand-500 mb-2">Destination / Vendor</label>
-                                    <input type="text" name="title" required placeholder="e.g. San Francisco (SFO)" class="w-full p-3 rounded-xl border border-brand-200 bg-brand-50 font-medium text-brand-900 placeholder:text-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                    <input type="text" name="title" id="booking-title" required placeholder="e.g. San Francisco (SFO)" class="w-full p-3 rounded-xl border border-brand-200 bg-brand-50 font-medium text-brand-900 placeholder:text-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase text-brand-500 mb-2">Estimated Cost ($)</label>
-                                    <input type="number" name="price" required min="1" placeholder="450" class="w-full p-3 rounded-xl border border-brand-200 bg-brand-50 font-medium text-brand-900 placeholder:text-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                    <input type="number" name="price" id="booking-price" required min="1" placeholder="450" class="w-full p-3 rounded-xl border border-brand-200 bg-brand-50 font-medium text-brand-900 placeholder:text-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
                                 </div>
                                 <div class="sm:col-span-2">
                                     <label class="block text-xs font-bold uppercase text-brand-500 mb-2">Start Date</label>
-                                    <input type="date" name="start_date" required class="w-full p-3 rounded-xl border border-brand-200 bg-brand-50 font-medium text-brand-900 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                    <input type="date" name="start_date" id="booking-start-date" required class="w-full p-3 rounded-xl border border-brand-200 bg-brand-50 font-medium text-brand-900 focus:outline-none focus:ring-2 focus:ring-brand-500">
                                 </div>
                                 <div class="flex items-end">
-                                    <button type="submit" class="w-full py-3 bg-brand-950 text-white font-bold rounded-xl shadow-lg shadow-brand-950/15 hover:bg-brand-900 active:scale-98 transition-all">
+                                    <button type="submit" id="booking-submit" class="w-full py-3 bg-brand-950 text-white font-bold rounded-xl shadow-lg shadow-brand-950/15 hover:bg-brand-900 active:scale-98 transition-all">
                                         Confirm Booking
                                     </button>
                                 </div>
@@ -582,7 +583,7 @@
 
                         <!-- Booked Trips List -->
                         <div class="space-y-4">
-                            <h2 class="text-xl font-extrabold text-brand-950 tracking-tight font-sans">Active Itineraries</h2>
+                            <h2 class="text-lg font-bold text-brand-950 tracking-tight font-sans">Active Itineraries</h2>
                             
                             @forelse($trips as $trip)
                             <div class="bg-white p-6 rounded-3xl border border-brand-200/50 shadow-sm flex flex-col sm:flex-row justify-between gap-6 hover:shadow-md transition-shadow">
@@ -626,7 +627,7 @@
                     <!-- Tab content: Expenses Claims Ledger -->
                     <div x-show="activeTab === 'expenses'" class="space-y-6">
                         <div class="flex justify-between items-center">
-                            <h2 class="text-xl font-extrabold text-brand-950 tracking-tight font-sans">Expense Requests</h2>
+                            <h2 class="text-lg font-bold text-brand-950 tracking-tight font-sans">Expense Requests</h2>
                             <button @click="showExpenseModal = true" class="px-5 py-2.5 bg-brand-950 text-white font-bold text-sm rounded-xl hover:bg-brand-900 active:scale-98 transition-all">
                                 Submit Expense Claim
                             </button>
@@ -682,7 +683,7 @@
                 <!-- Right Area: Virtual Cards List -->
                 <div class="lg:col-span-4 space-y-6">
                     <div class="flex justify-between items-center">
-                        <h2 class="text-xl font-extrabold text-brand-950 tracking-tight font-sans">Virtual Cards</h2>
+                        <h2 class="text-lg font-bold text-brand-950 tracking-tight font-sans">Virtual Cards</h2>
                         <button @click="showCardModal = true" class="text-xs font-bold uppercase tracking-wider text-indigo-600 hover:text-indigo-800">
                             + Issue Card
                         </button>

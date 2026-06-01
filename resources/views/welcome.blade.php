@@ -46,15 +46,15 @@
 
             <!-- Action Buttons matching screenshot exactly -->
             <div class="flex items-center space-x-3.5">
-                <a href="{{ route('get-started') }}?source=Homepage" class="hidden sm:inline-flex items-center justify-center px-4 py-2 font-bold text-white bg-[#59BABA] hover:bg-[#48A5A5] rounded-full text-xs transition-all duration-200">
+                <a href="{{ route('get-started') }}?source=Homepage" id="nav-get-started" class="hidden sm:inline-flex items-center justify-center px-4 py-2 font-bold text-white bg-[#59BABA] hover:bg-[#48A5A5] rounded-full text-xs transition-all duration-200">
                     Get started
                 </a>
-                <a href="#" class="hidden sm:inline-flex items-center justify-center px-4 py-2 font-bold border border-slate-900 rounded-full text-xs text-slate-900 hover:bg-slate-50 transition-all duration-200">
+                <a href="#" id="nav-request-demo" class="hidden sm:inline-flex items-center justify-center px-4 py-2 font-bold border border-slate-900 rounded-full text-xs text-slate-900 hover:bg-slate-50 transition-all duration-200">
                     Request a demo
                 </a>
                 
                 <!-- Log In with Flag Icon -->
-                <a href="{{ route('dashboard') }}" class="inline-flex items-center space-x-1 text-xs font-bold text-slate-800 hover:text-[#59BABA] transition-colors pl-2 border-l border-slate-200">
+                <a href="{{ route('dashboard') }}" id="nav-login" class="inline-flex items-center space-x-1 text-xs font-bold text-slate-800 hover:text-[#59BABA] transition-colors pl-2 border-l border-slate-200">
                     <span>Log In</span>
                     <!-- American Flag mini circle -->
                     <span class="w-3.5 h-3.5 rounded-full overflow-hidden flex items-center justify-center border border-slate-100 shadow-sm shrink-0">
@@ -120,7 +120,7 @@
                             <!-- Card 1 -->
                             <div @click="selectedOptions.includes(1) ? selectedOptions = selectedOptions.filter(x => x !== 1) : selectedOptions.push(1)"
                                  :class="selectedOptions.includes(1) ? 'border-[#59BABA] bg-[#F5FBFB]' : 'border-transparent bg-[#F2F4FE] hover:bg-[#EBEDFA]'"
-                                 class="relative border p-6 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[145px] text-center select-none group">
+                                 id="hero-card-travel" id="hero-card-expenses" class="relative border p-6 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[145px] text-center select-none group">
                                 
                                 <!-- Checkbox top-left -->
                                 <div class="absolute top-4 left-4 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200"

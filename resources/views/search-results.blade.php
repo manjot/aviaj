@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Flights | Aviaj Premium</title>
+    <title>Book Policy-Compliant Corporate Flights | Aviaj Travel</title>
     <meta name="description" content="Efficient, policy-compliant travel booking for the modern enterprise. Powered by Aviaj AI.">
     
     <!-- Modern Premium Typography -->
@@ -171,7 +171,7 @@
                 </div>
 
                 <!-- CTA -->
-                <button type="button" class="w-full md:w-auto self-end px-6 py-2.5 bg-[#59BABA] hover:bg-[#59BABA]/95 text-white font-bold rounded-xl shadow-md transition-all duration-150 shrink-0 text-sm flex items-center justify-center gap-2 mt-4 md:mt-0">
+                <button type="button" id="btn-search-trigger" class="w-full md:w-auto self-end px-6 py-2.5 bg-[#59BABA] hover:bg-[#59BABA]/95 text-white font-bold rounded-xl shadow-md transition-all duration-150 shrink-0 text-sm flex items-center justify-center gap-2 mt-4 md:mt-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     <span>Search</span>
                 </button>
@@ -226,7 +226,7 @@
                         <!-- Policy Compliant checkbox -->
                         <label class="flex items-center justify-between cursor-pointer group">
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" x-model="policyCompliant" class="w-4 h-4 rounded text-[#59BABA] focus:ring-[#59BABA] border-slate-300">
+                                <input type="checkbox" x-model="policyCompliant" id="filter-policy-compliant" class="w-4 h-4 rounded text-[#59BABA] focus:ring-[#59BABA] border-slate-300">
                                 <span class="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">Policy Compliant</span>
                             </div>
                             <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 tracking-wider">SMART</span>
@@ -234,13 +234,13 @@
 
                         <!-- Direct Only checkbox -->
                         <label class="flex items-center space-x-3 cursor-pointer group">
-                            <input type="checkbox" x-model="directOnly" class="w-4 h-4 rounded text-[#59BABA] focus:ring-[#59BABA] border-slate-300">
+                            <input type="checkbox" x-model="directOnly" id="filter-direct-only" class="w-4 h-4 rounded text-[#59BABA] focus:ring-[#59BABA] border-slate-300">
                             <span class="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">Direct Only</span>
                         </label>
 
                         <!-- Refundable checkbox -->
                         <label class="flex items-center space-x-3 cursor-pointer group">
-                            <input type="checkbox" x-model="refundable" class="w-4 h-4 rounded text-[#59BABA] focus:ring-[#59BABA] border-slate-300">
+                            <input type="checkbox" x-model="refundable" id="filter-refundable" class="w-4 h-4 rounded text-[#59BABA] focus:ring-[#59BABA] border-slate-300">
                             <span class="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">Refundable</span>
                         </label>
                     </div>
@@ -252,7 +252,7 @@
                     
                     <div class="space-y-2.5">
                         <!-- All Airlines button option -->
-                        <button type="button" @click="selectedAirline = 'all'"
+                        <button type="button" id="airline-all" @click="selectedAirline = 'all'"
                                 class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold flex justify-between items-center transition-all duration-150"
                                 :class="selectedAirline === 'all' ? 'bg-[#59BABA]/10 text-[#59BABA]' : 'text-slate-600 hover:bg-slate-50'">
                             <span>All Airlines</span>
@@ -260,7 +260,7 @@
                         </button>
 
                         <!-- United stack -->
-                        <button type="button" @click="selectedAirline = 'united'"
+                        <button type="button" id="airline-united" @click="selectedAirline = 'united'"
                                 class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold flex justify-between items-center transition-all duration-150"
                                 :class="selectedAirline === 'united' ? 'bg-[#59BABA]/10 text-[#59BABA]' : 'text-slate-600 hover:bg-slate-50'">
                             <span>United Airlines</span>
@@ -268,7 +268,7 @@
                         </button>
 
                         <!-- British Airways stack -->
-                        <button type="button" @click="selectedAirline = 'british'"
+                        <button type="button" id="airline-british" @click="selectedAirline = 'british'"
                                 class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold flex justify-between items-center transition-all duration-150"
                                 :class="selectedAirline === 'british' ? 'bg-[#59BABA]/10 text-[#59BABA]' : 'text-slate-600 hover:bg-slate-50'">
                             <span>British Airways</span>
@@ -276,7 +276,7 @@
                         </button>
 
                         <!-- Delta stack -->
-                        <button type="button" @click="selectedAirline = 'delta'"
+                        <button type="button" id="airline-delta" @click="selectedAirline = 'delta'"
                                 class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold flex justify-between items-center transition-all duration-150"
                                 :class="selectedAirline === 'delta' ? 'bg-[#59BABA]/10 text-[#59BABA]' : 'text-slate-600 hover:bg-slate-50'">
                             <span>Delta Air Lines</span>

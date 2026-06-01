@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Started | Aviaj</title>
-    <meta name="description" content="Get started with Aviaj travel and expense management.">
+    <title>Get Started with Aviaj | AI-Powered Business Travel & Expenses</title>
+    <meta name="description" content="Create your Aviaj account today. Automate corporate travel booking, manage corporate cards, and reconcile expenses in real-time with no platform fees.">
     
     <!-- Modern Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +27,7 @@
     <div class="min-h-[calc(100vh-32px)] grid lg:grid-cols-12 bg-white">
         
         <!-- Left Half: Registration Form -->
-        <div class="lg:col-span-6 flex flex-col justify-between p-8 sm:p-12 md:p-16 max-w-xl mx-auto w-full">
+        <main id="get-started-main" class="lg:col-span-6 flex flex-col justify-between p-8 sm:p-12 md:p-16 max-w-xl mx-auto w-full">
             <!-- Brand Logo -->
             <div class="mb-10">
                 <a href="/" class="flex items-center space-x-2">
@@ -50,14 +50,14 @@
                 <form action="{{ route('demo-login') }}" method="GET" class="space-y-4 pt-4">
                     <div class="relative">
                         <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Work Email (name@company.com)</label>
-                        <input type="email" required placeholder="name@company.com" class="w-full bg-[#FCFDFE] border border-slate-200 focus:border-[#59BABA] focus:ring-1 focus:ring-[#59BABA] pl-4 pr-4 py-3.5 rounded-lg text-sm text-[#0F172A] outline-none transition-all">
+                        <input type="email" id="email-input" required placeholder="name@company.com" class="w-full bg-[#FCFDFE] border border-slate-200 focus:border-[#59BABA] focus:ring-1 focus:ring-[#59BABA] pl-4 pr-4 py-3.5 rounded-lg text-sm text-[#0F172A] outline-none transition-all">
                     </div>
                     
                     <p class="text-[10px] text-slate-400 leading-normal">
                         By continuing, you agree to receive marketing communications. See our <a href="#" class="underline hover:text-[#59BABA]">Privacy Policy</a>
                     </p>
 
-                    <button type="submit" class="w-full inline-flex items-center justify-center py-4 font-bold text-white bg-[#59BABA] hover:bg-[#48A5A5] rounded-full shadow-lg shadow-[#59BABA]/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 text-sm tracking-wide text-center">
+                    <button type="submit" id="btn-continue-email" class="w-full inline-flex items-center justify-center py-4 font-bold text-white bg-[#59BABA] hover:bg-[#48A5A5] rounded-full shadow-lg shadow-[#59BABA]/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 text-sm tracking-wide text-center">
                         Continue with email
                     </button>
                 </form>
@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Google sign in button -->
-                <a href="{{ route('demo-login') }}" class="w-full inline-flex items-center justify-center py-3.5 px-6 font-bold text-white bg-[#0C0A21] hover:bg-[#16133B] rounded-full shadow-md hover:-translate-y-0.5 transition-all duration-200 text-xs tracking-wider">
+                <a href="{{ route('demo-login') }}" id="btn-continue-google" class="w-full inline-flex items-center justify-center py-3.5 px-6 font-bold text-white bg-[#0C0A21] hover:bg-[#16133B] rounded-full shadow-md hover:-translate-y-0.5 transition-all duration-200 text-xs tracking-wider">
                     <!-- Google minimal G logo -->
                     <svg class="w-4 h-4 mr-2.5" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -87,12 +87,12 @@
 
                 <!-- Outline Request Demo -->
                 <div class="pt-4 flex flex-col items-center space-y-4">
-                    <a href="#" class="w-full inline-flex items-center justify-center py-3.5 border border-slate-900 rounded-full font-bold text-xs text-[#0F172A] hover:bg-slate-50 transition-all duration-200 text-center">
+                    <a href="#" id="btn-request-demo" class="w-full inline-flex items-center justify-center py-3.5 border border-slate-900 rounded-full font-bold text-xs text-[#0F172A] hover:bg-slate-50 transition-all duration-200 text-center">
                         Request a demo
                     </a>
                     
                     <span class="text-xs font-semibold text-slate-500">
-                        Already have an account? <a href="{{ route('dashboard') }}" class="font-extrabold text-[#0F172A] hover:text-[#59BABA] underline underline-offset-2 transition-colors">Log in</a>
+                        Already have an account? <a href="{{ route('dashboard') }}" id="btn-login-redirect" class="font-extrabold text-[#0F172A] hover:text-[#59BABA] underline underline-offset-2 transition-colors">Log in</a>
                     </span>
                 </div>
             </div>
@@ -103,8 +103,10 @@
             </div>
         </div>
 
+        </main>
+
         <!-- Right Half: Carousel / Slides Slider -->
-        <div class="lg:col-span-6 bg-[#EEF2FF] flex flex-col justify-between p-8 sm:p-12 md:p-16 relative overflow-hidden" 
+        <aside id="get-started-aside" class="lg:col-span-6 bg-[#EEF2FF] flex flex-col justify-between p-8 sm:p-12 md:p-16 relative overflow-hidden" 
              x-data="{ 
                 slide: 1,
                 slides: [
@@ -139,7 +141,7 @@
                 <!-- Mockup graphics with prev/next navigation -->
                 <div class="flex items-center justify-between">
                     <!-- Prev Arrow -->
-                    <button @click="slide = slide === 1 ? 3 : slide - 1" class="w-10 h-10 rounded-full bg-white/70 hover:bg-white text-slate-700 shadow flex items-center justify-center transition-all">
+                    <button @click="slide = slide === 1 ? 3 : slide - 1" id="slider-prev" class="w-10 h-10 rounded-full bg-white/70 hover:bg-white text-slate-700 shadow flex items-center justify-center transition-all">
                         &larr;
                     </button>
 
@@ -165,7 +167,7 @@
                     </div>
 
                     <!-- Next Arrow -->
-                    <button @click="slide = slide === 3 ? 1 : slide + 1" class="w-10 h-10 rounded-full bg-white/70 hover:bg-white text-slate-700 shadow flex items-center justify-center transition-all">
+                    <button @click="slide = slide === 3 ? 1 : slide + 1" id="slider-next" class="w-10 h-10 rounded-full bg-white/70 hover:bg-white text-slate-700 shadow flex items-center justify-center transition-all">
                         &rarr;
                     </button>
                 </div>
@@ -196,7 +198,7 @@
                 </div>
             </div>
 
-        </div>
+        </aside>
 
     </div>
 
