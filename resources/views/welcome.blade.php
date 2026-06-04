@@ -310,7 +310,7 @@
                             Premium, high-performance iPhone and iPad apps built with Swift for the elite UAE audience.
                         </p>
                     </div>
-                    <a href="#lead-form" class="inline-flex items-center text-sm font-semibold text-[#3525CD] group-hover:translate-x-1 transition-transform mt-4">
+                    <a href="/ios-development" class="inline-flex items-center text-sm font-semibold text-[#3525CD] group-hover:translate-x-1 transition-transform mt-4">
                         Explore <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </div>
@@ -327,7 +327,7 @@
                             Scalable and robust Kotlin-based applications optimized for the diverse Android ecosystem.
                         </p>
                     </div>
-                    <a href="#lead-form" class="inline-flex items-center text-sm font-semibold text-[#3525CD] group-hover:translate-x-1 transition-transform mt-4">
+                    <a href="/android-development" class="inline-flex items-center text-sm font-semibold text-[#3525CD] group-hover:translate-x-1 transition-transform mt-4">
                         Explore <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </div>
@@ -344,7 +344,7 @@
                             Custom M-commerce solutions with local payment gateways (Telr, Checkout.com, Stripe) and Arabic support.
                         </p>
                     </div>
-                    <a href="#lead-form" class="inline-flex items-center text-sm font-semibold text-[#3525CD] group-hover:translate-x-1 transition-transform mt-4">
+                    <a href="/ecommerce-excellence" class="inline-flex items-center text-sm font-semibold text-[#3525CD] group-hover:translate-x-1 transition-transform mt-4">
                         Get Pricing <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </div>
@@ -361,7 +361,7 @@
                             Save 40% on costs with Flutter or React Native without compromising on native feel.
                         </p>
                     </div>
-                    <a href="#lead-form" class="inline-flex items-center text-sm font-semibold text-[#3525CD] group-hover:translate-x-1 transition-transform mt-4">
+                    <a href="/cross-platform" class="inline-flex items-center text-sm font-semibold text-[#3525CD] group-hover:translate-x-1 transition-transform mt-4">
                         Get Quote <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </div>
@@ -380,7 +380,7 @@
                             Integrate Generative AI, predictive analytics, and LLMs into your mobile ecosystem. Build the next generation of smart solutions for Dubai's tech hubs.
                         </p>
                     </div>
-                    <a href="#lead-form" class="inline-flex items-center text-sm font-semibold text-[#A855F7] group-hover:translate-x-1 transition-transform mt-4 relative z-10">
+                    <a href="/ai-powered-apps" class="inline-flex items-center text-sm font-semibold text-[#A855F7] group-hover:translate-x-1 transition-transform mt-4 relative z-10">
                         Learn More <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </div>

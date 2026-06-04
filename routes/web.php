@@ -8,6 +8,27 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Dedicated Service Pages
+Route::get('/ios-development', function () {
+    return view('services.ios');
+})->name('services.ios');
+
+Route::get('/android-development', function () {
+    return view('services.android');
+})->name('services.android');
+
+Route::get('/ecommerce-excellence', function () {
+    return view('services.ecommerce');
+})->name('services.ecommerce');
+
+Route::get('/cross-platform', function () {
+    return view('services.cross-platform');
+})->name('services.cross-platform');
+
+Route::get('/ai-powered-apps', function () {
+    return view('services.ai-apps');
+})->name('services.ai-apps');
+
 // Demo login shortcut
 Route::get('/demo-login', [DashboardController::class, 'demoLogin'])->name('demo-login');
 
