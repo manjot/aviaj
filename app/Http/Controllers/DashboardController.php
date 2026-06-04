@@ -322,25 +322,25 @@ class DashboardController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'company' => 'required|string|max:255',
+            'message' => 'required|string|max:2000',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:100',
             'budget' => 'required|string|max:255',
         ]);
 
-        $details = $request->only(['name', 'company', 'email', 'phone', 'budget']);
+        $details = $request->only(['name', 'message', 'email', 'phone', 'budget']);
 
         try {
             \Illuminate\Support\Facades\Mail::raw(
                 "New Lead Proposal Request Received:\n\n" .
                 "Name: {$details['name']}\n" .
-                "Company: {$details['company']}\n" .
+                "Message: {$details['message']}\n" .
                 "Email: {$details['email']}\n" .
                 "Phone: {$details['phone']}\n" .
                 "Budget: {$details['budget']}\n",
                 function ($message) use ($details) {
                     $message->to(['info@ajath.ae', 'manjot@ajath.com', 'shachisheh@gmail.com'])
-                            ->subject("New Lead Proposal: {$details['name']} ({$details['company']})")
+                            ->subject("New Lead Proposal: {$details['name']}")
                             ->from(config('mail.from.address'), config('mail.from.name'));
                 }
             );

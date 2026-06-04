@@ -202,15 +202,15 @@
                         <h3 class="text-2xl font-bold text-[#0B1C30] tracking-tight">Ready to Start?</h3>
                         <p class="text-sm text-[#464555] mt-1 mb-6">Get a detailed proposal within 24 hours.</p>
 
-                        <form class="space-y-4" x-data="{ name: '', company: '', email: '', phone: '', budget: 'AED 15,000 - 30,000', submitted: false, loading: false }" @submit.prevent="loading = true; fetch('/contact', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ name, company, email, phone, budget }) }).then(res => { loading = false; if (res.ok) { window.location.href = '/thank-you'; } else { alert('Failed to send. Please check fields or try again.'); } }).catch(err => { loading = false; alert('Network error. Please try again.'); })">
+                        <form class="space-y-4" x-data="{ name: '', message: '', email: '', phone: '', budget: 'AED 15,000 - 30,000', submitted: false, loading: false }" @submit.prevent="loading = true; fetch('/contact', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ name, message, email, phone, budget }) }).then(res => { loading = false; if (res.ok) { window.location.href = '/thank-you'; } else { alert('Failed to send. Please check fields or try again.'); } }).catch(err => { loading = false; alert('Network error. Please try again.'); })">
                             <div x-show="!submitted" class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Name</label>
                                     <input type="text" x-model="name" placeholder="Your Name" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Company</label>
-                                    <input type="text" x-model="company" placeholder="Company Name" required class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all">
+                                    <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Message</label>
+                                    <textarea x-model="message" placeholder="How can we help you?" required rows="3" class="w-full px-4 py-3 rounded-lg border border-slate-200/80 focus:border-[#3525CD] focus:ring-1 focus:ring-[#3525CD] bg-white/90 text-sm outline-none transition-all resize-none"></textarea>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-[#0B1C30] uppercase tracking-wider mb-1">Email Address</label>
