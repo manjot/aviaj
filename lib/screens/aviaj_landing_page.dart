@@ -41,6 +41,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   final GlobalKey _seasonalGuidesKey = GlobalKey();
   final GlobalKey _safetyCenterKey = GlobalKey();
   final GlobalKey _supportCenterKey = GlobalKey();
+  final GlobalKey _appOnlyKey = GlobalKey();
   final GlobalKey _pricingKey = GlobalKey();
   int _selectedHeroIndex = 0;
   int _selectedStoryIndex = 0;
@@ -308,6 +309,12 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     Container(
                       key: _supportCenterKey,
                       child: _buildSupportCenterSection(context, isDesktop),
+                    ),
+
+                    // SECTION 5K: "AVIAJ IS NOW APP-ONLY." ("GET THE APP" 2-PHONE STAGE + "WHY SWITCH TO THE AVIAJ APP?" 3 ILLUSTRATED CARDS)
+                    Container(
+                      key: _appOnlyKey,
+                      child: _buildAppOnlySwitchSection(context, isDesktop),
                     ),
 
                     // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
@@ -10249,7 +10256,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     ),
                     const SizedBox(width: 10),
                     InkWell(
-                      onTap: widget.onOpenFullMobilePreview,
+                      onTap: () => _scrollToSection(_appOnlyKey),
                       borderRadius: BorderRadius.circular(30),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -11113,6 +11120,694 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       },
     );
   }
+
+  /// SECTION 5K: "AVIAJ IS NOW APP-ONLY." Hero + "GET THE APP" 2-Phone Stage + "WHY SWITCH TO THE AVIAJ APP?" 3 Illustrated Cards
+  Widget _buildAppOnlySwitchSection(BuildContext context, bool isDesktop) {
+    final pack = widget.state.regionalPack;
+
+    final reasons = [
+      (
+        title: 'Never miss a\nconnection',
+        subtitle:
+            'Get real-time notifications so you don’t miss a message.',
+        painter: const _AppSwitchHandHeartPainter(),
+      ),
+      (
+        title: 'Call without sharing\nyour number',
+        subtitle:
+            'Use our in-app voice and video calls to help move from match to IRL, safely.',
+        painter: const _AppSwitchHandPhonePainter(),
+      ),
+      (
+        title: 'Trust your matches\nare genuine',
+        subtitle:
+            'Chat confidently with verified members using easy in-app photo and ID verification.',
+        painter: const _AppSwitchIdCardsPainter(),
+      ),
+    ];
+
+    // Left 2-Phone Mockup Stage inside "GET THE APP"
+    final twoPhoneStage = Container(
+      height: isDesktop ? 490 : 410,
+      width: double.infinity,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        color: AviajTheme.loveRed,
+        borderRadius: BorderRadius.circular(26),
+      ),
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          // 1. Left Tilted Phone ("9:41" + "Chats" + "Your matches (6)" + "Chats (Recent)")
+          Positioned(
+            left: isDesktop ? 34 : 12,
+            bottom: -24,
+            child: Transform.rotate(
+              angle: -0.055,
+              child: Container(
+                width: isDesktop ? 225 : 180,
+                height: isDesktop ? 405 : 335,
+                padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(28),
+                  ),
+                  border: Border.all(
+                    color: const Color(0xFF1E1E1E),
+                    width: 2.2,
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '9:41',
+                        style: TextStyle(
+                          color: Color(0xFF1E1E1E),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Chats',
+                        style: TextStyle(
+                          color: Color(0xFF1E1E1E),
+                          fontSize: 19,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Your matches (6)',
+                        style: TextStyle(
+                          color: Color(0xFF2B2B2B),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: AviajTheme.loveRed,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: AviajNetworkImage(
+                                    imageUrl: pack.profiles[1].imageUrl,
+                                    width: 38,
+                                    height: 38,
+                                    fallbackLabel: '12+',
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: -4,
+                                left: 8,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                    vertical: 1.5,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AviajTheme.loveRed,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Text(
+                                    '12+',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 7.5,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 8),
+                          ClipOval(
+                            child: AviajNetworkImage(
+                              imageUrl: pack.profiles[2].imageUrl,
+                              width: 40,
+                              height: 40,
+                              fallbackLabel: 'M',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Chats (Recent)',
+                        style: TextStyle(
+                          color: Color(0xFF2B2B2B),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      for (final chat in [
+                        (
+                          name: 'James',
+                          sub: 'Your move',
+                          url: pack.profiles[1].imageUrl,
+                        ),
+                        (
+                          name: 'Nick',
+                          sub: 'It’s a match!',
+                          url: pack.profiles[3].imageUrl,
+                        ),
+                        (
+                          name: 'Kevin',
+                          sub: 'Hey there!',
+                          url: pack.profiles[4].imageUrl,
+                        ),
+                      ]) ...[
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Row(
+                            children: [
+                              ClipOval(
+                                child: AviajNetworkImage(
+                                  imageUrl: chat.url,
+                                  width: 34,
+                                  height: 34,
+                                  fallbackLabel: chat.name[0],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      chat.name,
+                                      style: const TextStyle(
+                                        color: Color(0xFF1E1E1E),
+                                        fontSize: 10.5,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    Text(
+                                      chat.sub,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Color(0xFF6E6E6E),
+                                        fontSize: 8.8,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 2. Right Upright Foreground Phone ("Aviaj" + "Tiana, 30" Portrait Card)
+          Positioned(
+            right: isDesktop ? 34 : 12,
+            bottom: -16,
+            child: Container(
+              width: isDesktop ? 280 : 210,
+              height: isDesktop ? 440 : 355,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(30),
+                ),
+                border: Border.all(
+                  color: const Color(0xFF1E1E1E),
+                  width: 2.4,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.16),
+                    blurRadius: 20,
+                    offset: const Offset(-6, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Aviaj',
+                          style: TextStyle(
+                            color: Color(0xFF1E1E1E),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -0.7,
+                          ),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          Icons.tune_rounded,
+                          size: 18,
+                          color: Colors.grey.shade800,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(18),
+                        ),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            AviajNetworkImage(
+                              imageUrl: pack.profiles[0].imageUrl,
+                              width: double.infinity,
+                              height: double.infinity,
+                              fallbackLabel: 'Tiana, 30',
+                            ),
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.45),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.ios_share_rounded,
+                                  color: Colors.white,
+                                  size: 13,
+                                ),
+                              ),
+                            ),
+                            const Positioned(
+                              left: 14,
+                              bottom: 18,
+                              child: Text(
+                                'Tiana, 30',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    // Right "GET THE APP" Copy + QR Code Column
+    final getTheAppRightColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'GET THE APP',
+          style: TextStyle(
+            color: const Color(0xFF242424),
+            fontSize: isDesktop ? 62 : 38,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -1.6,
+            height: 1.0,
+          ),
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'Download Aviaj from the App Store or Google Play and sign in with the same account you used on Aviaj web.',
+          style: TextStyle(
+            color: Color(0xFF242424),
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            height: 1.45,
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Scan the QR code below with your phone or tablet to get started.',
+          style: TextStyle(
+            color: Color(0xFF242424),
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            height: 1.45,
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Your matches and conversations are waiting for you on the app. 💛',
+          style: TextStyle(
+            color: Color(0xFF242424),
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            height: 1.45,
+          ),
+        ),
+        const SizedBox(height: 28),
+        InkWell(
+          onTap: () => showMobileAppDownloadModal(context),
+          borderRadius: BorderRadius.circular(16),
+          child: SizedBox(
+            width: 176,
+            height: 176,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                const Icon(
+                  Icons.qr_code_2_rounded,
+                  size: 176,
+                  color: Color(0xFF1E1E1E),
+                ),
+                Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.favorite_rounded,
+                    color: AviajTheme.loveRed,
+                    size: 22,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
+    return Column(
+      children: [
+        // 1. Top Soft Cream/Blush Banner ("AVIAJ IS NOW APP-ONLY.")
+        Container(
+          width: double.infinity,
+          color: const Color(0xFFFFF5CC),
+          padding: EdgeInsets.fromLTRB(
+            isDesktop ? 64 : 20,
+            24,
+            isDesktop ? 64 : 20,
+            isDesktop ? 88 : 56,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              child: Column(
+                children: [
+                  // Sub-navbar row
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () => _scrollToSection(_modesKey),
+                        child: const Text(
+                          'Aviaj',
+                          style: TextStyle(
+                            color: Color(0xFF242424),
+                            fontSize: 32,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -1.2,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      if (isDesktop)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _NavbarLink(
+                                label: 'Date',
+                                onTap: () => _scrollToSection(_dateSectionKey),
+                              ),
+                              _NavbarLink(
+                                label: 'AFF',
+                                onTap: () => _scrollToSection(_affKey),
+                              ),
+                              _NavbarLink(
+                                label: 'Stories',
+                                onTap: () => _scrollToSection(_storiesKey),
+                              ),
+                              _NavbarLink(
+                                label: 'Safety',
+                                onTap: () => _scrollToSection(_safetyCenterKey),
+                              ),
+                              _NavbarLink(
+                                label: 'Support',
+                                onTap: () =>
+                                    _scrollToSection(_supportCenterKey),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const Spacer(),
+                      _buildRegionSelectorPill(
+                        isDarkPill: false,
+                        showFullLanguageLabel: false,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: isDesktop ? 68 : 40),
+                  Text(
+                    'AVIAJ IS NOW APP-ONLY.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: const Color(0xFF242424),
+                      fontSize: isDesktop ? 72 : 38,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1.8,
+                      height: 1.02,
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  const Text(
+                    'So we can keep bringing you the best experience and safety features, Aviaj is now app-only.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF242424),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  InkWell(
+                    onTap: () => _openSafetyFeatureModal(
+                      context,
+                      title: 'Why Aviaj is Now App-Only',
+                      subtitle:
+                          'Designed to bring you our most advanced safety tools, real-time notifications, and verified connections.',
+                      detailBody:
+                          'By focusing exclusively on the Aviaj iOS and Android apps, every member benefits from real-time push notifications, native HD voice & video calls, biometric Photo & ID Verification, and Deception Detector™ protection. Sign in on the mobile app with your existing account—all your matches and conversations are waiting for you.',
+                    ),
+                    child: const Text(
+                      'Learn more',
+                      style: TextStyle(
+                        color: Color(0xFF242424),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // 2. "GET THE APP" 2-Column Split Section (2-Phone Mockup Stage Left + QR Code Right)
+        Container(
+          width: double.infinity,
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 64 : 20,
+            vertical: isDesktop ? 76 : 48,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1140),
+              child: isDesktop
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(flex: 11, child: twoPhoneStage),
+                        const SizedBox(width: 64),
+                        Expanded(flex: 10, child: getTheAppRightColumn),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        twoPhoneStage,
+                        const SizedBox(height: 36),
+                        getTheAppRightColumn,
+                      ],
+                    ),
+            ),
+          ),
+        ),
+
+        // 3. "WHY SWITCH TO THE AVIAJ APP?" Full-Bleed Brand Section with 3 Hand-Drawn Illustrated Cards
+        Container(
+          width: double.infinity,
+          color: AviajTheme.loveRed,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 64 : 20,
+            vertical: isDesktop ? 88 : 56,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1140),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'WHY SWITCH TO THE AVIAJ APP?',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: isDesktop ? 64 : 36,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1.6,
+                      height: 1.02,
+                    ),
+                  ),
+                  const SizedBox(height: 44),
+                  if (isDesktop)
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (int i = 0; i < reasons.length; i++) ...[
+                            if (i > 0) const SizedBox(width: 24),
+                            Expanded(
+                              child: _buildWhySwitchReasonCard(
+                                title: reasons[i].title,
+                                subtitle: reasons[i].subtitle,
+                                painter: reasons[i].painter,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    )
+                  else
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (int i = 0; i < reasons.length; i++) ...[
+                          if (i > 0) const SizedBox(height: 20),
+                          _buildWhySwitchReasonCard(
+                            title: reasons[i].title,
+                            subtitle: reasons[i].subtitle,
+                            painter: reasons[i].painter,
+                          ),
+                        ],
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWhySwitchReasonCard({
+    required String title,
+    required String subtitle,
+    required CustomPainter painter,
+  }) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: 235,
+              color: const Color(0xFFFFF5CC),
+              alignment: Alignment.center,
+              child: CustomPaint(
+                size: const Size(240, 165),
+                painter: painter,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(28),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Color(0xFF1E1E1E),
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.7,
+                      height: 1.15,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: Color(0xFF2B2B2B),
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w500,
+                      height: 1.46,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _NavbarLink extends StatelessWidget {
@@ -11604,6 +12299,187 @@ class _SafetyStarBadgePainter extends CustomPainter {
     }
     path.close();
     canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+/// Custom line-art illustration: Two sketched hands forming a heart in the center
+class _AppSwitchHandHeartPainter extends CustomPainter {
+  const _AppSwitchHandHeartPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final strokePaint = Paint()
+      ..color = const Color(0xFF1E1E1E)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final heartFillPaint = Paint()
+      ..color = const Color(0xFFFFC629)
+      ..style = PaintingStyle.fill;
+
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+
+    // Center heart formed by the two hands
+    final heartPath = Path()
+      ..moveTo(cx, cy + 28)
+      ..cubicTo(cx - 42, cy + 4, cx - 44, cy - 30, cx - 18, cy - 30)
+      ..cubicTo(cx - 6, cy - 30, cx, cy - 18, cx, cy - 14)
+      ..cubicTo(cx, cy - 18, cx + 6, cy - 30, cx + 18, cy - 30)
+      ..cubicTo(cx + 44, cy - 30, cx + 42, cy + 4, cx, cy + 28)
+      ..close();
+    canvas.drawPath(heartPath, heartFillPaint);
+    canvas.drawPath(heartPath, strokePaint);
+
+    // Left hand outer contour & fingers
+    final leftHand = Path()
+      ..moveTo(14, cy + 32)
+      ..quadraticBezierTo(44, cy + 4, 62, cy - 26)
+      ..quadraticBezierTo(78, cy - 48, cx - 4, cy - 22)
+      ..moveTo(34, cy + 46)
+      ..quadraticBezierTo(68, cy + 32, cx - 2, cy + 28);
+    canvas.drawPath(leftHand, strokePaint);
+
+    // Right hand outer contour & fingers
+    final rightHand = Path()
+      ..moveTo(size.width - 14, cy + 32)
+      ..quadraticBezierTo(size.width - 44, cy + 4, size.width - 62, cy - 26)
+      ..quadraticBezierTo(size.width - 78, cy - 48, cx + 4, cy - 22)
+      ..moveTo(size.width - 34, cy + 46)
+      ..quadraticBezierTo(size.width - 68, cy + 32, cx + 2, cy + 28);
+    canvas.drawPath(rightHand, strokePaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+/// Custom line-art illustration: Hand holding an upright smartphone
+class _AppSwitchHandPhonePainter extends CustomPainter {
+  const _AppSwitchHandPhonePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final strokePaint = Paint()
+      ..color = const Color(0xFF1E1E1E)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final darkFill = Paint()
+      ..color = const Color(0xFF242424)
+      ..style = PaintingStyle.fill;
+
+    final screenFill = Paint()
+      ..color = const Color(0xFFFFC629)
+      ..style = PaintingStyle.fill;
+
+    final cx = size.width / 2 + 6;
+    final phoneRect = RRect.fromRectAndRadius(
+      Rect.fromCenter(
+        center: Offset(cx, size.height * 0.44),
+        width: 72,
+        height: 124,
+      ),
+      const Radius.circular(8),
+    );
+    canvas.drawRRect(phoneRect, darkFill);
+
+    // Inner yellow screen
+    final screenRect = Rect.fromCenter(
+      center: Offset(cx, size.height * 0.39),
+      width: 66,
+      height: 94,
+    );
+    canvas.drawRect(screenRect, screenFill);
+    canvas.drawRRect(phoneRect, strokePaint);
+
+    // Sketched thumb & hand wrapping from bottom-left
+    final thumbFill = Paint()
+      ..color = const Color(0xFFFFF5CC)
+      ..style = PaintingStyle.fill;
+    final thumbPath = Path()
+      ..moveTo(cx - 56, size.height - 6)
+      ..quadraticBezierTo(cx - 52, size.height * 0.56, cx - 36, size.height * 0.50)
+      ..quadraticBezierTo(cx - 10, size.height * 0.62, cx - 2, size.height * 0.68)
+      ..quadraticBezierTo(cx + 4, size.height * 0.75, cx - 14, size.height * 0.78)
+      ..quadraticBezierTo(cx - 28, size.height * 0.84, cx - 22, size.height - 4);
+    canvas.drawPath(thumbPath, thumbFill);
+    canvas.drawPath(thumbPath, strokePaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+/// Custom line-art illustration: Two overlapping tilted ID verification cards
+class _AppSwitchIdCardsPainter extends CustomPainter {
+  const _AppSwitchIdCardsPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final strokePaint = Paint()
+      ..color = const Color(0xFF1E1E1E)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.9
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final whiteFill = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    final accentFill = Paint()
+      ..color = const Color(0xFFFFC629)
+      ..style = PaintingStyle.fill;
+
+    // 1. Left tilted ID card
+    canvas.save();
+    canvas.translate(size.width * 0.36, size.height * 0.42);
+    canvas.rotate(0.11);
+    final card1 = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: Offset.zero, width: 106, height: 70),
+      const Radius.circular(6),
+    );
+    canvas.drawRRect(card1, whiteFill);
+    canvas.drawRRect(card1, strokePaint);
+    // Top yellow header strip
+    canvas.drawRect(const Rect.fromLTWH(-52, -34, 104, 8), accentFill);
+    // Left yellow photo box
+    canvas.drawRect(const Rect.fromLTWH(-44, -18, 30, 38), accentFill);
+    // Right text lines
+    canvas.drawLine(const Offset(-6, -12), const Offset(16, -12), strokePaint);
+    canvas.drawLine(const Offset(-6, -3), const Offset(28, -3), strokePaint);
+    canvas.drawLine(const Offset(-6, 6), const Offset(12, 6), strokePaint);
+    canvas.restore();
+
+    // 2. Right tilted overlapping ID card
+    canvas.save();
+    canvas.translate(size.width * 0.64, size.height * 0.58);
+    canvas.rotate(-0.14);
+    final card2 = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: Offset.zero, width: 106, height: 70),
+      const Radius.circular(6),
+    );
+    canvas.drawRRect(card2, whiteFill);
+    canvas.drawRRect(card2, strokePaint);
+    // Top yellow header strip
+    canvas.drawRect(const Rect.fromLTWH(-52, -34, 104, 8), accentFill);
+    // Barcode box
+    canvas.drawRect(const Rect.fromLTWH(-34, -18, 68, 12), accentFill);
+    for (double x = -28; x <= 28; x += 6) {
+      canvas.drawLine(Offset(x, -15), Offset(x, -9), strokePaint);
+    }
+    // Bottom lines
+    canvas.drawLine(const Offset(-34, 4), const Offset(22, 4), strokePaint);
+    canvas.drawLine(const Offset(-34, 14), const Offset(8, 14), strokePaint);
+    canvas.restore();
   }
 
   @override
