@@ -31,6 +31,7 @@ class AviajLandingPage extends StatefulWidget {
 class _AviajLandingPageState extends State<AviajLandingPage>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _safetyPartnersScrollController = ScrollController();
   final GlobalKey _modesKey = GlobalKey();
   final GlobalKey _dateSectionKey = GlobalKey();
   final GlobalKey _affKey = GlobalKey();
@@ -212,6 +213,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     _bannerIntroController.dispose();
     _profileSliderController.dispose();
     _scrollController.dispose();
+    _safetyPartnersScrollController.dispose();
     super.dispose();
   }
 
@@ -8186,20 +8188,20 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             'Catch a vibe check from the comfort of home using built-in HD voice and video calls inside Aviaj—no phone number, social handle, or personal contact details required.',
       ),
       (
-        title: 'Safe Date Planning & Check-Ins',
+        title: 'Share Date',
         subtitle:
-            'Share your live date itinerary and check-in times with trusted friends.',
+            'Easily share your date details with a trusted friend or family member, right from the app.',
         graphic: _buildSafeDateChatGraphic(pack),
         detailBody:
-            'Planning a coffee date or weekend trek? Share who you’re meeting, where you’re going, and when you expect to check in directly with trusted contacts.',
+            'Going on a date? Share Date lets you send who you’re meeting, where you’re going, and when you’re meeting directly to a trusted friend or family member in seconds.',
       ),
       (
-        title: 'Unmatch, Block, and Report',
+        title: 'Block, Report and Unmatch',
         subtitle:
-            'You’re always in control—unmatch, block, or report anyone confidentially.',
+            'Simple tools to remove or report anyone who makes you uncomfortable.',
         graphic: _buildBlockAndReportGraphic(),
         detailBody:
-            'If someone ever makes you feel uncomfortable, you can unmatch, pre-emptively block contacts, or submit a confidential report to our 24/7 Safety & Trust team.',
+            'If someone ever makes you feel uncomfortable, you can unmatch, block, or confidentially report them in one tap—they won’t be notified and won’t see your profile.',
       ),
     ];
 
@@ -8270,7 +8272,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         ),
 
-        // 2. "Safety features" Heading + 2-Column Large Illustrated Safety Cards Grid (8 Cards)
+        // 2. "Safety features" Heading + 8 Illustrated Safety Cards + "Learn more" Safety Handbook + "Safety alert" / "Support and resources" + "Safety partnerships"
         Container(
           width: double.infinity,
           color: Colors.white,
@@ -8282,6 +8284,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1200),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
                     'Safety features',
@@ -8322,6 +8325,18 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       );
                     }).toList(),
                   ),
+
+                  const SizedBox(height: 36),
+                  // 3. "Learn more" Safety Handbook Split Card ("View our Safety Handbook" + Outdoor Couple Photo)
+                  _buildSafetyHandbookBanner(context, isDesktop),
+
+                  const SizedBox(height: 26),
+                  // 4. 2-Column Grey Callout Cards ("Safety alert" & "Support and resources")
+                  _buildSafetyAlertAndResourcesRow(context, isDesktop),
+
+                  const SizedBox(height: 76),
+                  // 5. "Safety partnerships" Header + "Scroll to explore →" + 4-Card Carousel
+                  _buildSafetyPartnershipsSection(context, isDesktop),
                 ],
               ),
             ),
@@ -9126,7 +9141,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     );
   }
 
-  /// Card 7 Mockup: Safe Date Planning & Check-Ins ("Shall we go on a coffee date?" / "Yes, that sounds lovely")
+  /// Card 7 Mockup: Share Date ("Shall we go on a coffee date?" / "Yes, that sounds lovely" + "Going on a date with Matt?" card)
   Widget _buildSafeDateChatGraphic(AviajRegionalContentPack pack) {
     return Container(
       color: Colors.white,
@@ -9134,58 +9149,64 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         alignment: Alignment.center,
         children: [
           Positioned(
-            left: 56,
-            bottom: 18,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: AviajNetworkImage(
-                imageUrl: pack.profiles[2].imageUrl,
-                width: 165,
-                height: 205,
-                fallbackLabel: 'Coffee Date',
+            left: 26,
+            bottom: 28,
+            child: Transform.rotate(
+              angle: -0.04,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: AviajNetworkImage(
+                  imageUrl: pack.profiles[2].imageUrl,
+                  width: 148,
+                  height: 195,
+                  fallbackLabel: 'Coffee Date',
+                ),
               ),
             ),
           ),
           Positioned(
-            left: 195,
-            bottom: 10,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: AviajNetworkImage(
-                imageUrl: pack.profiles[3].imageUrl,
-                width: 165,
-                height: 185,
-                fallbackLabel: 'Coffee Date',
+            left: 148,
+            bottom: 14,
+            child: Transform.rotate(
+              angle: 0.025,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: AviajNetworkImage(
+                  imageUrl: pack.profiles[3].imageUrl,
+                  width: 148,
+                  height: 185,
+                  fallbackLabel: 'Coffee Date',
+                ),
               ),
             ),
           ),
           Positioned(
-            left: 112,
-            top: 42,
+            left: 98,
+            top: 32,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: AviajTheme.loveRed,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(14),
               ),
               child: const Text(
                 'Shall we go on a coffee date?',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontSize: 10.5,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
           ),
           Positioned(
-            left: 136,
-            top: 88,
+            left: 122,
+            top: 68,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.14),
@@ -9198,9 +9219,89 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                 'Yes, that sounds lovely',
                 style: TextStyle(
                   color: Color(0xFF1E1E1E),
-                  fontSize: 12,
+                  fontSize: 10.5,
                   fontWeight: FontWeight.w700,
                 ),
+              ),
+            ),
+          ),
+          // Overlapping "Going on a date with Matt?" Share Date card on the right
+          Positioned(
+            right: 22,
+            bottom: 24,
+            child: Container(
+              width: 232,
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: AviajTheme.loveRed,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.18),
+                    blurRadius: 18,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Going on a date with Matt?',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'You can share the date details to let a friend know who you’re meeting, where and when.',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 9.2,
+                      fontWeight: FontWeight.w500,
+                      height: 1.32,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 7),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF242424),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      'Try Share Date',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 6.5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white, width: 1.1),
+                    ),
+                    child: const Text(
+                      'Not now',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -9209,15 +9310,15 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     );
   }
 
-  /// Card 8 Mockup: Unmatch, Block, and Report (Phone `9:41` status bar + safety warning shield)
+  /// Card 8 Mockup: Block, Report and Unmatch (Phone `9:41` status bar + 3 action circles ✕ / ★ / ✓ + "Block and Report" + "Recommend to a friend")
   Widget _buildBlockAndReportGraphic() {
     return Container(
       color: const Color(0xFFE9E9E9),
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Container(
-          width: 220,
-          height: 245,
+          width: 245,
+          height: 255,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: const BorderRadius.vertical(
@@ -9225,7 +9326,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             ),
             border: Border.all(color: const Color(0xFF1E1E1E), width: 2),
           ),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
           child: Column(
             children: [
               const Row(
@@ -9245,43 +9346,604 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                   Icon(Icons.battery_full_rounded, size: 13),
                 ],
               ),
-              const SizedBox(height: 16),
-              Container(
-                width: 52,
-                height: 52,
-                decoration: const BoxDecoration(
-                  color: AviajTheme.loveRed,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: const CustomPaint(
-                  size: Size(26, 26),
-                  painter: _SafetyWarningTrianglePainter(),
+              const SizedBox(height: 10),
+              // 3 circular action icons arranged in an arc (✕, ★, ✓)
+              SizedBox(
+                height: 92,
+                width: double.infinity,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      top: 0,
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          color: AviajTheme.loveRed,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: const CustomPaint(
+                          size: Size(24, 24),
+                          painter: _SafetyStarBadgePainter(),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 16,
+                      bottom: 4,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                          color: AviajTheme.loveRed,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.close_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 16,
+                      bottom: 4,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                          color: AviajTheme.loveRed,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               const Text(
-                'Block & Report',
+                'Block and Report',
                 style: TextStyle(
                   color: Color(0xFF1E1E1E),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 6),
-              const Text(
-                'They won’t be notified and won’t be able to see your profile.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF5A5A5A),
-                  fontSize: 10.5,
-                  height: 1.35,
+              const Spacer(),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 8.5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(
+                    color: const Color(0xFFBDBDBD),
+                    width: 1.1,
+                  ),
+                ),
+                child: const Text(
+                  'Recommend to a friend',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF1E1E1E),
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  /// "Learn more" — Safety Handbook Split Banner ("View our Safety Handbook" + Outdoor Couple Photo)
+  Widget _buildSafetyHandbookBanner(BuildContext context, bool isDesktop) {
+    final textColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          'Learn more',
+          style: TextStyle(
+            color: const Color(0xFF1E1E1E),
+            fontSize: isDesktop ? 56 : 36,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -1.6,
+            height: 1.05,
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Our safety handbook provides clear guidance, tools, and resources—all in one place to support your safety.',
+          style: TextStyle(
+            color: Color(0xFF2B2B2B),
+            fontSize: 16.5,
+            fontWeight: FontWeight.w500,
+            height: 1.48,
+          ),
+        ),
+        const SizedBox(height: 28),
+        InkWell(
+          onTap: () => _openSafetyFeatureModal(
+            context,
+            title: 'Aviaj Safety Handbook',
+            subtitle:
+                'Clear guidance, tools, and resources—all in one place to support your safety before, during, and after every connection.',
+            detailBody:
+                '1. Keep conversations on Aviaj while getting to know someone.\n2. Use Photo Verification, ID Verification, and In-app Video Calls before meeting IRL.\n3. Always meet in a public place and use Share Date to send your live itinerary to a trusted friend or family member.\n4. Trust your instincts—you can Unmatch, Block, and Report anyone at any time.',
+          ),
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 15),
+            decoration: BoxDecoration(
+              color: const Color(0xFF242424),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: const Text(
+              'View our Safety Handbook',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.5,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+
+    final imageWidget = ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: AviajNetworkImage(
+        imageUrl:
+            'https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&fit=crop&w=1000&q=85',
+        width: double.infinity,
+        height: isDesktop ? 480 : 300,
+        fallbackLabel: 'Aviaj Safety Handbook',
+      ),
+    );
+
+    return Container(
+      padding: EdgeInsets.all(isDesktop ? 40 : 24),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3F3F3),
+        borderRadius: BorderRadius.circular(28),
+      ),
+      child: isDesktop
+          ? SizedBox(
+              height: 480,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    flex: 11,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 40,
+                        bottom: 24,
+                      ),
+                      child: textColumn,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 10,
+                    child: imageWidget,
+                  ),
+                ],
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                imageWidget,
+                const SizedBox(height: 24),
+                textColumn,
+              ],
+            ),
+    );
+  }
+
+  /// 2-Column Grey Callout Cards ("Safety alert" & "Support and resources")
+  Widget _buildSafetyAlertAndResourcesRow(
+    BuildContext context,
+    bool isDesktop,
+  ) {
+    final safetyAlertCard = Container(
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3F3F3),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Safety alert',
+            style: TextStyle(
+              color: Color(0xFF1E1E1E),
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.7,
+            ),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Aviaj does not offer emergency response services. If you or someone you know is in immediate danger, please call your local emergency number.',
+            style: TextStyle(
+              color: Color(0xFF2B2B2B),
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    final supportResourcesCard = InkWell(
+      onTap: () => _openSafetyFeatureModal(
+        context,
+        title: 'Aviaj Help Center & Safety Support',
+        subtitle:
+            '24/7 guidance on using Aviaj, staying safe online, and troubleshooting your account.',
+        detailBody:
+            'Need assistance with Photo Verification, ID Verification, reporting a profile, or managing your privacy preferences? Our global Safety & Support specialists review reports 24/7 and provide dedicated resources for every region.',
+      ),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF3F3F3),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Support and resources',
+              style: TextStyle(
+                color: Color(0xFF1E1E1E),
+                fontSize: 28,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.7,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text.rich(
+              TextSpan(
+                style: const TextStyle(
+                  color: Color(0xFF2B2B2B),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  height: 1.5,
+                ),
+                children: [
+                  const TextSpan(
+                    text:
+                        'For more information on using Aviaj, staying safe online, or troubleshooting, please visit our ',
+                  ),
+                  TextSpan(
+                    text: 'Help Center',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                  const TextSpan(text: '.'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (isDesktop) {
+      return IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: safetyAlertCard),
+            const SizedBox(width: 26),
+            Expanded(child: supportResourcesCard),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        safetyAlertCard,
+        const SizedBox(height: 18),
+        supportResourcesCard,
+      ],
+    );
+  }
+
+  /// "Safety partnerships" Section Header + "Scroll to explore →" + 4-Card Horizontal Carousel
+  Widget _buildSafetyPartnershipsSection(BuildContext context, bool isDesktop) {
+    final partners = [
+      (
+        title: 'Bloom powered by Chayn',
+        description:
+            'In 2024 we announced Bloom, an industry-first partnership with Chayn to provide free online trauma support to members of our global community who experience sexual assault or relationship abuse.',
+        logoWidget: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 9,
+              height: 9,
+              decoration: const BoxDecoration(
+                color: Color(0xFF1E1E1E),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 5),
+            const Text(
+              'bloom',
+              style: TextStyle(
+                color: Color(0xFF1E1E1E),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.4,
+              ),
+            ),
+          ],
+        ),
+      ),
+      (
+        title: 'National Domestic Violence Hotline',
+        description:
+            'Since 2020, Aviaj has partnered with the National Domestic Violence Hotline, an Austin, Texas-based organization dedicated to preventing relationship abuse and supporting those affected by it.',
+        logoWidget: Container(
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xFF1E1E1E), width: 1.2),
+          ),
+          alignment: Alignment.centerLeft,
+          child: const Text(
+            'NATIONAL\nDOMESTIC\nVIOLENCE\nHOTLINE',
+            style: TextStyle(
+              color: Color(0xFF1E1E1E),
+              fontSize: 7.2,
+              fontWeight: FontWeight.w900,
+              height: 1.12,
+            ),
+          ),
+        ),
+      ),
+      (
+        title: 'Refuge UK',
+        description:
+            'United by our shared vision to tackle technology-facilitated abuse and gender-based violence, Aviaj has partnered with the UK’s largest domestic abuse organization, Refuge, since 2023.',
+        logoWidget: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Refuge',
+                style: TextStyle(
+                  color: Color(0xFF1E1E1E),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
+                  height: 1.0,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Container(
+                width: 44,
+                height: 1.5,
+                color: const Color(0xFF1E1E1E),
+              ),
+              const SizedBox(height: 3),
+              const Text(
+                'For women and children\nagainst domestic violence',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF1E1E1E),
+                  fontSize: 5.5,
+                  fontWeight: FontWeight.w700,
+                  height: 1.15,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      (
+        title: 'Survivor Hub',
+        description:
+            'The Survivor Hub is an Australian survivor-led initiative which harnesses collective knowledge and lived experience to support, inform and empower people impacted by sexual assault.',
+        logoWidget: Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: const Color(0xFF1E1E1E), width: 1.2),
+          ),
+          alignment: Alignment.center,
+          child: const Text(
+            'THE\nSURVIVOR\nHUB',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xFF1E1E1E),
+              fontSize: 6.8,
+              fontWeight: FontWeight.w800,
+              height: 1.12,
+            ),
+          ),
+        ),
+      ),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                'Safety partnerships',
+                style: TextStyle(
+                  color: const Color(0xFF1E1E1E),
+                  fontSize: isDesktop ? 56 : 34,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -1.6,
+                  height: 1.05,
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                if (!_safetyPartnersScrollController.hasClients) return;
+                final maxScroll =
+                    _safetyPartnersScrollController.position.maxScrollExtent;
+                final current = _safetyPartnersScrollController.offset;
+                final target = (current + 340) > maxScroll ? 0.0 : current + 340;
+                _safetyPartnersScrollController.animateTo(
+                  target,
+                  duration: const Duration(milliseconds: 420),
+                  curve: Curves.easeOutCubic,
+                );
+              },
+              borderRadius: BorderRadius.circular(30),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Scroll to explore',
+                      style: TextStyle(
+                        color: Color(0xFF1E1E1E),
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF242424),
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.arrow_forward_rounded,
+                        color: Colors.white,
+                        size: 19,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 36),
+        SingleChildScrollView(
+          controller: _safetyPartnersScrollController,
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (int i = 0; i < partners.length; i++) ...[
+                if (i > 0) const SizedBox(width: 24),
+                InkWell(
+                  onTap: () => _openSafetyFeatureModal(
+                    context,
+                    title: partners[i].title,
+                    subtitle: 'Official Aviaj Global Safety Partner',
+                    detailBody: partners[i].description,
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    width: 316,
+                    height: 440,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: AviajTheme.loveRed,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 82,
+                          height: 82,
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          alignment: Alignment.center,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: partners[i].logoWidget,
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        Text(
+                          partners[i].title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.6,
+                            height: 1.15,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        Expanded(
+                          child: Text(
+                            partners[i].description,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.2,
+                              fontWeight: FontWeight.w500,
+                              height: 1.44,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Learn More',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -9859,36 +10521,33 @@ class _SafetyCallBarIconsPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class _SafetyWarningTrianglePainter extends CustomPainter {
-  const _SafetyWarningTrianglePainter();
+class _SafetyStarBadgePainter extends CustomPainter {
+  const _SafetyStarBadgePainter();
 
   @override
   void paint(Canvas canvas, Size size) {
-    final strokePaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.2
-      ..strokeJoin = StrokeJoin.round
-      ..strokeCap = StrokeCap.round;
-
-    final cx = size.width / 2;
-    final path = Path()
-      ..moveTo(cx, 3)
-      ..lineTo(size.width - 2, size.height - 3)
-      ..lineTo(2, size.height - 3)
-      ..close();
-    canvas.drawPath(path, strokePaint);
-
-    // Exclamation mark inside triangle
-    canvas.drawLine(
-      Offset(cx, 10),
-      Offset(cx, 16.5),
-      strokePaint,
-    );
-    final dotPaint = Paint()
+    final paint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(cx, 20), 1.4, dotPaint);
+
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final outerR = size.width * 0.45;
+    final innerR = size.width * 0.21;
+    final path = Path();
+    for (int i = 0; i < 10; i++) {
+      final angle = -math.pi / 2 + i * (math.pi / 5);
+      final r = i.isEven ? outerR : innerR;
+      final x = cx + math.cos(angle) * r;
+      final y = cy + math.sin(angle) * r;
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    }
+    path.close();
+    canvas.drawPath(path, paint);
   }
 
   @override
