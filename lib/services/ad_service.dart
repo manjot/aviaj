@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'ad_mobile_bridge_stub.dart'
     if (dart.library.io) 'ad_mobile_bridge_io.dart';
+import 'stripe_service.dart';
 
 enum AdNetworkProvider {
   googleAdMob,
@@ -589,6 +590,25 @@ class AviajAdBannerWidget extends StatelessWidget {
                     icon: const Icon(Icons.play_circle_fill_rounded, size: 16),
                     label: const Text(
                       'Watch Rewarded Ad (+3)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  FilledButton.icon(
+                    onPressed: () => showStripeStorefrontModal(context),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFF635BFF),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
+                    ),
+                    icon: const Icon(Icons.credit_card_rounded, size: 16),
+                    label: const Text(
+                      'Go Gold • Stripe (\$14.99)',
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 12,

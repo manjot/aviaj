@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../services/ad_service.dart';
+import '../services/stripe_service.dart';
 import '../state/aviaj_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -546,18 +547,46 @@ class _TripCard extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               FilledButton.icon(
-                onPressed: () => state.toggleJoinTrip(trip.id),
+                onPressed: () {
+                  if (joined) {
+                    state.toggleJoinTrip(trip.id);
+                  } else {
+                    showStripeStorefrontModal(
+                      context,
+                      customTripPlan: StripeProductPlan(
+                        id: 'trip_deposit_${trip.id}',
+                        name:
+                            'Trip Deposit: ${trip.destination} (${trip.durationDays} Days)',
+                        subtitle:
+                            'Refundable Escrow Spot • Est. Total Split \$${trip.estimatedCostUsd}',
+                        amountUsd: 199.00,
+                        interval: 'trip_deposit',
+                        badgeColor: AviajTheme.loveCrimson,
+                        perks: [
+                          'Guaranteed Spot on ${trip.title}',
+                          '100% Refundable up to 14 Days Before Departure',
+                          'Direct Group Lounge Chat & Villa Room Selection',
+                        ],
+                      ),
+                      onCustomPlanPaid: () {
+                        if (!state.isUserJoinedTrip(trip.id)) {
+                          state.toggleJoinTrip(trip.id);
+                        }
+                      },
+                    );
+                  }
+                },
                 style: FilledButton.styleFrom(
                   backgroundColor:
-                      joined ? AviajTheme.oceanTeal : AviajTheme.coralPrimary,
+                      joined ? AviajTheme.obsidian : const Color(0xFF635BFF),
                 ),
                 icon: Icon(
                   joined
                       ? Icons.check_circle_rounded
-                      : Icons.flight_takeoff_rounded,
+                      : Icons.credit_card_rounded,
                   size: 17,
                 ),
-                label: Text(joined ? 'Spot Reserved' : 'Join Trip'),
+                label: Text(joined ? 'Spot Reserved ✓' : 'Book Spot • Stripe'),
               ),
             ],
           ),

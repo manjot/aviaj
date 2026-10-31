@@ -5,6 +5,7 @@ import 'screens/messages_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/trips_screen.dart';
 import 'services/ad_service.dart';
+import 'services/stripe_service.dart';
 import 'state/aviaj_state.dart';
 import 'theme/app_theme.dart';
 import 'widgets/common_widgets.dart';
@@ -223,6 +224,31 @@ class AviajHomeShell extends StatelessWidget {
                     }),
                   ),
                 const Spacer(),
+                if (screenWidth >= 1040) ...[
+                  FilledButton.icon(
+                    onPressed: () => showStripeStorefrontModal(context),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFF635BFF),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    icon: const Icon(Icons.credit_card_rounded, size: 16),
+                    label: const Text(
+                      'Aviaj Gold • Stripe',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
                 if (screenWidth >= 840) ...[
                   FilledButton.icon(
                     onPressed: () => showAdMobUnityConsoleModal(context),
