@@ -8,40 +8,45 @@ enum AviajRegion {
     flag: '🇮🇳',
     label: 'India',
     languageLabel: 'English (India)',
-    sampleDestinations: 'Goa, Udaipur, and Ladakh',
-    coPilotLocationHeader: 'Goa & Udaipur, IN ⌄',
+    sampleDestinations:
+        'Manali & Himachal Hiking, Uttarakhand Famous Treks, Goa & Andaman Beaches',
+    coPilotLocationHeader: 'Manali, Uttarakhand, Goa & Andaman, IN ⌄',
   ),
   middleEast(
     code: 'AE',
     flag: '🇦🇪',
     label: 'Middle East',
     languageLabel: 'English (Middle East)',
-    sampleDestinations: 'Dubai, AlUla, and Muscat',
-    coPilotLocationHeader: 'Dubai Marina, AE ⌄',
+    sampleDestinations:
+        'Jebel Jais & AlUla Canyon Treks, Dubai & Muscat Beaches',
+    coPilotLocationHeader: 'Jebel Jais, AlUla & Dubai Beaches, AE ⌄',
   ),
   americas(
     code: 'US',
     flag: '🇺🇸',
     label: 'Americas',
     languageLabel: 'English (United States)',
-    sampleDestinations: 'Big Sur, Tulum, and Maui',
-    coPilotLocationHeader: 'Miami & Big Sur, US ⌄',
+    sampleDestinations:
+        'Yosemite & Zion Famous Treks, Maui & Miami Beaches',
+    coPilotLocationHeader: 'Yosemite, Zion, Maui & Miami, US ⌄',
   ),
   europe(
     code: 'EU',
     flag: '🇪🇺',
     label: 'Europe',
     languageLabel: 'English (Europe)',
-    sampleDestinations: 'Amalfi, Santorini, and Lisbon',
-    coPilotLocationHeader: 'Amalfi Coast, IT ⌄',
+    sampleDestinations:
+        'Dolomites & Chamonix Alps Treks, Amalfi & Santorini Beaches',
+    coPilotLocationHeader: 'Dolomites, Amalfi & Santorini, EU ⌄',
   ),
   asiaPacific(
     code: 'APAC',
     flag: '🇯🇵',
     label: 'Asia-Pacific',
     languageLabel: 'English (Asia-Pacific)',
-    sampleDestinations: 'Kyoto, Bali, and Jeju Island',
-    coPilotLocationHeader: 'Kyoto & Bali ⌄',
+    sampleDestinations:
+        'Mt. Fuji & Mt. Batur Treks, Bali & Phuket Beaches',
+    coPilotLocationHeader: 'Mt. Fuji, Uluwatu Bali & Phuket ⌄',
   );
 
   final String code;
@@ -66,6 +71,13 @@ class AviajRegionalContentPack {
   final AviajRegion region;
   final List<TravellerProfile> profiles;
   final List<({String imageUrl, String tag})> steppedCards;
+  final List<
+      ({
+        String title,
+        String subtitle,
+        String categoryBadge,
+        String imageUrl,
+      })> featuredDestinations;
   final String departureCirclePhotoUrl;
   final List<String> romanceVerifiedPortraitUrls;
   final String romancePhoneImageUrl;
@@ -82,6 +94,7 @@ class AviajRegionalContentPack {
     required this.region,
     required this.profiles,
     required this.steppedCards,
+    required this.featuredDestinations,
     required this.departureCirclePhotoUrl,
     required this.romanceVerifiedPortraitUrls,
     required this.romancePhoneImageUrl,
@@ -97,14 +110,115 @@ class AviajRegionalContentPack {
 }
 
 class AviajRegionalCatalog {
-  /// Automatically detects the visitor's region from timezone offset, timezone name, and system locale.
-  /// - India (`UTC+5:30` / `IST` / `IN`) -> [AviajRegion.india]
-  /// - Middle East (`UTC+3:00`..`UTC+4:00` / `AE`, `SA`, `QA`, etc.) -> [AviajRegion.middleEast]
-  /// - Americas (`UTC-10:00`..`UTC-3:00` / `US`, `CA`, `MX`, `BR`) -> [AviajRegion.americas]
-  /// - Asia-Pacific (`UTC+7:00`..`UTC+12:00` / `JP`, `SG`, `AU`, etc.) -> [AviajRegion.asiaPacific]
-  /// - Europe (`UTC+0:00`..`UTC+2:00` / `GB`, `FR`, `DE`, `IT`, `ES`) -> [AviajRegion.europe]
+  /// Maps a 2-letter ISO country code (from live IP/VPN geolocation) to an [AviajRegion].
+  static AviajRegion? regionFromCountryCode(String? rawCode) {
+    if (rawCode == null || rawCode.trim().isEmpty) return null;
+    final code = rawCode.trim().toUpperCase();
+
+    // 1. India & South Asia
+    const indiaCodes = {'IN', 'LK', 'NP', 'BD', 'MV'};
+    if (indiaCodes.contains(code)) {
+      return AviajRegion.india;
+    }
+
+    // 2. Middle East & North Africa
+    const middleEastCodes = {
+      'AE',
+      'SA',
+      'QA',
+      'KW',
+      'BH',
+      'OM',
+      'JO',
+      'LB',
+      'EG',
+      'IQ',
+      'MA',
+      'TN',
+      'DZ',
+      'TR',
+    };
+    if (middleEastCodes.contains(code)) {
+      return AviajRegion.middleEast;
+    }
+
+    // 3. Americas (USA, Canada, Latin America, Caribbean)
+    const americasCodes = {
+      'US',
+      'USA',
+      'CA',
+      'MX',
+      'BR',
+      'AR',
+      'CO',
+      'CL',
+      'PE',
+      'EC',
+      'CR',
+      'PA',
+      'UY',
+      'DO',
+      'PR',
+      'JM',
+      'BS',
+    };
+    if (americasCodes.contains(code)) {
+      return AviajRegion.americas;
+    }
+
+    // 4. Asia-Pacific
+    const apacCodes = {
+      'JP',
+      'SG',
+      'KR',
+      'TH',
+      'ID',
+      'MY',
+      'PH',
+      'VN',
+      'AU',
+      'NZ',
+      'HK',
+      'TW',
+      'CN',
+    };
+    if (apacCodes.contains(code)) {
+      return AviajRegion.asiaPacific;
+    }
+
+    // 5. Europe & UK
+    if (code.length == 2) {
+      return AviajRegion.europe;
+    }
+    return null;
+  }
+
+  /// Automatically detects the visitor's initial region synchronously (before async IP geolocation completes).
   static AviajRegion detectVisitorRegion() {
     try {
+      // Check URL query hints first (e.g. ?region=US, ?country=AE, ?v=regional_USA)
+      final uriStr = Uri.base.toString().toUpperCase();
+      final queryParams = Uri.base.queryParameters;
+      final explicitRegion =
+          (queryParams['region'] ?? queryParams['country'] ?? '').toUpperCase();
+      final fromExplicit = regionFromCountryCode(explicitRegion);
+      if (fromExplicit != null) return fromExplicit;
+
+      if (uriStr.contains('USA') || uriStr.contains('AMERICA')) {
+        return AviajRegion.americas;
+      }
+      if (uriStr.contains('UAE') ||
+          uriStr.contains('DUBAI') ||
+          uriStr.contains('MIDDLE')) {
+        return AviajRegion.middleEast;
+      }
+      if (uriStr.contains('EUROPE') || uriStr.contains('EU_')) {
+        return AviajRegion.europe;
+      }
+      if (uriStr.contains('APAC') || uriStr.contains('JAPAN')) {
+        return AviajRegion.asiaPacific;
+      }
+
       final now = DateTime.now();
       final offsetMinutes = now.timeZoneOffset.inMinutes;
       final tzName = now.timeZoneName.toUpperCase();
@@ -123,54 +237,20 @@ class AviajRegionalCatalog {
       }
 
       // 2. Check Middle East (UTC+3 to UTC+4 = 180..240 minutes, or MENA country codes)
-      const middleEastCodes = {
-        'AE',
-        'SA',
-        'QA',
-        'KW',
-        'BH',
-        'OM',
-        'JO',
-        'LB',
-        'EG',
-        'IQ',
-      };
-      if (middleEastCodes.contains(countryCode) ||
+      if (regionFromCountryCode(countryCode) == AviajRegion.middleEast ||
           (offsetMinutes >= 180 && offsetMinutes <= 240)) {
         return AviajRegion.middleEast;
       }
 
       // 3. Check Americas (Western Hemisphere negative UTC offsets or Americas country codes)
-      const americasCodes = {
-        'US',
-        'CA',
-        'MX',
-        'BR',
-        'AR',
-        'CO',
-        'CL',
-        'PE',
-      };
-      if (americasCodes.contains(countryCode) || offsetMinutes < 0) {
+      if (regionFromCountryCode(countryCode) == AviajRegion.americas ||
+          offsetMinutes < 0) {
         return AviajRegion.americas;
       }
 
       // 4. Check Asia-Pacific (UTC+7 to UTC+12)
-      const apacCodes = {
-        'JP',
-        'SG',
-        'KR',
-        'TH',
-        'ID',
-        'MY',
-        'PH',
-        'VN',
-        'AU',
-        'NZ',
-        'HK',
-        'TW',
-      };
-      if (apacCodes.contains(countryCode) || offsetMinutes >= 420) {
+      if (regionFromCountryCode(countryCode) == AviajRegion.asiaPacific ||
+          offsetMinutes >= 420) {
         return AviajRegion.asiaPacific;
       }
 
@@ -222,7 +302,7 @@ class AviajRegionalCatalog {
           TravelStyle.boutiqueLuxury,
           TravelStyle.islandHopper,
         ],
-        nextDestination: 'Udaipur & Goa Coastline',
+        nextDestination: 'Goa Beaches & Palolem Coast',
         nextTripWindow: 'Nov 14 – Nov 24',
         budgetTier: r'$$',
         languages: ['English', 'Hindi', 'Marathi'],
@@ -269,7 +349,7 @@ class AviajRegionalCatalog {
           TravelStyle.roadTripper,
           TravelStyle.digitalNomad,
         ],
-        nextDestination: 'Leh, Nubra & Pangong, Ladakh',
+        nextDestination: 'Manali & Hampta Pass Trek, Himachal',
         nextTripWindow: 'Nov 18 – Nov 29',
         budgetTier: r'$$',
         languages: ['English', 'Hindi', 'Kannada'],
@@ -315,7 +395,7 @@ class AviajRegionalCatalog {
           TravelStyle.foodieCulture,
           TravelStyle.nightlifeSocial,
         ],
-        nextDestination: 'Jaipur & Jaisalmer, Rajasthan',
+        nextDestination: 'Kedarkantha & Valley of Flowers, Uttarakhand',
         nextTripWindow: 'Nov 16 – Nov 25',
         budgetTier: r'$$$',
         languages: ['English', 'Hindi', 'Malayalam'],
@@ -362,7 +442,7 @@ class AviajRegionalCatalog {
           TravelStyle.boutiqueLuxury,
           TravelStyle.roadTripper,
         ],
-        nextDestination: 'Varkala Cliffs & Alleppey Backwaters',
+        nextDestination: 'Havelock & Radhanagar Beach, Andaman',
         nextTripWindow: 'Nov 20 – Dec 01',
         budgetTier: r'$$',
         languages: ['English', 'Hindi', 'Punjabi'],
@@ -408,7 +488,7 @@ class AviajRegionalCatalog {
           TravelStyle.islandHopper,
           TravelStyle.digitalNomad,
         ],
-        nextDestination: 'Pondicherry & Munnar Hills',
+        nextDestination: 'Chopta-Tungnath Trek, Uttarakhand',
         nextTripWindow: 'Nov 22 – Dec 03',
         budgetTier: r'$$',
         languages: ['English', 'Tamil', 'Hindi'],
@@ -454,7 +534,7 @@ class AviajRegionalCatalog {
           TravelStyle.roadTripper,
           TravelStyle.boutiqueLuxury,
         ],
-        nextDestination: 'Ranthambore & Jawai Leopard Hills',
+        nextDestination: 'Manali, Solang & Spiti Trek',
         nextTripWindow: 'Dec 01 – Dec 10',
         budgetTier: r'$$$',
         languages: ['English', 'Hindi'],
@@ -500,7 +580,7 @@ class AviajRegionalCatalog {
           TravelStyle.adventureTrek,
           TravelStyle.backpacker,
         ],
-        nextDestination: 'Darjeeling, Sikkim & Shillong',
+        nextDestination: 'South Goa & Andaman Islands',
         nextTripWindow: 'Dec 04 – Dec 14',
         budgetTier: r'$$',
         languages: ['English', 'Bengali', 'Hindi'],
@@ -531,17 +611,51 @@ class AviajRegionalCatalog {
       (
         imageUrl:
             'https://images.pexels.com/photos/15026763/pexels-photo-15026763.jpeg?auto=compress&cs=tinysrgb&w=900',
-        tag: 'Outdoors',
+        tag: 'Manali Trek',
       ),
       (
         imageUrl:
             'https://images.pexels.com/photos/18360995/pexels-photo-18360995.jpeg?auto=compress&cs=tinysrgb&w=900',
-        tag: 'Roadtrips',
+        tag: 'Uttarakhand Treks',
       ),
       (
         imageUrl:
             'https://images.pexels.com/photos/16605844/pexels-photo-16605844.jpeg?auto=compress&cs=tinysrgb&w=900',
-        tag: 'Island hopper',
+        tag: 'Goa & Andaman',
+      ),
+    ],
+    featuredDestinations: [
+      (
+        title: 'Manali & Hampta Pass Trek',
+        subtitle:
+            'Himachal Pradesh • Solang Valley, Beas Kund & Rohtang Alpine Trails',
+        categoryBadge: '🏔️ HIKING & TREKKING',
+        imageUrl:
+            'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Uttarakhand Famous Treks',
+        subtitle:
+            'Kedarkantha Summit, Valley of Flowers, Chopta-Tungnath & Rishikesh',
+        categoryBadge: '🥾 HIMALAYAN TREKS',
+        imageUrl:
+            'https://images.unsplash.com/photo-1589802829985-817e51171b92?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Goa Sunset Beaches & Cliffs',
+        subtitle:
+            'Palolem, Vagator, Cabo de Rama & Fontainhas Coastal Escapes',
+        categoryBadge: '🏖️ BEACHES & SUNSETS',
+        imageUrl:
+            'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Andaman & Nicobar Islands',
+        subtitle:
+            'Havelock Island, Radhanagar Beach & Coral Reef Scuba Diving',
+        categoryBadge: '🏝️ ISLANDS & DIVING',
+        imageUrl:
+            'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=900&q=80',
       ),
     ],
     departureCirclePhotoUrl:
@@ -645,7 +759,7 @@ class AviajRegionalCatalog {
           TravelStyle.roadTripper,
           TravelStyle.boutiqueLuxury,
         ],
-        nextDestination: 'Jabal Akhdar & Muscat, Oman',
+        nextDestination: 'Jebel Jais & Hatta Trek, UAE',
         nextTripWindow: 'Nov 18 – Nov 28',
         budgetTier: r'$$$',
         languages: ['Arabic', 'English'],
@@ -691,7 +805,7 @@ class AviajRegionalCatalog {
           TravelStyle.boutiqueLuxury,
           TravelStyle.roadTripper,
         ],
-        nextDestination: 'Petra & Aqaba Red Sea',
+        nextDestination: 'Dubai Kite Beach & Saadiyat',
         nextTripWindow: 'Nov 20 – Nov 30',
         budgetTier: r'$$',
         languages: ['Arabic', 'English'],
@@ -814,17 +928,51 @@ class AviajRegionalCatalog {
       (
         imageUrl:
             'https://images.pexels.com/photos/17505373/pexels-photo-17505373/free-photo-of-portrait-of-woman-in-hijab.jpeg?auto=compress&cs=tinysrgb&w=900',
-        tag: 'Outdoors',
+        tag: 'Jebel Jais Trek',
       ),
       (
         imageUrl:
             'https://images.pexels.com/photos/10861771/pexels-photo-10861771.jpeg?auto=compress&cs=tinysrgb&w=900',
-        tag: 'Roadtrips',
+        tag: 'AlUla Canyons',
       ),
       (
         imageUrl:
             'https://images.pexels.com/photos/8995940/pexels-photo-8995940.jpeg?auto=compress&cs=tinysrgb&w=900',
-        tag: 'Island hopper',
+        tag: 'Dubai & Red Sea',
+      ),
+    ],
+    featuredDestinations: [
+      (
+        title: 'Jebel Jais & Hatta Mountain Trek',
+        subtitle:
+            'UAE Hajar Mountains • Via Ferrata Ridgelines & Turquoise Wadis',
+        categoryBadge: '🏔️ HIKING & TREKKING',
+        imageUrl:
+            'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'AlUla & Jabal Akhdar Canyon Treks',
+        subtitle:
+            'Sandstone Heritage Trails, Wadi Rum & Oman Balcony Walk',
+        categoryBadge: '🥾 CANYON TREKS',
+        imageUrl:
+            'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Dubai Kite Beach & Saadiyat Coast',
+        subtitle:
+            'Turquoise Gulf Shores, Beach Clubs & Sunset Yacht Cruises',
+        categoryBadge: '🏖️ BEACHES & COAST',
+        imageUrl:
+            'https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Red Sea Coral Islands & Musandam',
+        subtitle:
+            'Private Lagoon Beaches, Scuba Reefs & Fjord Dhow Sailing',
+        categoryBadge: '🏝️ ISLANDS & DIVING',
+        imageUrl:
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
       ),
     ],
     departureCirclePhotoUrl:
@@ -882,7 +1030,7 @@ class AviajRegionalCatalog {
           TravelStyle.islandHopper,
           TravelStyle.foodieCulture,
         ],
-        nextDestination: 'Big Sur & Maui, Hawaii',
+        nextDestination: 'Maui & Kauai Beaches, Hawaii',
         nextTripWindow: 'Nov 15 – Nov 26',
         budgetTier: r'$$',
         languages: ['English', 'Spanish'],
@@ -974,7 +1122,7 @@ class AviajRegionalCatalog {
           TravelStyle.roadTripper,
           TravelStyle.foodieCulture,
         ],
-        nextDestination: 'Sedona & Grand Canyon, AZ',
+        nextDestination: 'Zion Narrows & Grand Canyon Trek',
         nextTripWindow: 'Nov 20 – Nov 29',
         budgetTier: r'$$',
         languages: ['English', 'Spanish'],
@@ -1020,7 +1168,7 @@ class AviajRegionalCatalog {
           TravelStyle.roadTripper,
           TravelStyle.backpacker,
         ],
-        nextDestination: 'Banff & Lake Louise',
+        nextDestination: 'Yosemite Half Dome & Banff Trek',
         nextTripWindow: 'Dec 01 – Dec 10',
         budgetTier: r'$$',
         languages: ['English'],
@@ -1097,17 +1245,51 @@ class AviajRegionalCatalog {
       (
         imageUrl:
             'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=900&q=80',
-        tag: 'Outdoors',
+        tag: 'Yosemite Trek',
       ),
       (
         imageUrl:
             'https://images.pexels.com/photos/936119/pexels-photo-936119.jpeg?auto=compress&cs=tinysrgb&w=900',
-        tag: 'Roadtrips',
+        tag: 'Zion & Sedona',
       ),
       (
         imageUrl:
             'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=900&q=80',
-        tag: 'Island hopper',
+        tag: 'Maui & Miami',
+      ),
+    ],
+    featuredDestinations: [
+      (
+        title: 'Yosemite & Half Dome Alpine Trek',
+        subtitle:
+            'California Sierra Nevada • Mist Trail, El Capitan & Tahoe Rim',
+        categoryBadge: '🏔️ HIKING & TREKKING',
+        imageUrl:
+            'https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Zion, Sedona & Grand Canyon Treks',
+        subtitle:
+            'Angels Landing, The Narrows & Red Rock Cathedral Trails',
+        categoryBadge: '🥾 FAMOUS US TREKS',
+        imageUrl:
+            'https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Maui, Kauai & Napali Coast Beaches',
+        subtitle:
+            'Hawaiian Surf Breaks, Road to Hana Waterfalls & Sunset Bays',
+        categoryBadge: '🏖️ BEACHES & SURF',
+        imageUrl:
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Miami South Beach, Malibu & Key West',
+        subtitle:
+            'Turquoise Atlantic Keys, Pacific Coast Highway & Tulum Coves',
+        categoryBadge: '🏝️ COASTAL ESCAPES',
+        imageUrl:
+            'https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?auto=format&fit=crop&w=900&q=80',
       ),
     ],
     departureCirclePhotoUrl:
@@ -1211,7 +1393,7 @@ class AviajRegionalCatalog {
           TravelStyle.roadTripper,
           TravelStyle.backpacker,
         ],
-        nextDestination: 'Dolomites & Lake Como, Italy',
+        nextDestination: 'Dolomites Seceda Ridgeline Trek',
         nextTripWindow: 'Nov 18 – Nov 29',
         budgetTier: r'$$',
         languages: ['English', 'Gaelic'],
@@ -1257,7 +1439,7 @@ class AviajRegionalCatalog {
           TravelStyle.adventureTrek,
           TravelStyle.foodieCulture,
         ],
-        nextDestination: 'Paros & Milos, Greece',
+        nextDestination: 'Santorini & Milos Beaches, Greece',
         nextTripWindow: 'Nov 20 – Dec 01',
         budgetTier: r'$$',
         languages: ['French', 'English'],
@@ -1303,7 +1485,7 @@ class AviajRegionalCatalog {
           TravelStyle.roadTripper,
           TravelStyle.adventureTrek,
         ],
-        nextDestination: 'Madeira & Lisbon, Portugal',
+        nextDestination: 'Tour du Mont Blanc & Chamonix Trek',
         nextTripWindow: 'Nov 14 – Dec 14',
         budgetTier: r'$$',
         languages: ['English', 'Swedish'],
@@ -1380,17 +1562,51 @@ class AviajRegionalCatalog {
       (
         imageUrl:
             'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80',
-        tag: 'Outdoors',
+        tag: 'Dolomites Trek',
       ),
       (
         imageUrl:
             'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80',
-        tag: 'Roadtrips',
+        tag: 'Mont Blanc Alps',
       ),
       (
         imageUrl:
             'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80',
-        tag: 'Island hopper',
+        tag: 'Amalfi & Greek Isles',
+      ),
+    ],
+    featuredDestinations: [
+      (
+        title: 'Dolomites & Seceda Ridgeline Trek',
+        subtitle:
+            'Italian Alps • Tre Cime di Lavaredo & Lago di Braies Trails',
+        categoryBadge: '🏔️ HIKING & TREKKING',
+        imageUrl:
+            'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Tour du Mont Blanc & Chamonix Alps',
+        subtitle:
+            'Swiss-French-Italian Alpine Passes, Zermatt & Matterhorn Views',
+        categoryBadge: '🥾 ALPINE TREKS',
+        imageUrl:
+            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Amalfi Coast, Positano & Capri Beaches',
+        subtitle:
+            'Mediterranean Cliffside Coves, Boat Days & Sunset Aperitivos',
+        categoryBadge: '🏖️ BEACHES & COAST',
+        imageUrl:
+            'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Santorini, Milos & Mallorca Islands',
+        subtitle:
+            'Aegean Sarakiniko Moon Beach, Cyclades Sailing & Spanish Calas',
+        categoryBadge: '🏝️ ISLAND BEACHES',
+        imageUrl:
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
       ),
     ],
     departureCirclePhotoUrl:
@@ -1449,7 +1665,7 @@ class AviajRegionalCatalog {
           TravelStyle.digitalNomad,
           TravelStyle.nightlifeSocial,
         ],
-        nextDestination: 'Kyoto & Osaka, Japan',
+        nextDestination: 'Mt. Fuji & Kamikochi Alps Trek',
         nextTripWindow: 'Nov 18 – Dec 02',
         budgetTier: r'$$',
         languages: ['English', 'Mandarin', 'Japanese'],
@@ -1495,7 +1711,7 @@ class AviajRegionalCatalog {
           TravelStyle.islandHopper,
           TravelStyle.adventureTrek,
         ],
-        nextDestination: 'Hokkaido & Niseko, Japan',
+        nextDestination: 'Uluwatu & Nusa Penida Beaches, Bali',
         nextTripWindow: 'Nov 22 – Dec 05',
         budgetTier: r'$$',
         languages: ['Japanese', 'English'],
@@ -1541,7 +1757,7 @@ class AviajRegionalCatalog {
           TravelStyle.boutiqueLuxury,
           TravelStyle.islandHopper,
         ],
-        nextDestination: 'Jeju Island & Busan',
+        nextDestination: 'Mt. Batur Trek & Phuket Beaches',
         nextTripWindow: 'Nov 25 – Dec 06',
         budgetTier: r'$$',
         languages: ['Korean', 'English'],
@@ -1572,17 +1788,51 @@ class AviajRegionalCatalog {
       (
         imageUrl:
             'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80',
-        tag: 'Outdoors',
+        tag: 'Mt. Fuji Trek',
       ),
       (
         imageUrl:
             'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80',
-        tag: 'Roadtrips',
+        tag: 'Bali Volcano Trek',
       ),
       (
         imageUrl:
             'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=900&q=80',
-        tag: 'Island hopper',
+        tag: 'Bali & Phuket Beaches',
+      ),
+    ],
+    featuredDestinations: [
+      (
+        title: 'Mt. Fuji & Japanese Alps Trek',
+        subtitle:
+            'Yoshida Summit Trail, Kamikochi Valley & Hakone Ridge Walks',
+        categoryBadge: '🏔️ HIKING & TREKKING',
+        imageUrl:
+            'https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Mt. Batur & Jeju Hallasan Volcano Treks',
+        subtitle:
+            'Sunrise Caldera Hikes in Bali & South Korea’s Highest Peak',
+        categoryBadge: '🥾 VOLCANO TREKS',
+        imageUrl:
+            'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Uluwatu, Seminyak & Nusa Penida (Bali)',
+        subtitle:
+            'Kelingking Cliff Beaches, Surf Breaks & Manta Ray Snorkeling',
+        categoryBadge: '🏖️ BEACHES & SURF',
+        imageUrl:
+            'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Phuket, Krabi & Railay Island Beaches',
+        subtitle:
+            'Andaman Sea Limestone Lagoons, Phi Phi & Boracay White Sand',
+        categoryBadge: '🏝️ ISLAND HOPPING',
+        imageUrl:
+            'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=900&q=80',
       ),
     ],
     departureCirclePhotoUrl:

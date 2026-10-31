@@ -32,10 +32,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _modesKey = GlobalKey();
+  final GlobalKey _affKey = GlobalKey();
   final GlobalKey _radarKey = GlobalKey();
   final GlobalKey _storiesKey = GlobalKey();
   final GlobalKey _pricingKey = GlobalKey();
   int _selectedHeroIndex = 0;
+  bool _showAffMegaMenu = false;
+  bool _showStoriesMegaMenu = false;
 
   late final AnimationController _bannerIntroController;
   late final AnimationController _profileSliderController;
@@ -65,17 +68,31 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         }
       });
 
-    // Automatically advance the 3D profiles slider after the banner intro completes.
+    // Immediately detect visitor's live IP / VPN region (e.g. Turbo VPN USA -> Americas)
+    _checkLiveIpRegion();
+
+    // Automatically advance the 3D profiles slider and re-check live VPN IP region.
     _autoSlideTimer = Timer.periodic(
       const Duration(milliseconds: 2900),
       (_) {
         if (!mounted) return;
+        _checkLiveIpRegion();
         if (_bannerIntroController.isCompleted &&
             !_profileSliderController.isAnimating) {
           _profileSliderController.forward(from: 0);
         }
       },
     );
+  }
+
+  Future<void> _checkLiveIpRegion() async {
+    final changed = await widget.state.refreshRegionFromLiveIp();
+    if (changed && mounted) {
+      setState(() {
+        _selectedHeroIndex = 0;
+      });
+      _replayBannerAnimation();
+    }
   }
 
   void _triggerNextProfileSlide() {
@@ -206,50 +223,64 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth >= 980;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        child: Column(
-          children: [
-            // SECTION 1: FULL-BLEED ANIMATED BANNER (GIANT NAME + 3D PROFILES SLIDER)
-            _buildSpaciousHeroSection(context, isDesktop),
+    return ListenableBuilder(
+      listenable: widget.state,
+      builder: (context, _) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              children: [
+                // SECTION 1: FULL-BLEED ANIMATED BANNER (GIANT NAME + 3D PROFILES SLIDER)
+                _buildSpaciousHeroSection(context, isDesktop),
 
-            // SECTION 2: MISSION HEADLINE + 3 STEPPED CARDS WITH VERTICAL PILLS
-            _buildBelowBannerIntroStrip(context, isDesktop),
+                // SECTION 2: MISSION HEADLINE + 3 STEPPED CARDS WITH VERTICAL PILLS
+                _buildBelowBannerIntroStrip(context, isDesktop),
 
-            // SECTION 3: LIFESTYLE PHOTO + CIRCULAR STAMP EMBLEM + "SHARE YOUR NEXT ITINERARY"
-            Container(
-              key: _radarKey,
-              child: _buildDepartureCircleSection(context, isDesktop),
+                // SECTION 2B: REGIONAL FAMOUS HIKING, TREKKING & BEACH DESTINATIONS SHOWCASE
+                _buildRegionalTreksAndBeachesSection(context, isDesktop),
+
+                // SECTION 3: LIFESTYLE PHOTO + CIRCULAR STAMP EMBLEM + "SHARE YOUR NEXT ITINERARY"
+                Container(
+                  key: _radarKey,
+                  child: _buildDepartureCircleSection(context, isDesktop),
+                ),
+
+                // SECTION 4: TWO SIDE-BY-SIDE SOLID RED LOVE SHOWCASE CARDS (AVIAJ DATE & AFF - AVIAJ FRIENDS FOREVER)
+                Container(
+                  key: _modesKey,
+                  child: _buildThreeModesPillarSection(context, isDesktop),
+                ),
+
+                // SECTION 4B: DEDICATED FULL-BLEED "AFF — AVIAJ FRIENDS FOREVER" HERO SECTION
+                Container(
+                  key: _affKey,
+                  child: _buildAffFriendsForeverSection(context, isDesktop),
+                ),
+
+                // SECTION 5: EDITORIAL QUOTE TESTIMONIAL + MONOCHROME COUPLE PORTRAIT
+                Container(
+                  key: _storiesKey,
+                  child: _buildStoriesSection(context, isDesktop),
+                ),
+
+                // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
+                _buildGetTheAppQrPhonesBanner(context, isDesktop),
+
+                // SECTION 7: MINIMAL CABIN CLASS UPGRADES (STRIPE acct_1TNTVyJD1U0jWVOT)
+                Container(
+                  key: _pricingKey,
+                  child: _buildMinimalCabinUpgradesSection(context, isDesktop),
+                ),
+
+                // SECTION 8: MULTI-COLUMN SITEMAP FOOTER
+                _buildConversionBannerAndFooter(context, isDesktop),
+              ],
             ),
-
-            // SECTION 4: TWO SIDE-BY-SIDE SOLID RED LOVE SHOWCASE CARDS (AVIAJ ROMANCE & CO-PILOT)
-            Container(
-              key: _modesKey,
-              child: _buildThreeModesPillarSection(context, isDesktop),
-            ),
-
-            // SECTION 5: EDITORIAL QUOTE TESTIMONIAL + MONOCHROME COUPLE PORTRAIT
-            Container(
-              key: _storiesKey,
-              child: _buildStoriesSection(context, isDesktop),
-            ),
-
-            // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
-            _buildGetTheAppQrPhonesBanner(context, isDesktop),
-
-            // SECTION 7: MINIMAL CABIN CLASS UPGRADES (STRIPE acct_1TNTVyJD1U0jWVOT)
-            Container(
-              key: _pricingKey,
-              child: _buildMinimalCabinUpgradesSection(context, isDesktop),
-            ),
-
-            // SECTION 8: MULTI-COLUMN SITEMAP FOOTER
-            _buildConversionBannerAndFooter(context, isDesktop),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -310,24 +341,54 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _NavbarLink(
-                            label: 'Romance',
-                            onTap: () => _scrollToSection(_modesKey),
+                            label: 'Date',
+                            onTap: () {
+                              setState(() {
+                                _showAffMegaMenu = false;
+                                _showStoriesMegaMenu = false;
+                              });
+                              _scrollToSection(_modesKey);
+                            },
                           ),
                           _NavbarLink(
-                            label: 'Co-Pilot',
-                            onTap: () => _scrollToSection(_modesKey),
+                            label: 'AFF',
+                            isHighlighted: _showAffMegaMenu,
+                            onTap: () {
+                              setState(() {
+                                _showAffMegaMenu = !_showAffMegaMenu;
+                                _showStoriesMegaMenu = false;
+                              });
+                            },
                           ),
                           _NavbarLink(
                             label: 'Stories',
-                            onTap: () => _scrollToSection(_storiesKey),
+                            isHighlighted: _showStoriesMegaMenu,
+                            onTap: () {
+                              setState(() {
+                                _showStoriesMegaMenu = !_showStoriesMegaMenu;
+                                _showAffMegaMenu = false;
+                              });
+                            },
                           ),
                           _NavbarLink(
                             label: 'Safety',
-                            onTap: () => _scrollToSection(_radarKey),
+                            onTap: () {
+                              setState(() {
+                                _showAffMegaMenu = false;
+                                _showStoriesMegaMenu = false;
+                              });
+                              _scrollToSection(_radarKey);
+                            },
                           ),
                           _NavbarLink(
                             label: 'Support',
-                            onTap: () => _scrollToSection(_pricingKey),
+                            onTap: () {
+                              setState(() {
+                                _showAffMegaMenu = false;
+                                _showStoriesMegaMenu = false;
+                              });
+                              _scrollToSection(_pricingKey);
+                            },
                           ),
                         ],
                       ),
@@ -371,6 +432,30 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                 ],
               ),
             ),
+
+            // Interactive "Explore AFF (Aviaj Friends Forever) ›" Mega-Menu Dropdown Card
+            if (_showAffMegaMenu)
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  isDesktop ? 48 : 16,
+                  8,
+                  isDesktop ? 48 : 16,
+                  12,
+                ),
+                child: _buildExploreAffMegaMenuCard(context, isDesktop),
+              ),
+
+            // Interactive "Explore Stories ›" Mega-Menu Dropdown Card
+            if (_showStoriesMegaMenu)
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  isDesktop ? 48 : 16,
+                  8,
+                  isDesktop ? 48 : 16,
+                  12,
+                ),
+                child: _buildExploreStoriesMegaMenuCard(context, isDesktop),
+              ),
 
             // Main Animated Stage: Giant "Aviaj" Name + 3D Angled Profiles Slider
             ClipRect(
@@ -668,29 +753,61 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     height: height,
                     fallbackLabel: profile.name,
                   ),
-                  // Angled "Name, Age" caption aligned to the 3D bottom perspective edge
+                  // Angled "Name, Age" + Regional Trek/Beach destination badge aligned to the 3D bottom perspective edge
                   Positioned(
-                    left: 12,
-                    right: 12,
-                    bottom: slant * 0.62 + 16,
+                    left: 10,
+                    right: 10,
+                    bottom: slant * 0.56 + 12,
                     child: Transform.rotate(
                       angle: 0.19,
-                      child: Text(
-                        '$firstName, ${profile.age}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: fontSize.clamp(11.0, 22.0),
-                          letterSpacing: -0.3,
-                          shadows: const [
-                            Shadow(
-                              color: Colors.black54,
-                              blurRadius: 12,
-                              offset: Offset(0, 2),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '$firstName, ${profile.age}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              fontSize: fontSize.clamp(11.0, 22.0),
+                              letterSpacing: -0.3,
+                              shadows: const [
+                                Shadow(
+                                  color: Colors.black54,
+                                  blurRadius: 12,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.58),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.35),
+                                width: 0.8,
+                              ),
+                            ),
+                            child: Text(
+                              '📍 ${profile.nextDestination}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                                fontSize: (fontSize * 0.54).clamp(8.5, 11.5),
+                                letterSpacing: -0.1,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -909,6 +1026,314 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// SECTION 2B: Regional Famous Hiking, Trekking & Beach Destinations Grid
+  /// Showcases iconic treks (e.g. Manali & Hampta Pass, Uttarakhand Kedarkantha & Valley of Flowers)
+  /// and beaches (e.g. Goa Palolem & Vagator, Andaman Havelock & Radhanagar Beach) for the active region.
+  Widget _buildRegionalTreksAndBeachesSection(
+    BuildContext context,
+    bool isDesktop,
+  ) {
+    final pack = widget.state.regionalPack;
+    final region = pack.region;
+    final destinations = pack.featuredDestinations;
+
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFFFFF5F6),
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 72 : 20,
+        vertical: isDesktop ? 72 : 48,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1220),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 7,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AviajTheme.loveRed,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text(
+                      '${region.flag} ${region.label.toUpperCase()} HIKING, TREKS & BEACHES',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 7,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: AviajTheme.loveRed.withValues(alpha: 0.25),
+                      ),
+                    ),
+                    child: Text(
+                      '📍 ${region.sampleDestinations}',
+                      style: const TextStyle(
+                        color: AviajTheme.midnightNavy,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 18),
+              Text(
+                region == AviajRegion.india
+                    ? 'Famous Indian Treks & Beaches — Manali, Uttarakhand, Goa & Andaman'
+                    : 'Famous ${region.label} Hiking Treks & Iconic Beach Escapes',
+                style: TextStyle(
+                  color: AviajTheme.midnightNavy,
+                  fontSize: isDesktop ? 42 : 30,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1.3,
+                  height: 1.08,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                region == AviajRegion.india
+                    ? 'Match with verified hikers, trekkers, and beach lovers heading to Himachal (Manali, Hampta Pass, Kasol), Uttarakhand (Kedarkantha, Valley of Flowers, Chopta-Tungnath, Rishikesh), Goa (Palolem, Vagator, Cabo de Rama), and Andaman & Nicobar Islands (Havelock & Radhanagar Beach).'
+                    : 'Match with verified hikers, trekkers, and island hoppers heading to ${region.sampleDestinations} on your exact travel dates.',
+                style: const TextStyle(
+                  color: Color(0xFF4A353B),
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w500,
+                  height: 1.48,
+                ),
+              ),
+              const SizedBox(height: 32),
+              isDesktop
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < destinations.length; i++) ...[
+                          if (i > 0) const SizedBox(width: 20),
+                          Expanded(
+                            child: _buildRegionalDestinationCard(
+                              context,
+                              destinations[i],
+                            ),
+                          ),
+                        ],
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        for (int i = 0; i < destinations.length; i++) ...[
+                          if (i > 0) const SizedBox(height: 18),
+                          _buildRegionalDestinationCard(
+                            context,
+                            destinations[i],
+                          ),
+                        ],
+                      ],
+                    ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegionalDestinationCard(
+    BuildContext context,
+    ({
+      String title,
+      String subtitle,
+      String categoryBadge,
+      String imageUrl,
+    }) dest,
+  ) {
+    return InkWell(
+      onTap: widget.onOpenFullMobilePreview,
+      borderRadius: BorderRadius.circular(26),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(26),
+          border: Border.all(
+            color: AviajTheme.loveRed.withValues(alpha: 0.16),
+            width: 1.2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AviajTheme.loveRed.withValues(alpha: 0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(25),
+              ),
+              child: SizedBox(
+                height: 220,
+                width: double.infinity,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    AviajNetworkImage(
+                      imageUrl: dest.imageUrl,
+                      width: double.infinity,
+                      height: 220,
+                      fallbackLabel: dest.title,
+                    ),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.15),
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.65),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 14,
+                      left: 14,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AviajTheme.loveRed,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Text(
+                          dest.categoryBadge,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 11,
+                            letterSpacing: 0.4,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 12,
+                      left: 14,
+                      right: 14,
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.92),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.people_alt_rounded,
+                                  size: 13,
+                                  color: AviajTheme.loveRed,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Date • Co-Pilot • AFF Crews',
+                                  style: TextStyle(
+                                    color: AviajTheme.midnightNavy,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 10.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    dest.title,
+                    style: const TextStyle(
+                      color: AviajTheme.midnightNavy,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 19,
+                      letterSpacing: -0.4,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    dest.subtitle,
+                    style: const TextStyle(
+                      color: Color(0xFF5A4348),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13.5,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  const Row(
+                    children: [
+                      Text(
+                        'Join Departure Circle',
+                        style: TextStyle(
+                          color: AviajTheme.loveRed,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 13,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 15,
+                        color: AviajTheme.loveRed,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1250,7 +1675,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
           const SizedBox(height: 24),
           const Text(
-            'Aviaj Romance',
+            'Aviaj Date',
             style: TextStyle(
               color: Colors.white,
               fontSize: 34,
@@ -1260,7 +1685,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
           const SizedBox(height: 10),
           const Text(
-            'Whether you’re seeking a spontaneous vacation romance or ready to meet a lifelong travel partner, Aviaj Romance is built to bring you closer to love safely and meaningfully.',
+            'Whether you’re new to travel dating or ready to try again, Aviaj Date is built to bring you closer to love safely and meaningfully.',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.5,
@@ -1491,18 +1916,44 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Aviaj Co-Pilot',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 34,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -0.9,
-            ),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 10,
+            runSpacing: 6,
+            children: [
+              const Text(
+                'AFF',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 34,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.9,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Text(
+                  'AVIAJ FRIENDS FOREVER',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.6,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 10),
           const Text(
-            'Whether you’ve landed in a new city solo or want to split a villa with a 6-person crew, Co-Pilot makes it easy to meet like-minded travellers who match your vibe.',
+            'Whether you’ve moved to a new city, landed solo abroad, or just want to expand your circle, AFF (Aviaj Friends Forever) makes it easy to meet like-minded people who match your vibe.',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.5,
@@ -1512,7 +1963,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
           const SizedBox(height: 20),
           InkWell(
-            onTap: widget.onOpenFullMobilePreview,
+            onTap: () => _scrollToSection(_affKey),
             child: const Text(
               'Find your people',
               style: TextStyle(
@@ -1599,7 +2050,624 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     );
   }
 
-  /// SECTION 5 (Screenshot 5): Editorial Quotation Testimonial on Left + Monochrome Couple Portrait on Right
+  /// Interactive "Explore AFF (Aviaj Friends Forever) ›" Mega-Menu Card
+  Widget _buildExploreAffMegaMenuCard(BuildContext context, bool isDesktop) {
+    return Container(
+      width: double.infinity,
+      constraints: const BoxConstraints(maxWidth: 1220),
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 44 : 24,
+        vertical: isDesktop ? 36 : 24,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.14),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: 0,
+            top: 0,
+            child: IconButton(
+              onPressed: () => setState(() => _showAffMegaMenu = false),
+              icon: const Icon(
+                Icons.close_rounded,
+                color: AviajTheme.midnightNavy,
+                size: 24,
+              ),
+              tooltip: 'Close AFF menu',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 36),
+            child: isDesktop
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() => _showAffMegaMenu = false);
+                            _scrollToSection(_affKey);
+                          },
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Explore AFF ›',
+                                style: TextStyle(
+                                  color: AviajTheme.midnightNavy,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.8,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Aviaj Friends Forever — features designed to help you find your people and connect over what you’re into.',
+                                style: TextStyle(
+                                  color: Color(0xFF3E3034),
+                                  fontSize: 15.5,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.45,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      Expanded(
+                        flex: 3,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() => _showAffMegaMenu = false);
+                            _scrollToSection(_affKey);
+                          },
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today_outlined,
+                                    size: 16,
+                                    color: AviajTheme.midnightNavy,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Plans ›',
+                                    style: TextStyle(
+                                      color: AviajTheme.midnightNavy,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'Organize a group meetup, or discover local travel events happening nearby.',
+                                style: TextStyle(
+                                  color: Color(0xFF4A3B40),
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.45,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 32),
+                      Expanded(
+                        flex: 3,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() => _showAffMegaMenu = false);
+                            _scrollToSection(_affKey);
+                          },
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.favorite_border_rounded,
+                                    size: 17,
+                                    color: AviajTheme.loveRed,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Community Leaders ›',
+                                    style: TextStyle(
+                                      color: AviajTheme.midnightNavy,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'Our leaders help bring AFF’s values into their communities across the country.',
+                                style: TextStyle(
+                                  color: Color(0xFF4A3B40),
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.45,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() => _showAffMegaMenu = false);
+                          _scrollToSection(_affKey);
+                        },
+                        child: const Text(
+                          'Explore AFF (Aviaj Friends Forever) ›',
+                          style: TextStyle(
+                            color: AviajTheme.midnightNavy,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Features designed to help you find your people and connect over what you’re into.',
+                        style: TextStyle(
+                          color: Color(0xFF3E3034),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Interactive "Explore Stories ›" Mega-Menu Card
+  Widget _buildExploreStoriesMegaMenuCard(
+    BuildContext context,
+    bool isDesktop,
+  ) {
+    return Container(
+      width: double.infinity,
+      constraints: const BoxConstraints(maxWidth: 1220),
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 44 : 24,
+        vertical: isDesktop ? 36 : 24,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.14),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: 0,
+            top: 0,
+            child: IconButton(
+              onPressed: () => setState(() => _showStoriesMegaMenu = false),
+              icon: const Icon(
+                Icons.close_rounded,
+                color: AviajTheme.midnightNavy,
+                size: 24,
+              ),
+              tooltip: 'Close Stories menu',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 36),
+            child: isDesktop
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() => _showStoriesMegaMenu = false);
+                            _scrollToSection(_storiesKey);
+                          },
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Explore Stories ›',
+                                style: TextStyle(
+                                  color: AviajTheme.midnightNavy,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.8,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'All the guidance and inspiration you need to help you find love and friendship.',
+                                style: TextStyle(
+                                  color: Color(0xFF3E3034),
+                                  fontSize: 15.5,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.45,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() => _showStoriesMegaMenu = false);
+                                _scrollToSection(_storiesKey);
+                              },
+                              child: const Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 6),
+                                  Text(
+                                    'Love Stories ›',
+                                    style: TextStyle(
+                                      color: AviajTheme.midnightNavy,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    'From Tokyo to Toronto, explore the love found on Aviaj around the world.',
+                                    style: TextStyle(
+                                      color: Color(0xFF4A3B40),
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.45,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 22),
+                            InkWell(
+                              onTap: () {
+                                setState(() => _showStoriesMegaMenu = false);
+                                _scrollToSection(_affKey);
+                              },
+                              child: const Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'The Friendship Hub ›',
+                                    style: TextStyle(
+                                      color: AviajTheme.midnightNavy,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    'Advice and stories to help you build the AFF friendships you want.',
+                                    style: TextStyle(
+                                      color: Color(0xFF4A3B40),
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.45,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 32),
+                      Expanded(
+                        flex: 3,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() => _showStoriesMegaMenu = false);
+                            _scrollToSection(_storiesKey);
+                          },
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 6),
+                              Text(
+                                'Seasonal Dating Guides ›',
+                                style: TextStyle(
+                                  color: AviajTheme.midnightNavy,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              SizedBox(height: 6),
+                              Text(
+                                'Plan the perfect date—no matter when, where or who you’re dating.',
+                                style: TextStyle(
+                                  color: Color(0xFF4A3B40),
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.45,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() => _showStoriesMegaMenu = false);
+                          _scrollToSection(_storiesKey);
+                        },
+                        child: const Text(
+                          'Explore Stories ›',
+                          style: TextStyle(
+                            color: AviajTheme.midnightNavy,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'All the guidance and inspiration you need to help you find love and friendship.',
+                        style: TextStyle(
+                          color: Color(0xFF3E3034),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// SECTION 4B: Full-Bleed "AFF — Aviaj Friends Forever" Dedicated Lifestyle Hero Section
+  Widget _buildAffFriendsForeverSection(BuildContext context, bool isDesktop) {
+    final pack = widget.state.regionalPack;
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 48 : 16,
+        vertical: isDesktop ? 24 : 16,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1340),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(36),
+            child: SizedBox(
+              height: isDesktop ? 610 : 520,
+              width: double.infinity,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  AviajNetworkImage(
+                    imageUrl: pack.coPilotCrewImageUrl,
+                    width: double.infinity,
+                    height: double.infinity,
+                    fallbackLabel: 'AFF — Aviaj Friends Forever',
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.28),
+                          Colors.black.withValues(alpha: 0.56),
+                          Colors.black.withValues(alpha: 0.72),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 680),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Flower/Heart Emblem + Giant "AFF" Wordmark
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: isDesktop ? 68 : 54,
+                                  height: isDesktop ? 68 : 54,
+                                  decoration: const BoxDecoration(
+                                    color: AviajTheme.loveRed,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.diversity_1_rounded,
+                                    color: Colors.white,
+                                    size: isDesktop ? 36 : 28,
+                                  ),
+                                ),
+                                const SizedBox(width: 14),
+                                Text(
+                                  'AFF',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: isDesktop ? 86 : 62,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: -2.4,
+                                    height: 0.95,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AviajTheme.loveRed,
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: const Text(
+                                'AVIAJ FRIENDS FOREVER',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 12.5,
+                                  letterSpacing: 1.4,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 22),
+                            Text(
+                              'We’ve reimagined AFF (Aviaj Friends Forever) to make finding your people easier, safer, and more fun. Whether you’re settling into a new city, starting a solo adventure, or just looking for friends who get you, our latest features are built to help.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: isDesktop ? 19 : 15.5,
+                                fontWeight: FontWeight.w600,
+                                height: 1.48,
+                              ),
+                            ),
+                            const SizedBox(height: 28),
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              spacing: 14,
+                              runSpacing: 12,
+                              children: [
+                                _buildStoreDownloadPill(
+                                  icon: Icons.apple_rounded,
+                                  topLabel: 'Download on the',
+                                  storeName: 'App Store',
+                                  onTap: widget.onOpenFullMobilePreview,
+                                ),
+                                _buildStoreDownloadPill(
+                                  icon: Icons.play_arrow_rounded,
+                                  topLabel: 'GET IT ON',
+                                  storeName: 'Google Play',
+                                  onTap: widget.onOpenFullMobilePreview,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Text(
+                              'Apple and the Apple Logo are trademarks of Apple Inc.\nGoogle Play is a trademark of Google LLC.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.78),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                height: 1.35,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStoreDownloadPill({
+    required IconData icon,
+    required String topLabel,
+    required String storeName,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white24, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Colors.white, size: 28),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  topLabel,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  storeName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// SECTION 5: Editorial Quotation Testimonial + Full Love Stories Hub ("For the Love of Love")
   Widget _buildStoriesSection(BuildContext context, bool isDesktop) {
     final pack = widget.state.regionalPack;
     final quoteColumn = Column(
@@ -1637,7 +2705,15 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         ),
         const SizedBox(height: 28),
         FilledButton(
-          onPressed: widget.onOpenFullMobilePreview,
+          onPressed: () => _openFullLoveStoryModal(
+            context,
+            coupleName: pack.storyAttribution.split(',').first.trim(),
+            metLabel: 'Met on Aviaj in 2023',
+            heroImageUrl: pack.storyCoupleImageUrl,
+            secondaryImageUrl: pack.departureCirclePhotoUrl,
+            locationTag: '${widget.state.activeRegion.label} | First Spark',
+            headlineQuote: pack.storyQuote,
+          ),
           style: FilledButton.styleFrom(
             backgroundColor: AviajTheme.midnightNavy,
             foregroundColor: Colors.white,
@@ -1678,35 +2754,887 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       ),
     );
 
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 72 : 24,
-        vertical: isDesktop ? 76 : 48,
+    final featuredStories = [
+      (
+        couple: 'Tosin & Kieron',
+        metYear: 'Met on Aviaj in 2020',
+        summary: '36 questions later, it was love.',
+        cityTag: 'Dublin | Unexpected',
+        imageUrl: pack.storyCoupleImageUrl,
+        secondImageUrl: pack.departureCirclePhotoUrl,
       ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1220),
-          child: isDesktop
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+      (
+        couple: 'Truett & Bimal',
+        metYear: 'Met on Aviaj in 2018',
+        summary:
+            'His friends played virtual Cupid, and it worked like a charm.',
+        cityTag: 'Dallas, TX | LGBTQIA+',
+        imageUrl: pack.steppedCards[0].imageUrl,
+        secondImageUrl: pack.steppedCards[1].imageUrl,
+      ),
+      (
+        couple: 'Nina & Thomas',
+        metYear: 'Met on Aviaj in 2022',
+        summary: 'As it turned out, love really was just around the corner.',
+        cityTag: 'Paris, France | Unexpected',
+        imageUrl: pack.departureCirclePhotoUrl,
+        secondImageUrl: pack.storyCoupleImageUrl,
+      ),
+      (
+        couple: 'Jayde & Joel',
+        metYear: 'Met on Aviaj in 2024',
+        summary:
+            'A mutual love of fashion and travel led to a connection that fit just right.',
+        cityTag: 'New York City, NY | Friends First',
+        imageUrl: pack.steppedCards[1].imageUrl,
+        secondImageUrl: pack.steppedCards[2].imageUrl,
+      ),
+      (
+        couple: 'Leslie & Thomas',
+        metYear: 'Met on Aviaj in 2021',
+        summary:
+            'From airport masks to a wedding-day adventure, this love story has it all.',
+        cityTag: 'Dallas, TX | Unexpected',
+        imageUrl: pack.steppedCards[2].imageUrl,
+        secondImageUrl: pack.storyCoupleImageUrl,
+      ),
+      (
+        couple: pack.storyAttribution.split(',').first.trim(),
+        metYear: 'Met on Aviaj in 2023',
+        summary: pack.storyQuote,
+        cityTag: '${widget.state.activeRegion.label} | Departure Match',
+        imageUrl: pack.romancePhoneImageUrl,
+        secondImageUrl: pack.storyCoupleImageUrl,
+      ),
+    ];
+
+    return Column(
+      children: [
+        // 5A: Regional Editorial Quote + Monochrome Couple Portrait
+        Container(
+          width: double.infinity,
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 72 : 24,
+            vertical: isDesktop ? 76 : 48,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1220),
+              child: isDesktop
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(flex: 6, child: quoteColumn),
+                        const SizedBox(width: 64),
+                        Expanded(flex: 5, child: monochromePortrait),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        quoteColumn,
+                        const SizedBox(height: 32),
+                        monochromePortrait,
+                      ],
+                    ),
+            ),
+          ),
+        ),
+
+        // 5B: Full-Bleed 3-Panel B&W Couple Collage — "For the Love of Love"
+        SizedBox(
+          width: double.infinity,
+          height: isDesktop ? 520 : 360,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildMonochromePanel(
+                      pack.storyCoupleImageUrl,
+                      height: double.infinity,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildMonochromePanel(
+                      pack.departureCirclePhotoUrl,
+                      height: double.infinity,
+                    ),
+                  ),
+                  if (isDesktop)
+                    Expanded(
+                      child: _buildMonochromePanel(
+                        pack.steppedCards[0].imageUrl,
+                        height: double.infinity,
+                      ),
+                    ),
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.10),
+                      Colors.black.withValues(alpha: 0.62),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 24,
+                    right: 24,
+                    bottom: isDesktop ? 42 : 26,
+                  ),
+                  child: Text(
+                    'For the Love of Love',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AviajTheme.loveRed,
+                      fontSize: isDesktop ? 86 : 44,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -2.4,
+                      height: 1.0,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // 5C: Centered Editorial Intro + "Featured Love Stories" 3-Column Grid
+        Container(
+          width: double.infinity,
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 72 : 24,
+            vertical: isDesktop ? 76 : 48,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1220),
+              child: Column(
+                children: [
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 980),
+                    child: Text(
+                      'Discover real Aviaj love stories from across the world—full of sparks, surprises, second chances, and everything in between.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AviajTheme.midnightNavy,
+                        fontSize: isDesktop ? 48 : 30,
+                        fontWeight: FontWeight.w900,
+                        height: 1.12,
+                        letterSpacing: -1.4,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 14,
+                    runSpacing: 12,
+                    children: [
+                      FilledButton(
+                        onPressed: () {
+                          final first = featuredStories.first;
+                          _openFullLoveStoryModal(
+                            context,
+                            coupleName: first.couple,
+                            metLabel: first.metYear,
+                            heroImageUrl: first.imageUrl,
+                            secondaryImageUrl: first.secondImageUrl,
+                            locationTag: first.cityTag,
+                            headlineQuote: first.summary,
+                          );
+                        },
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AviajTheme.midnightNavy,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 26,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                        ),
+                        child: const Text(
+                          'Read the stories',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14.5,
+                          ),
+                        ),
+                      ),
+                      OutlinedButton(
+                        onPressed: widget.onOpenFullMobilePreview,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AviajTheme.midnightNavy,
+                          side: const BorderSide(
+                            color: AviajTheme.midnightNavy,
+                            width: 1.4,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 26,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                        ),
+                        child: const Text(
+                          'Start your love story',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: isDesktop ? 64 : 40),
+                  Text(
+                    'Featured Love Stories',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AviajTheme.midnightNavy,
+                      fontSize: isDesktop ? 52 : 34,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'From Tokyo to Toronto, explore the love found on Aviaj around the world.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF4A3B40),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 36),
+                  Wrap(
+                    spacing: 24,
+                    runSpacing: 24,
+                    children: featuredStories.map((story) {
+                      final cardWidth = isDesktop ? 380.0 : double.infinity;
+                      return SizedBox(
+                        width: cardWidth,
+                        child: _buildLoveStoryCollectionCard(
+                          context,
+                          coupleName: story.couple,
+                          metYear: story.metYear,
+                          summary: story.summary,
+                          cityTag: story.cityTag,
+                          imageUrl: story.imageUrl,
+                          secondImageUrl: story.secondImageUrl,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // 5D: Full-Bleed Red Love "Share Your Love Story" Banner with 3-Card Stacked B&W Fan
+        Container(
+          width: double.infinity,
+          color: AviajTheme.loveRed,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 72 : 24,
+            vertical: isDesktop ? 72 : 48,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1220),
+              child: isDesktop
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: _buildShareYourLoveStoryLeftPane(context),
+                        ),
+                        const SizedBox(width: 56),
+                        Expanded(
+                          flex: 6,
+                          child: _buildShareYourLoveStoryStackedFan(pack),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildShareYourLoveStoryLeftPane(context),
+                        const SizedBox(height: 36),
+                        _buildShareYourLoveStoryStackedFan(pack),
+                      ],
+                    ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMonochromePanel(String imageUrl, {required double height}) {
+    return ColorFiltered(
+      colorFilter: const ColorFilter.matrix(<double>[
+        0.2126, 0.7152, 0.0722, 0, 0, //
+        0.2126, 0.7152, 0.0722, 0, 0, //
+        0.2126, 0.7152, 0.0722, 0, 0, //
+        0, 0, 0, 1, 0, //
+      ]),
+      child: AviajNetworkImage(
+        imageUrl: imageUrl,
+        width: double.infinity,
+        height: height,
+        fallbackLabel: 'Aviaj Love Story',
+      ),
+    );
+  }
+
+  Widget _buildLoveStoryCollectionCard(
+    BuildContext context, {
+    required String coupleName,
+    required String metYear,
+    required String summary,
+    required String cityTag,
+    required String imageUrl,
+    required String secondImageUrl,
+  }) {
+    return InkWell(
+      onTap: () => _openFullLoveStoryModal(
+        context,
+        coupleName: coupleName,
+        metLabel: metYear,
+        heroImageUrl: imageUrl,
+        secondaryImageUrl: secondImageUrl,
+        locationTag: cityTag,
+        headlineQuote: summary,
+      ),
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF6F5F2),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: SizedBox(
+                height: 340,
+                width: double.infinity,
+                child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Expanded(flex: 6, child: quoteColumn),
-                    const SizedBox(width: 64),
-                    Expanded(flex: 5, child: monochromePortrait),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    quoteColumn,
-                    const SizedBox(height: 32),
-                    monochromePortrait,
+                    _buildMonochromePanel(imageUrl, height: 340),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.72),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 16,
+                      right: 16,
+                      bottom: 18,
+                      child: Column(
+                        children: [
+                          Text(
+                            coupleName,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.6,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AviajTheme.loveRed,
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Text(
+                              metYear,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    summary,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AviajTheme.midnightNavy,
+                      fontSize: 15.5,
+                      fontWeight: FontWeight.w600,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    cityTag,
+                    style: const TextStyle(
+                      color: Color(0xFF6E5D62),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  const Text(
+                    'Read more',
+                    style: TextStyle(
+                      color: AviajTheme.midnightNavy,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildShareYourLoveStoryLeftPane(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Share Your\nLove Story',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 54,
+            fontWeight: FontWeight.w900,
+            height: 1.04,
+            letterSpacing: -1.6,
+          ),
+        ),
+        const SizedBox(height: 18),
+        const Text(
+          'Whether you found your person on Aviaj Date or finally found your people on AFF (Aviaj Friends Forever), we’d love to share your story and inspire people to find love too.',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.5,
+            fontWeight: FontWeight.w500,
+            height: 1.48,
+          ),
+        ),
+        const SizedBox(height: 28),
+        FilledButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Share your Aviaj or AFF story at stories@aviaj.com — our editorial team reads every submission!',
+                ),
+                backgroundColor: AviajTheme.midnightNavy,
+              ),
+            );
+          },
+          style: FilledButton.styleFrom(
+            backgroundColor: AviajTheme.midnightNavy,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40),
+            ),
+          ),
+          child: const Text(
+            'Submit your story',
+            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+          ),
+        ),
+        const SizedBox(height: 30),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: const BoxDecoration(
+                color: AviajTheme.midnightNavy,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.mail_outline_rounded,
+                color: Colors.white,
+                size: 19,
+              ),
+            ),
+            const SizedBox(width: 14),
+            const Expanded(
+              child: Text(
+                'Prefer pen and paper? Send your story to:\nAviaj Love Stories Desk, P.O. Box 300940 Austin, Texas, 78703\nWe read every letter — and may occasionally even write back.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                  height: 1.45,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildShareYourLoveStoryStackedFan(AviajRegionalContentPack pack) {
+    return SizedBox(
+      height: 410,
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          Positioned(
+            left: 250,
+            top: 48,
+            width: 240,
+            height: 315,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(22),
+              child: _buildMonochromePanel(
+                pack.steppedCards[2].imageUrl,
+                height: 315,
+              ),
+            ),
+          ),
+          Positioned(
+            left: 135,
+            top: 26,
+            width: 265,
+            height: 355,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.white, width: 3),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(21),
+                child: _buildMonochromePanel(
+                  pack.departureCirclePhotoUrl,
+                  height: 355,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            top: 0,
+            width: 295,
+            height: 400,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(26),
+                border: Border.all(color: Colors.white, width: 3),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(23),
+                child: _buildMonochromePanel(
+                  pack.storyCoupleImageUrl,
+                  height: 400,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Full-Screen Editorial Love Story Reader Modal (matches Tosin & Kieron multi-chapter view)
+  void _openFullLoveStoryModal(
+    BuildContext context, {
+    required String coupleName,
+    required String metLabel,
+    required String heroImageUrl,
+    required String secondaryImageUrl,
+    required String locationTag,
+    required String headlineQuote,
+  }) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(20),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1060, maxHeight: 860),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(28),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Breadcrumb + Close Bar
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(28, 18, 20, 14),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Love Stories  ›  All Stories  ›  $coupleName  ›',
+                              style: const TextStyle(
+                                color: AviajTheme.midnightNavy,
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => Navigator.of(ctx).pop(),
+                            icon: const Icon(Icons.close_rounded),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Giant B&W Hero Banner with Met Year + Couple Name
+                    SizedBox(
+                      height: 420,
+                      width: double.infinity,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          _buildMonochromePanel(heroImageUrl, height: 420),
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withValues(alpha: 0.15),
+                                  Colors.black.withValues(alpha: 0.78),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 6,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AviajTheme.loveRed,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      metLabel,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    coupleName,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 64,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: -2.0,
+                                      height: 1.0,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 580,
+                                    ),
+                                    child: Text(
+                                      headlineQuote,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.45,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Multi-Chapter Editorial Story Body
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 48,
+                        vertical: 40,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'They say timing is everything — and when $coupleName matched on Aviaj ($locationTag), neither of them expected a single route check-in to turn into a lifelong adventure together.',
+                            style: const TextStyle(
+                              color: AviajTheme.midnightNavy,
+                              fontSize: 16.5,
+                              fontWeight: FontWeight.w500,
+                              height: 1.6,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'The 10-Hour Second Date',
+                            style: TextStyle(
+                              color: AviajTheme.midnightNavy,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.8,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'What started as curiosity turned into 10 hours of sharing travel stories, favorite cafés, and opening up in ways most people don’t in the first few weeks of dating. Thirty-six questions later, there was no denying their connection had shifted into something extraordinary.',
+                            style: TextStyle(
+                              color: Color(0xFF3E3034),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1.6,
+                            ),
+                          ),
+                          const SizedBox(height: 28),
+                          // Side-by-side B&W duo portraits
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 6,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: _buildMonochromePanel(
+                                    heroImageUrl,
+                                    height: 300,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                flex: 4,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: _buildMonochromePanel(
+                                    secondaryImageUrl,
+                                    height: 300,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 32),
+                          Text(
+                            '“I didn’t like the idea of waiting for somebody to message me. I’m in charge of my love life here, so I just really always felt empowered by Aviaj.”',
+                            style: const TextStyle(
+                              color: AviajTheme.midnightNavy,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w900,
+                              height: 1.22,
+                              letterSpacing: -0.9,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            coupleName,
+                            style: const TextStyle(
+                              color: Color(0xFF5A4A4F),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 28),
+                          const Text(
+                            'Two Weddings, Two Cultures, One Love',
+                            style: TextStyle(
+                              color: AviajTheme.midnightNavy,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.8,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'One year after moving in together, a proposal overlooking the coast turned into two unforgettable celebrations with friends and family from around the world. What defines their relationship is a sense of partnership — the certainty that no matter what life brings, they can face it together.',
+                            style: TextStyle(
+                              color: Color(0xFF3E3034),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1.6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -2463,12 +4391,12 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         _LightFooterColumn(
           title: 'Our apps',
           items: const [
-            'Aviaj Romance',
-            'Aviaj Co-Pilot',
+            'Aviaj Date',
+            'AFF (Aviaj Friends Forever)',
             'Aviaj Crew ↗',
           ],
           boldItems: true,
-          onTap: () => _scrollToSection(_modesKey),
+          onTap: () => _scrollToSection(_affKey),
         ),
         _LightFooterColumn(
           title: 'Company',
@@ -2527,8 +4455,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 class _NavbarLink extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
+  final bool isHighlighted;
 
-  const _NavbarLink({required this.label, required this.onTap});
+  const _NavbarLink({
+    required this.label,
+    required this.onTap,
+    this.isHighlighted = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -2536,10 +4469,18 @@ class _NavbarLink extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: TextButton(
         onPressed: onTap,
+        style: isHighlighted
+            ? TextButton.styleFrom(
+                backgroundColor: AviajTheme.warmSand,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+              )
+            : null,
         child: Text(
           label,
-          style: const TextStyle(
-            color: AviajTheme.midnightNavy,
+          style: TextStyle(
+            color: isHighlighted ? AviajTheme.loveRed : AviajTheme.midnightNavy,
             fontWeight: FontWeight.w800,
             fontSize: 14,
           ),

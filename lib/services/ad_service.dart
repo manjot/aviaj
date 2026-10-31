@@ -30,29 +30,47 @@ class AviajAdService extends ChangeNotifier {
 
   AviajAdService._();
 
-  // Production Google AdMob IDs (overridable via --dart-define or runtime console)
+  // Production Google AdMob IDs (Publisher ID: ca-app-pub-4106606850293358)
+  String admobPublisherId = const String.fromEnvironment(
+    'ADMOB_PUBLISHER_ID',
+    defaultValue: 'ca-app-pub-4106606850293358',
+  );
   String admobAndroidAppId = const String.fromEnvironment(
     'ADMOB_ANDROID_APP_ID',
-    defaultValue: 'ca-app-pub-3940256099942544~3347511713',
+    defaultValue: 'ca-app-pub-4106606850293358~4259580608',
   );
   String admobIosAppId = const String.fromEnvironment(
     'ADMOB_IOS_APP_ID',
-    defaultValue: 'ca-app-pub-3940256099942544~1458002511',
+    defaultValue: 'ca-app-pub-4106606850293358~1715188645',
   );
   String admobBannerUnitId = const String.fromEnvironment(
     'ADMOB_BANNER_UNIT_ID',
-    defaultValue: 'ca-app-pub-3940256099942544/6300978111',
+    defaultValue: 'ca-app-pub-4106606850293358/9928720582',
   );
   String admobInterstitialUnitId = const String.fromEnvironment(
     'ADMOB_INTERSTITIAL_UNIT_ID',
-    defaultValue: 'ca-app-pub-3940256099942544/1033173712',
+    defaultValue: 'ca-app-pub-4106606850293358/7901770150',
   );
   String admobRewardedUnitId = const String.fromEnvironment(
     'ADMOB_REWARDED_UNIT_ID',
-    defaultValue: 'ca-app-pub-3940256099942544/5224354917',
+    defaultValue: 'ca-app-pub-4106606850293358/7512429907',
+  );
+  String admobIosBannerUnitId = const String.fromEnvironment(
+    'ADMOB_IOS_BANNER_UNIT_ID',
+    defaultValue: 'ca-app-pub-4106606850293358/5816204854',
+  );
+  String admobIosInterstitialUnitId = const String.fromEnvironment(
+    'ADMOB_IOS_INTERSTITIAL_UNIT_ID',
+    defaultValue: 'ca-app-pub-4106606850293358/5189518897',
+  );
+  String admobIosRewardedUnitId = const String.fromEnvironment(
+    'ADMOB_IOS_REWARDED_UNIT_ID',
+    defaultValue: 'ca-app-pub-4106606850293358/9922970826',
   );
 
-  // Production Unity Ads Game IDs & Placements (overridable via --dart-define or runtime console)
+  // Production Unity Cloud Organization (13469047611046) & Aviaj Project (d8385613-98a1-4ca9-abb2-076401c353b9)
+  String unityOrganizationId = '13469047611046';
+  String unityProjectId = 'd8385613-98a1-4ca9-abb2-076401c353b9';
   String unityAndroidGameId = const String.fromEnvironment(
     'UNITY_ANDROID_GAME_ID',
     defaultValue: '5719482',
@@ -82,7 +100,7 @@ class AviajAdService extends ChangeNotifier {
     isUnityInitialized = await NativeAdBridge.initializeUnityAds(
       androidGameId: unityAndroidGameId,
       iosGameId: unityIosGameId,
-      testMode: true,
+      testMode: false,
     );
     notifyListeners();
   }
@@ -128,7 +146,7 @@ class AviajAdService extends ChangeNotifier {
 
     final shownNatively = await NativeAdBridge.showNativeInterstitial(
       admobAndroidUnitId: admobInterstitialUnitId,
-      admobIosUnitId: admobInterstitialUnitId,
+      admobIosUnitId: admobIosInterstitialUnitId,
       unityAndroidPlacement: unityInterstitialPlacement,
       unityIosPlacement: 'Interstitial_iOS',
       preferUnity: preferUnity,
@@ -155,7 +173,7 @@ class AviajAdService extends ChangeNotifier {
 
     final shownNatively = await NativeAdBridge.showNativeRewarded(
       admobAndroidUnitId: admobRewardedUnitId,
-      admobIosUnitId: admobRewardedUnitId,
+      admobIosUnitId: admobIosRewardedUnitId,
       unityAndroidPlacement: unityRewardedPlacement,
       unityIosPlacement: 'Rewarded_iOS',
       preferUnity: preferUnity,
@@ -656,7 +674,7 @@ class AviajAdBannerWidget extends StatelessWidget {
               ),
               NativeAdBridge.buildNativeBannerWidget(
                 admobAndroidUnitId: adService.admobBannerUnitId,
-                admobIosUnitId: adService.admobBannerUnitId,
+                admobIosUnitId: adService.admobIosBannerUnitId,
                 unityAndroidPlacement: adService.unityBannerPlacement,
                 unityIosPlacement: 'Banner_iOS',
                 preferUnity: isUnity,

@@ -6,10 +6,10 @@
         android:label="Aviaj"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <!-- Google AdMob Application ID (Production / Mediation Configured) -->
+        <!-- Google AdMob Application ID (Production Publisher ca-app-pub-4106606850293358) -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-4106606850293358~4259580608"/>
         <meta-data
             android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION"
             android:value="true"/>

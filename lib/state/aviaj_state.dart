@@ -4,6 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../data/mock_data.dart';
 import '../data/regional_data.dart';
 import '../models/models.dart';
+import '../services/ip_geo_stub.dart'
+    if (dart.library.js_interop) '../services/ip_geo_web.dart'
+    if (dart.library.io) '../services/ip_geo_io.dart';
 
 class AviajState extends ChangeNotifier {
   static const String _likedIdsKey = 'aviaj_liked_ids';
@@ -15,6 +18,8 @@ class AviajState extends ChangeNotifier {
   static const String _customMessagesKey = 'aviaj_custom_messages';
 
   AviajRegion _activeRegion = AviajRegionalCatalog.detectVisitorRegion();
+  bool _userManuallyLockedRegion = false;
+  String? _lastDetectedIpCountryCode;
   TravellerProfile _currentUser = AviajMockData.initialCurrentUser;
   late final List<TravellerProfile> _allProfiles = List<TravellerProfile>.from(
     AviajRegionalCatalog.packFor(_activeRegion).profiles,
@@ -41,6 +46,7 @@ class AviajState extends ChangeNotifier {
   }
 
   AviajRegion get activeRegion => _activeRegion;
+  String? get lastDetectedIpCountryCode => _lastDetectedIpCountryCode;
   AviajRegionalContentPack get regionalPack =>
       AviajRegionalCatalog.packFor(_activeRegion);
   TravellerProfile get currentUser => _currentUser;
@@ -196,13 +202,36 @@ class AviajState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setRegion(AviajRegion region) {
+  void setRegion(AviajRegion region, {bool manualOverride = true}) {
+    if (manualOverride) {
+      _userManuallyLockedRegion = true;
+    }
     if (_activeRegion == region) return;
     _activeRegion = region;
     _allProfiles
       ..clear()
       ..addAll(AviajRegionalCatalog.packFor(region).profiles);
     notifyListeners();
+  }
+
+  /// Queries live IP/VPN geolocation (`https://api.country.is/`, `https://ipwho.is/`, `/geo.php`)
+  /// so connecting a VPN (e.g. Turbo VPN to USA, Middle East, Europe, India, APAC) automatically
+  /// switches all regional images, profiles, and copy.
+  Future<bool> refreshRegionFromLiveIp() async {
+    if (_userManuallyLockedRegion) return false;
+    try {
+      final countryCode = await IpGeoPlatform.fetchLiveCountryCode();
+      if (countryCode != null && countryCode.isNotEmpty) {
+        _lastDetectedIpCountryCode = countryCode;
+        final detectedRegion =
+            AviajRegionalCatalog.regionFromCountryCode(countryCode);
+        if (detectedRegion != null && detectedRegion != _activeRegion) {
+          setRegion(detectedRegion, manualOverride: false);
+          return true;
+        }
+      }
+    } catch (_) {}
+    return false;
   }
 
   void toggleDarkMode() {

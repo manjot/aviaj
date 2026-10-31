@@ -1,0 +1,8 @@
+# Aviaj (aviaj.com) Authorized Digital Sellers for Mobile Apps (IAB Tech Lab app-ads.txt v1.0)
+# Google AdMob Production Publisher Account (ca-app-pub-4106606850293358)
+google.com, pub-4106606850293358, DIRECT, f08c47fec0942fa0
+
+# Unity Ads / Unity LevelPlay Production Organization (13469047611046)
+unity.com, 13469047611046, DIRECT, 96c5a37352f0969d
+unity3d.com, 13469047611046, DIRECT, 96c5a37352f0969d
+
