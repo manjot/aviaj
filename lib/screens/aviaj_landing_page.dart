@@ -38,6 +38,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   final GlobalKey _storiesKey = GlobalKey();
   final GlobalKey _pricingKey = GlobalKey();
   int _selectedHeroIndex = 0;
+  int _selectedStoryIndex = 0;
   bool _showDateMegaMenu = false;
   bool _showAffMegaMenu = false;
   bool _showStoriesMegaMenu = false;
@@ -3791,25 +3792,31 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         couple: 'Tosin & Kieron',
         metYear: 'Met on Aviaj in 2020',
         summary: '36 questions later, it was love.',
+        standfirst:
+            'The middle of a global pandemic isn’t when most people expect to meet their future spouse, but it was for this Dublin couple.',
         cityTag: 'Dublin | Unexpected',
         imageUrl: pack.storyCoupleImageUrl,
-        secondImageUrl: pack.departureCirclePhotoUrl,
+        secondImageUrl: pack.coPilotCrewImageUrl,
       ),
       (
         couple: 'Truett & Bimal',
         metYear: 'Met on Aviaj in 2018',
         summary:
             'His friends played virtual Cupid, and it worked like a charm.',
+        standfirst:
+            'One spontaneous right swipe during a weekend getaway turned into six years of adventures across three continents.',
         cityTag: 'Dallas, TX | LGBTQIA+',
-        imageUrl: pack.steppedCards[0].imageUrl,
-        secondImageUrl: pack.steppedCards[1].imageUrl,
+        imageUrl: pack.coPilotCrewImageUrl,
+        secondImageUrl: pack.profiles[1].imageUrl,
       ),
       (
         couple: 'Nina & Thomas',
         metYear: 'Met on Aviaj in 2022',
         summary: 'As it turned out, love really was just around the corner.',
+        standfirst:
+            'After matching on Aviaj Travel Mode before a flight to Paris, Nina and Thomas realized they lived just three blocks apart.',
         cityTag: 'Paris, France | Unexpected',
-        imageUrl: pack.departureCirclePhotoUrl,
+        imageUrl: pack.profiles[1].imageUrl,
         secondImageUrl: pack.storyCoupleImageUrl,
       ),
       (
@@ -3817,28 +3824,37 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         metYear: 'Met on Aviaj in 2024',
         summary:
             'A mutual love of fashion and travel led to a connection that fit just right.',
+        standfirst:
+            'What started as an AFF Departure Circle coffee meetup in SoHo quickly blossomed into an inseparable partnership.',
         cityTag: 'New York City, NY | Friends First',
-        imageUrl: pack.steppedCards[1].imageUrl,
-        secondImageUrl: pack.steppedCards[2].imageUrl,
+        imageUrl: pack.profiles[2].imageUrl,
+        secondImageUrl: pack.profiles[3].imageUrl,
       ),
       (
         couple: 'Leslie & Thomas',
         metYear: 'Met on Aviaj in 2021',
         summary:
             'From airport masks to a wedding-day adventure, this love story has it all.',
+        standfirst:
+            'Delayed flights and shared boarding gate laughs led to the adventure of a lifetime.',
         cityTag: 'Dallas, TX | Unexpected',
-        imageUrl: pack.steppedCards[2].imageUrl,
+        imageUrl: pack.profiles[3].imageUrl,
         secondImageUrl: pack.storyCoupleImageUrl,
       ),
       (
         couple: pack.storyAttribution.split(',').first.trim(),
         metYear: 'Met on Aviaj in 2023',
         summary: pack.storyQuote,
+        standfirst:
+            'Matched via Aviaj Destination Radar™ while planning overlapping trekking and coastal itineraries.',
         cityTag: '${widget.state.activeRegion.label} | Departure Match',
-        imageUrl: pack.romancePhoneImageUrl,
+        imageUrl: pack.profiles[4].imageUrl,
         secondImageUrl: pack.storyCoupleImageUrl,
       ),
     ];
+
+    final activeStory =
+        featuredStories[_selectedStoryIndex % featuredStories.length];
 
     return Column(
       children: [
@@ -3891,14 +3907,14 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                   ),
                   Expanded(
                     child: _buildMonochromePanel(
-                      pack.departureCirclePhotoUrl,
+                      pack.coPilotCrewImageUrl,
                       height: double.infinity,
                     ),
                   ),
                   if (isDesktop)
                     Expanded(
                       child: _buildMonochromePanel(
-                        pack.steppedCards[0].imageUrl,
+                        pack.profiles[1].imageUrl,
                         height: double.infinity,
                       ),
                     ),
@@ -3941,141 +3957,331 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         ),
 
-        // 5C: Centered Editorial Intro + "Featured Love Stories" 3-Column Grid
+        // 5C: Centered Editorial Intro + 2-Panel Monochrome Couple Strip + "Featured Love Stories" 3-Column Grid
         Container(
           width: double.infinity,
           color: Colors.white,
-          padding: EdgeInsets.symmetric(
-            horizontal: isDesktop ? 72 : 24,
-            vertical: isDesktop ? 76 : 48,
+          padding: EdgeInsets.only(
+            top: isDesktop ? 76 : 48,
+            bottom: isDesktop ? 48 : 32,
           ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1220),
-              child: Column(
-                children: [
-                  ConstrainedBox(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: isDesktop ? 72 : 24),
+                child: Center(
+                  child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 980),
-                    child: Text(
-                      'Discover real Aviaj love stories from across the world—full of sparks, surprises, second chances, and everything in between.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AviajTheme.midnightNavy,
-                        fontSize: isDesktop ? 48 : 30,
-                        fontWeight: FontWeight.w900,
-                        height: 1.12,
-                        letterSpacing: -1.4,
-                      ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Discover real Aviaj love stories from across the world—full of sparks, surprises, second chances, and everything in between.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AviajTheme.midnightNavy,
+                            fontSize: isDesktop ? 48 : 30,
+                            fontWeight: FontWeight.w900,
+                            height: 1.12,
+                            letterSpacing: -1.4,
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 14,
+                          runSpacing: 12,
+                          children: [
+                            FilledButton(
+                              onPressed: () {
+                                final first = featuredStories.first;
+                                _openFullLoveStoryModal(
+                                  context,
+                                  coupleName: first.couple,
+                                  metLabel: first.metYear,
+                                  heroImageUrl: first.imageUrl,
+                                  secondaryImageUrl: first.secondImageUrl,
+                                  locationTag: first.cityTag,
+                                  headlineQuote: first.summary,
+                                );
+                              },
+                              style: FilledButton.styleFrom(
+                                backgroundColor: AviajTheme.midnightNavy,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 26,
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                              child: const Text(
+                                'Read the stories',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 14.5,
+                                ),
+                              ),
+                            ),
+                            OutlinedButton(
+                              onPressed: widget.onOpenFullMobilePreview,
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AviajTheme.midnightNavy,
+                                side: const BorderSide(
+                                  color: AviajTheme.midnightNavy,
+                                  width: 1.4,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 26,
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                              child: const Text(
+                                'Start your love story',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 14.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 28),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 14,
-                    runSpacing: 12,
-                    children: [
-                      FilledButton(
-                        onPressed: () {
-                          final first = featuredStories.first;
-                          _openFullLoveStoryModal(
-                            context,
-                            coupleName: first.couple,
-                            metLabel: first.metYear,
-                            heroImageUrl: first.imageUrl,
-                            secondaryImageUrl: first.secondImageUrl,
-                            locationTag: first.cityTag,
-                            headlineQuote: first.summary,
-                          );
-                        },
-                        style: FilledButton.styleFrom(
-                          backgroundColor: AviajTheme.midnightNavy,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 26,
-                            vertical: 16,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                        ),
-                        child: const Text(
-                          'Read the stories',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 14.5,
-                          ),
-                        ),
+                ),
+              ),
+              SizedBox(height: isDesktop ? 52 : 32),
+              // Full-Width 2-Panel Monochrome Couple Strip
+              SizedBox(
+                width: double.infinity,
+                height: isDesktop ? 420 : 260,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildMonochromePanel(
+                        pack.profiles[2].imageUrl,
+                        height: double.infinity,
                       ),
-                      OutlinedButton(
-                        onPressed: widget.onOpenFullMobilePreview,
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AviajTheme.midnightNavy,
-                          side: const BorderSide(
+                    ),
+                    Expanded(
+                      child: _buildMonochromePanel(
+                        pack.profiles[3].imageUrl,
+                        height: double.infinity,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: isDesktop ? 68 : 42),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: isDesktop ? 72 : 24),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1220),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Featured Love Stories',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
                             color: AviajTheme.midnightNavy,
-                            width: 1.4,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 26,
-                            vertical: 16,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40),
+                            fontSize: isDesktop ? 52 : 34,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -1.5,
                           ),
                         ),
-                        child: const Text(
-                          'Start your love story',
+                        const SizedBox(height: 10),
+                        const Text(
+                          'From Tokyo to Toronto, explore the love found on Aviaj around the world.',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 14.5,
+                            color: Color(0xFF4A3B40),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 36),
+                        Wrap(
+                          spacing: 24,
+                          runSpacing: 24,
+                          children:
+                              featuredStories.asMap().entries.map((entry) {
+                            final idx = entry.key;
+                            final story = entry.value;
+                            final cardWidth =
+                                isDesktop ? 380.0 : double.infinity;
+                            return SizedBox(
+                              width: cardWidth,
+                              child: _buildLoveStoryCollectionCard(
+                                context,
+                                coupleName: story.couple,
+                                metYear: story.metYear,
+                                summary: story.summary,
+                                cityTag: story.cityTag,
+                                imageUrl: story.imageUrl,
+                                secondImageUrl: story.secondImageUrl,
+                                onSelectStory: () {
+                                  setState(() {
+                                    _selectedStoryIndex = idx;
+                                  });
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // 5C-DETAIL: Full-Width Couple Story Spotlight Hero ("Love Stories > All Stories > Tosin & Kieron >")
+        Container(
+          width: double.infinity,
+          height: isDesktop ? 580 : 460,
+          color: const Color(0xFFE5E4E2),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              _buildMonochromePanel(
+                activeStory.imageUrl,
+                height: double.infinity,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.55),
+                      Colors.black.withValues(alpha: 0.25),
+                      Colors.black.withValues(alpha: 0.76),
                     ],
                   ),
-                  SizedBox(height: isDesktop ? 64 : 40),
-                  Text(
-                    'Featured Love Stories',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AviajTheme.midnightNavy,
-                      fontSize: isDesktop ? 52 : 34,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'From Tokyo to Toronto, explore the love found on Aviaj around the world.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF4A3B40),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 36),
-                  Wrap(
-                    spacing: 24,
-                    runSpacing: 24,
-                    children: featuredStories.map((story) {
-                      final cardWidth = isDesktop ? 380.0 : double.infinity;
-                      return SizedBox(
-                        width: cardWidth,
-                        child: _buildLoveStoryCollectionCard(
-                          context,
-                          coupleName: story.couple,
-                          metYear: story.metYear,
-                          summary: story.summary,
-                          cityTag: story.cityTag,
-                          imageUrl: story.imageUrl,
-                          secondImageUrl: story.secondImageUrl,
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
+                ),
               ),
-            ),
+              // Top-Left Breadcrumb: "Love Stories > All Stories > Tosin & Kieron >"
+              Positioned(
+                top: isDesktop ? 34 : 20,
+                left: isDesktop ? 48 : 20,
+                right: 20,
+                child: Wrap(
+                  spacing: 6,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    const Text(
+                      'Love Stories  ›  All Stories  ›  ',
+                      style: TextStyle(
+                        color: Color(0xFF1E1E1E),
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      '${activeStory.couple}  ›',
+                      style: const TextStyle(
+                        color: Color(0xFF1E1E1E),
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Bottom-Centered Couple Story Title ("Met on Aviaj in 2020" + Giant "Tosin & Kieron" + Standfirst)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    24,
+                    24,
+                    24,
+                    isDesktop ? 46 : 28,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 820),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          activeStory.metYear,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: const Color(0xFFFF4B5C),
+                            fontSize: isDesktop ? 24 : 18,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          activeStory.couple,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: const Color(0xFFFF4B5C),
+                            fontSize: isDesktop ? 88 : 48,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -2.6,
+                            height: 0.98,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          activeStory.standfirst,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: isDesktop ? 17.5 : 14.5,
+                            fontWeight: FontWeight.w600,
+                            height: 1.45,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        OutlinedButton(
+                          onPressed: () => _openFullLoveStoryModal(
+                            context,
+                            coupleName: activeStory.couple,
+                            metLabel: activeStory.metYear,
+                            heroImageUrl: activeStory.imageUrl,
+                            secondaryImageUrl: activeStory.secondImageUrl,
+                            locationTag: activeStory.cityTag,
+                            headlineQuote: activeStory.summary,
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(
+                              color: Colors.white,
+                              width: 1.5,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: Text(
+                            'Read ${activeStory.couple}’s full story ›',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
 
@@ -4145,17 +4351,21 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     required String cityTag,
     required String imageUrl,
     required String secondImageUrl,
+    VoidCallback? onSelectStory,
   }) {
     return InkWell(
-      onTap: () => _openFullLoveStoryModal(
-        context,
-        coupleName: coupleName,
-        metLabel: metYear,
-        heroImageUrl: imageUrl,
-        secondaryImageUrl: secondImageUrl,
-        locationTag: cityTag,
-        headlineQuote: summary,
-      ),
+      onTap: () {
+        onSelectStory?.call();
+        _openFullLoveStoryModal(
+          context,
+          coupleName: coupleName,
+          metLabel: metYear,
+          heroImageUrl: imageUrl,
+          secondaryImageUrl: secondImageUrl,
+          locationTag: cityTag,
+          headlineQuote: summary,
+        );
+      },
       borderRadius: BorderRadius.circular(24),
       child: Container(
         padding: const EdgeInsets.all(14),
