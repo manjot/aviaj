@@ -35,50 +35,56 @@ class _MatchmakerScreenState extends State<MatchmakerScreen> {
       ),
       children: [
         Container(
-          padding: const EdgeInsets.all(24),
+          width: double.infinity,
+          padding: const EdgeInsets.all(26),
           decoration: BoxDecoration(
+            color: AviajTheme.loveCrimson,
             borderRadius: BorderRadius.circular(28),
-            gradient: const LinearGradient(
-              colors: [AviajTheme.oceanTeal, AviajTheme.deepNavy],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.compass_calibration_rounded,
-                    color: Colors.amberAccent,
-                    size: 24,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'AVIAJ COMPASS MATCHMAKER',
-                    style: TextStyle(
-                      color: Colors.amberAccent.shade100,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 12,
-                      letterSpacing: 1,
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                decoration: BoxDecoration(
+                  color: AviajTheme.bumbleHoney,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.favorite_rounded,
+                      color: AviajTheme.obsidian,
+                      size: 16,
                     ),
-                  ),
-                ],
+                    SizedBox(width: 6),
+                    Text(
+                      'AVIAJ SINGLE LOVE & TRAVEL MATCHMAKER',
+                      style: TextStyle(
+                        color: AviajTheme.obsidian,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 11,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               const Text(
                 'Tune Your Relationship Horizon & Travel Chemistry',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 23,
+                  fontSize: 24,
                   fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(height: 6),
               const Text(
                 'Tell us whether you’re seeking a long-term romantic co-pilot, a spontaneous short-term vacation spark, a platonic travel buddy, or a solo group squad.',
-                style: TextStyle(color: Colors.white70, fontSize: 14),
+                style: TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],
           ),

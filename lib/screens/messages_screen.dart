@@ -313,12 +313,14 @@ class _MessagesScreenState extends State<MessagesScreen> {
       children: [
         // Partner header bar
         Container(
+          width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF151F32) : Colors.white,
+            color: isDark ? const Color(0xFF1C1C22) : Colors.white,
             border: Border(
               bottom: BorderSide(
-                color: isDark ? const Color(0xFF26334D) : Colors.grey.shade200,
+                color:
+                    isDark ? const Color(0xFF2D2D38) : const Color(0xFFF0E4E6),
               ),
             ),
           ),
@@ -346,19 +348,38 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      Wrap(
+                        spacing: 8,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Text(
                             '${partner.name}, ${partner.age} ${partner.countryFlag}',
                             style: const TextStyle(
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w900,
                               fontSize: 16,
                             ),
                           ),
-                          const SizedBox(width: 8),
                           IntentBadge(
                             intent: partner.primaryIntent,
                             compact: true,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AviajTheme.bumbleHoney,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Text(
+                              '⏱ 22h First Move Active',
+                              style: TextStyle(
+                                color: AviajTheme.obsidian,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 10.5,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -375,7 +396,11 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   ),
                 ],
               ),
-              FilledButton.tonalIcon(
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: AviajTheme.loveCrimson,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: () =>
                     _showProposeDateDialog(context, state, partner),
                 icon: const Icon(Icons.wine_bar_rounded, size: 17),

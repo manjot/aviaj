@@ -77,17 +77,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Passport Header Card
+                // Solid-Color Single-Love Passport Header Card
                 Card(
                   clipBehavior: Clip.antiAlias,
                   child: Container(
-                    padding: const EdgeInsets.all(24),
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(26),
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [AviajTheme.deepNavy, AviajTheme.oceanTeal],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      color: AviajTheme.loveCrimson,
                     ),
                     child: Wrap(
                       spacing: 24,
@@ -96,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundColor: AviajTheme.coralPrimary,
+                          backgroundColor: AviajTheme.bumbleHoney,
                           child: ClipOval(
                             child: AviajNetworkImage(
                               imageUrl: user.imageUrl,
@@ -111,30 +108,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.amberAccent
-                                          .withValues(alpha: 0.2),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: const Text(
-                                      'VERIFIED AVIAJ PASSPORT',
-                                      style: TextStyle(
-                                        color: Colors.amberAccent,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 11,
-                                        letterSpacing: 0.8,
-                                      ),
-                                    ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 11,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AviajTheme.bumbleHoney,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  'VERIFIED AVIAJ SINGLE LOVE & TRAVEL PASSPORT',
+                                  style: TextStyle(
+                                    color: AviajTheme.obsidian,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 11,
+                                    letterSpacing: 0.7,
                                   ),
-                                ],
+                                ),
                               ),
                               const SizedBox(height: 8),
                               Text(
@@ -149,14 +140,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Text(
                                 '${user.occupation} • ${user.homeCity}',
                                 style: const TextStyle(
-                                  color: Colors.white70,
+                                  color: Colors.white,
                                   fontSize: 14,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              IntentBadge(
-                                intent: user.primaryIntent,
-                                solid: true,
+                              const SizedBox(height: 12),
+                              const AppStoreDownloadBadges(
+                                lightOnDark: true,
+                                compact: true,
                               ),
                             ],
                           ),

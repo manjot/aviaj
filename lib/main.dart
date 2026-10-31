@@ -41,7 +41,7 @@ class _AviajAppState extends State<AviajApp> {
       listenable: _state,
       builder: (context, _) {
         return MaterialApp(
-          title: 'Aviaj — Solo & Group Travel Buddy & Dating App',
+          title: 'Aviaj — Single Love & Relationship Travel App',
           debugShowCheckedModeBanner: false,
           theme: AviajTheme.lightTheme(),
           darkTheme: AviajTheme.darkTheme(),
@@ -60,29 +60,29 @@ class AviajHomeShell extends StatelessWidget {
 
   static const _navItems = [
     (
-      icon: Icons.explore_outlined,
-      activeIcon: Icons.explore_rounded,
-      label: 'Discover & Date',
+      icon: Icons.local_fire_department_outlined,
+      activeIcon: Icons.local_fire_department_rounded,
+      label: 'Swipe & Date',
     ),
     (
       icon: Icons.luggage_outlined,
       activeIcon: Icons.luggage_rounded,
-      label: 'Solo & Group Trips',
+      label: 'Singles Trips',
     ),
     (
-      icon: Icons.compass_calibration_outlined,
-      activeIcon: Icons.compass_calibration_rounded,
-      label: 'Compass Match',
+      icon: Icons.favorite_border_rounded,
+      activeIcon: Icons.favorite_rounded,
+      label: 'Love Match',
     ),
     (
-      icon: Icons.forum_outlined,
-      activeIcon: Icons.forum_rounded,
-      label: 'Lounge Chat',
+      icon: Icons.chat_bubble_outline_rounded,
+      activeIcon: Icons.chat_bubble_rounded,
+      label: 'First Moves',
     ),
     (
       icon: Icons.badge_outlined,
       activeIcon: Icons.badge_rounded,
-      label: 'My Passport',
+      label: 'Passport',
     ),
   ];
 
@@ -102,14 +102,16 @@ class AviajHomeShell extends StatelessWidget {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(68),
+        preferredSize: const Size.fromHeight(70),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF151F32) : Colors.white,
+            color: isDark ? const Color(0xFF1C1C22) : Colors.white,
             border: Border(
               bottom: BorderSide(
-                color: isDark ? const Color(0xFF26334D) : Colors.grey.shade200,
+                color:
+                    isDark ? const Color(0xFF2D2D38) : const Color(0xFFF0E4E6),
+                width: 1.5,
               ),
             ),
           ),
@@ -117,7 +119,7 @@ class AviajHomeShell extends StatelessWidget {
             bottom: false,
             child: Row(
               children: [
-                // Brand Logo
+                // Solid-Color Single-Love Brand Logo
                 Flexible(
                   child: InkWell(
                     onTap: () => state.setActiveTab(0),
@@ -126,21 +128,16 @@ class AviajHomeShell extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          width: 40,
-                          height: 40,
+                          width: 42,
+                          height: 42,
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                AviajTheme.coralPrimary,
-                                AviajTheme.sunsetOrange,
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
+                            color: AviajTheme.loveCrimson,
+                            borderRadius: BorderRadius.circular(13),
                           ),
                           child: const Icon(
-                            Icons.flight_takeoff_rounded,
+                            Icons.favorite_rounded,
                             color: Colors.white,
-                            size: 22,
+                            size: 23,
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -150,20 +147,24 @@ class AviajHomeShell extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'AVIAJ',
+                                'aviaj',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w900,
-                                  fontSize: 19,
-                                  letterSpacing: 1.2,
+                                  fontSize: 22,
+                                  letterSpacing: -0.5,
+                                  color: AviajTheme.loveCrimson,
+                                  height: 1.0,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                'Travel Buddy • Dating',
+                                'Single Love • Travel Dating',
                                 style: TextStyle(
                                   fontSize: 10.5,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey.shade500,
+                                  fontWeight: FontWeight.w800,
+                                  color: isDark
+                                      ? Colors.white70
+                                      : AviajTheme.obsidian,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -176,63 +177,74 @@ class AviajHomeShell extends StatelessWidget {
                 ),
                 const Spacer(),
                 if (isDesktopWeb)
-                  Flexible(
-                    flex: 3,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(_navItems.length, (idx) {
-                          final item = _navItems[idx];
-                          final isSelected = state.activeTabIndex == idx;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: TextButton.icon(
-                              onPressed: () => state.setActiveTab(idx),
-                              style: TextButton.styleFrom(
-                                backgroundColor: isSelected
-                                    ? AviajTheme.coralPrimary
-                                        .withValues(alpha: 0.12)
-                                    : Colors.transparent,
-                                foregroundColor: isSelected
-                                    ? AviajTheme.coralPrimary
-                                    : (isDark
-                                        ? Colors.white70
-                                        : Colors.grey.shade800),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 10,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                              ),
-                              icon: Icon(
-                                isSelected ? item.activeIcon : item.icon,
-                                size: 19,
-                              ),
-                              label: Text(
-                                item.label,
-                                style: TextStyle(
-                                  fontWeight: isSelected
-                                      ? FontWeight.w800
-                                      : FontWeight.w600,
-                                  fontSize: 13.5,
-                                ),
-                              ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(_navItems.length, (idx) {
+                      final item = _navItems[idx];
+                      final isSelected = state.activeTabIndex == idx;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
+                        child: TextButton.icon(
+                          onPressed: () => state.setActiveTab(idx),
+                          style: TextButton.styleFrom(
+                            backgroundColor: isSelected
+                                ? AviajTheme.loveCrimson
+                                : Colors.transparent,
+                            foregroundColor: isSelected
+                                ? Colors.white
+                                : (isDark
+                                    ? Colors.white70
+                                    : AviajTheme.obsidian),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 13,
+                              vertical: 10,
                             ),
-                          );
-                        }),
-                      ),
-                    ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          icon: Icon(
+                            isSelected ? item.activeIcon : item.icon,
+                            size: 18,
+                          ),
+                          label: Text(
+                            item.label,
+                            style: TextStyle(
+                              fontWeight: isSelected
+                                  ? FontWeight.w900
+                                  : FontWeight.w700,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                 const Spacer(),
                 if (screenWidth >= 680) ...[
-                  IntentBadge(
-                    intent: state.currentUser.primaryIntent,
-                    compact: true,
+                  FilledButton.icon(
+                    onPressed: () => showMobileAppDownloadModal(context),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AviajTheme.obsidian,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    icon: const Icon(Icons.phone_iphone_rounded, size: 16),
+                    label: const Text(
+                      'Get the App',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12.5,
+                      ),
+                    ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 8),
                 ],
                 IconButton(
                   tooltip: state.isDarkMode ? 'Light Mode' : 'Dark Mode',
@@ -263,7 +275,7 @@ class AviajHomeShell extends StatelessWidget {
                       icon: Icon(item.icon),
                       selectedIcon: Icon(
                         item.activeIcon,
-                        color: AviajTheme.coralPrimary,
+                        color: AviajTheme.loveCrimson,
                       ),
                       label: item.label,
                     ),
