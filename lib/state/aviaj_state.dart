@@ -18,7 +18,8 @@ class AviajState extends ChangeNotifier {
   static const String _customMessagesKey = 'aviaj_custom_messages';
 
   AviajRegion _activeRegion = AviajRegionalCatalog.detectVisitorRegion();
-  bool _userManuallyLockedRegion = false;
+  bool _userManuallyLockedRegion =
+      Uri.base.queryParameters.containsKey('region');
   String? _lastDetectedIpCountryCode;
   TravellerProfile _currentUser = AviajMockData.initialCurrentUser;
   late final List<TravellerProfile> _allProfiles = List<TravellerProfile>.from(
