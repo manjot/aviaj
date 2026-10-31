@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'ad_service.dart';
 import 'stripe_http_client_stub.dart'
+    if (dart.library.js_interop) 'stripe_http_client_web.dart'
     if (dart.library.io) 'stripe_http_client_io.dart';
 
 class StripeProductPlan {
