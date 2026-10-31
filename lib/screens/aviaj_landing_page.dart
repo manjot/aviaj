@@ -36,6 +36,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   final GlobalKey _affKey = GlobalKey();
   final GlobalKey _radarKey = GlobalKey();
   final GlobalKey _storiesKey = GlobalKey();
+  final GlobalKey _friendshipHubKey = GlobalKey();
   final GlobalKey _pricingKey = GlobalKey();
   int _selectedHeroIndex = 0;
   int _selectedStoryIndex = 0;
@@ -276,6 +277,12 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     Container(
                       key: _storiesKey,
                       child: _buildStoriesSection(context, isDesktop),
+                    ),
+
+                    // SECTION 5G: "THE FRIENDSHIP HUB" (SUB-NAVBAR + WAVY CLOUD BANNER + 4 FRIENDSHIP GUIDES + DARK SLATE FOOTER)
+                    Container(
+                      key: _friendshipHubKey,
+                      child: _buildFriendshipHubSection(context, isDesktop),
                     ),
 
                     // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
@@ -3398,7 +3405,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             InkWell(
                               onTap: () {
                                 setState(() => _showStoriesMegaMenu = false);
-                                _scrollToSection(_affKey);
+                                _scrollToSection(_friendshipHubKey);
                               },
                               child: const Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -6788,6 +6795,892 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       },
     );
   }
+
+  /// SECTION 5G: "The Friendship Hub" (Sub-Navbar + Wavy Cloud Frame Hero + 4 Friendship Guides + Dark Slate Footer)
+  Widget _buildFriendshipHubSection(BuildContext context, bool isDesktop) {
+    final friendshipArticles = [
+      (
+        title: 'How to Make New Friends',
+        excerpt:
+            'As humans, we naturally seek companionship, but knowing how to make friends isn’t easy. As connected as we are, it can be difficult to form genuine, long lasting relationships. Add on the day-to-day stresses of work, family, and everything in between, and suddenly it seems impossible to find the time to find friends. So, how ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1543807535-eceef0bc6599?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Making new friends as an adult starts with showing up where like-minded people gather—whether that’s an AFF (Aviaj Friends Forever) Departure Circle, a weekend hiking trek in Manali or Yosemite, or a neighborhood coffee club. Start with specific shared activities rather than open-ended plans, follow up within 48 hours after a great conversation, and treat consistency as the secret ingredient to turning a new connection into a lifelong friend.',
+      ),
+      (
+        title: 'Apps to Make Friends',
+        excerpt:
+            'Thought apps were just for making romantic connections? Think again. Our users begged us to create a friendship-finding app—and we listened. Whether you’re new to a city or looking to expand your social circle, Aviaj For Friends (AFF) is a fast-track way to create platonic connections and find new friends with similar hobbies and interests. Read ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'AFF (Aviaj Friends Forever) was built from the ground up for platonic connections. Create a dedicated friendship profile highlighting your weekend plans, favorite travel destinations, and community interests. Use Departure Plans to organize group meetups or join local Community Leaders hosting events across your city.',
+      ),
+      (
+        title: 'How to Deal with Having No Friends',
+        excerpt:
+            'There are billions of people on the planet, and yet so many of us feel lonely. If you have no friends and are wondering what to do, we have some insight for you. Whether you’ve moved to a new city or are looking to expand your friendship group, we created Aviaj For Friends (AFF) to help you ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Feeling isolated after relocating, graduating, or changing routines is one of the most universal human experiences. Instead of pressuring yourself to build an entire social circle overnight, focus on one low-stakes micro-connection at a time—like joining a local creative workshop, a group trek, or an AFF interest circle where everyone in the room is also looking to meet new people.',
+      ),
+      (
+        title: 'What is the Safest Way to Make Friends Online',
+        excerpt:
+            'Many of us spend a lot of time online, so it makes sense that we might try to meet new friends there too. While the internet and apps have opened up a world of possibilities, unfortunately, there is a darker side to logging on. Your safety is a priority, which is why we’ve drawn up ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'When meeting new friends online, always look for Photo & ID Verification badges on Aviaj, keep initial conversations inside the app, and use Aviaj Video Calls to say hello before meeting in person. For your first meetup, pick a lively public café or daytime group activity and share your live itinerary with a trusted contact.',
+      ),
+    ];
+
+    return Column(
+      children: [
+        // 1. Top White Sub-Navigation Bar (`≡ aviaj | About • The Buzz • The Shop • Ambassadors | [Download the App] [Sign In]`)
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(color: Color(0xFFECECEC), width: 1),
+            ),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 56 : 20,
+            vertical: 16,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1280),
+              child: Row(
+                children: [
+                  // Hexagonal / Emblem Mark + "aviaj"
+                  InkWell(
+                    onTap: () => _scrollToSection(_affKey),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: AviajTheme.loveRed,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.menu_rounded,
+                            color: Colors.white,
+                            size: 19,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'aviaj',
+                          style: TextStyle(
+                            color: AviajTheme.loveRed,
+                            fontSize: 27,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.9,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (isDesktop) ...[
+                    const SizedBox(width: 36),
+                    for (final navItem in const [
+                      'About',
+                      'The Buzz',
+                      'The Shop',
+                      'Ambassadors',
+                    ])
+                      Padding(
+                        padding: const EdgeInsets.only(right: 28),
+                        child: InkWell(
+                          onTap: () => _scrollToSection(_affKey),
+                          child: Text(
+                            navItem,
+                            style: const TextStyle(
+                              color: Color(0xFF1E1E1E),
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                  const Spacer(),
+                  FilledButton(
+                    onPressed: () => showMobileAppDownloadModal(context),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AviajTheme.loveRed,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
+                    child: const Text(
+                      'Download the App',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  OutlinedButton(
+                    onPressed: widget.onOpenFullMobilePreview,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFF1E1E1E),
+                      side: const BorderSide(
+                        color: Color(0xFF1E1E1E),
+                        width: 1.2,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
+                    child: const Text(
+                      'Sign In',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // 2. Full-Bleed Brand Banner with Wavy / Scalloped Cloud Frame ("The Friendship Hub")
+        Container(
+          width: double.infinity,
+          color: AviajTheme.loveRed,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 72 : 20,
+            vertical: isDesktop ? 52 : 32,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1180),
+              child: SizedBox(
+                height: isDesktop ? 470 : 320,
+                width: double.infinity,
+                child: ClipPath(
+                  clipper: const _WavyFriendshipFrameClipper(),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      AviajNetworkImage(
+                        imageUrl:
+                            'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=85',
+                        width: double.infinity,
+                        height: double.infinity,
+                        fallbackLabel: 'The Friendship Hub',
+                      ),
+                      Container(
+                        color: Colors.black.withValues(alpha: 0.24),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Text(
+                            'The Friendship Hub',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: isDesktop ? 64 : 36,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -1.6,
+                              height: 1.05,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // 3. 4-Column Friendship Editorial Article Cards Grid
+        Container(
+          width: double.infinity,
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 48 : 20,
+            vertical: isDesktop ? 68 : 44,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1280),
+              child: isDesktop
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: friendshipArticles.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final article = entry.value;
+                        return Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right:
+                                  idx < friendshipArticles.length - 1 ? 22 : 0,
+                            ),
+                            child: _buildFriendshipHubGuideCard(
+                              context,
+                              title: article.title,
+                              excerpt: article.excerpt,
+                              imageUrl: article.imageUrl,
+                              fullBody: article.fullBody,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  : Column(
+                      children: friendshipArticles.map((article) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 24),
+                          child: _buildFriendshipHubGuideCard(
+                            context,
+                            title: article.title,
+                            excerpt: article.excerpt,
+                            imageUrl: article.imageUrl,
+                            fullBody: article.fullBody,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+            ),
+          ),
+        ),
+
+        // 4. Dark Slate / Charcoal Friendship Hub Footer (`#1B2226`)
+        Container(
+          width: double.infinity,
+          color: const Color(0xFF1B2226),
+          padding: EdgeInsets.fromLTRB(
+            isDesktop ? 88 : 24,
+            isDesktop ? 64 : 44,
+            isDesktop ? 88 : 24,
+            isDesktop ? 44 : 32,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1240),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top Row: Small `aviaj` + `DOWNLOAD NOW` pill on left, App Store Trend of the Year Rosette on right
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 14,
+                                height: 14,
+                                decoration: BoxDecoration(
+                                  color: AviajTheme.loveRed,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Icon(
+                                  Icons.menu_rounded,
+                                  color: Colors.white,
+                                  size: 10,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              const Text(
+                                'aviaj',
+                                style: TextStyle(
+                                  color: AviajTheme.loveRed,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 26),
+                          InkWell(
+                            onTap: () => showMobileAppDownloadModal(context),
+                            borderRadius: BorderRadius.circular(40),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 34,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40),
+                                border: Border.all(
+                                  color: AviajTheme.loveRed,
+                                  width: 1.4,
+                                ),
+                              ),
+                              child: const Text(
+                                'DOWNLOAD NOW',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.5,
+                                  fontWeight: FontWeight.w600,
+                                  fontStyle: FontStyle.italic,
+                                  letterSpacing: 0.6,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      // Geometric App Store "Trend of the Year: Connection" Spirograph Rosette Badge
+                      SizedBox(
+                        width: 128,
+                        height: 128,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            CustomPaint(
+                              size: const Size(128, 128),
+                              painter: const _AppStoreTrendRosettePainter(),
+                            ),
+                            const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  ' App Store',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8.5,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                SizedBox(height: 3),
+                                Text(
+                                  'Trend of the Year:\nConnection',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.15,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  '2021',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 8.5,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: isDesktop ? 64 : 40),
+                  // Middle Row: Two Horizontal Accent Rules + 3 Columns (`The App`, `The Company`, `The Buzz`)
+                  isDesktop
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 1.2,
+                                    width: double.infinity,
+                                    color: AviajTheme.loveRed,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        flex: 4,
+                                        child: _buildFriendshipDarkFooterCol(
+                                          context,
+                                          title: 'The App',
+                                          items: const [
+                                            'Aviaj Date',
+                                            'Aviaj AFF',
+                                            'Aviaj Bizz',
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 6,
+                                        child: _buildFriendshipDarkFooterCol(
+                                          context,
+                                          title: 'The Company',
+                                          items: const [
+                                            'Help Centre',
+                                            'Events',
+                                            'Guidelines',
+                                            'Privacy Policy',
+                                            'Terms & Conditions',
+                                            'Do not sell or share my personal information',
+                                            'Contact Us',
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 64),
+                            Expanded(
+                              flex: 5,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 1.2,
+                                    width: double.infinity,
+                                    color: AviajTheme.loveRed,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildFriendshipDarkFooterCol(
+                                    context,
+                                    title: 'The Buzz',
+                                    items: const [
+                                      'Love',
+                                      'Friendship',
+                                      'Career',
+                                      'Wellness',
+                                      'How-to',
+                                      'Events',
+                                      'Submit a story',
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildFriendshipDarkFooterCol(
+                              context,
+                              title: 'The App',
+                              items: const [
+                                'Aviaj Date',
+                                'Aviaj AFF',
+                                'Aviaj Bizz',
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                            _buildFriendshipDarkFooterCol(
+                              context,
+                              title: 'The Company',
+                              items: const [
+                                'Help Centre',
+                                'Events',
+                                'Guidelines',
+                                'Privacy Policy',
+                                'Terms & Conditions',
+                                'Do not sell or share my personal information',
+                                'Contact Us',
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                            _buildFriendshipDarkFooterCol(
+                              context,
+                              title: 'The Buzz',
+                              items: const [
+                                'Love',
+                                'Friendship',
+                                'Career',
+                                'Wellness',
+                                'How-to',
+                                'Events',
+                                'Submit a story',
+                              ],
+                            ),
+                          ],
+                        ),
+                  SizedBox(height: isDesktop ? 88 : 44),
+                  // Bottom Row: `MAKE THE FIRST MOVE™` + Hexagonal Social Icons + Scroll-to-Top Button
+                  Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 24,
+                    runSpacing: 20,
+                    children: [
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'MAKE THE FIRST MOVE™',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w900,
+                              fontStyle: FontStyle.italic,
+                              letterSpacing: 0.4,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '©2026 Aviaj. All Rights Reserved',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (final label in const [
+                            'IG',
+                            'f',
+                            '𝕏',
+                            'in',
+                            'P',
+                            '▶',
+                            '♪',
+                          ])
+                            Padding(
+                              padding: const EdgeInsets.only(right: 14),
+                              child: InkWell(
+                                onTap: widget.onOpenFullMobilePreview,
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  width: 34,
+                                  height: 34,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AviajTheme.loveRed,
+                                      width: 1.2,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    label,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: () {
+                              _scrollController.animateTo(
+                                0,
+                                duration: const Duration(milliseconds: 600),
+                                curve: Curves.easeOutCubic,
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(24),
+                            child: Container(
+                              width: 42,
+                              height: 42,
+                              decoration: const BoxDecoration(
+                                color: AviajTheme.loveRed,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.keyboard_arrow_up_rounded,
+                                color: Colors.white,
+                                size: 26,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFriendshipHubGuideCard(
+    BuildContext context, {
+    required String title,
+    required String excerpt,
+    required String imageUrl,
+    required String fullBody,
+  }) {
+    return InkWell(
+      onTap: () => _openFriendshipHubGuideModal(
+        context,
+        title: title,
+        imageUrl: imageUrl,
+        excerpt: excerpt,
+        fullBody: fullBody,
+      ),
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFFDFCF5),
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(18),
+              ),
+              child: AviajNetworkImage(
+                imageUrl: imageUrl,
+                height: 245,
+                width: double.infinity,
+                fallbackLabel: title,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 20, 18, 22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Color(0xFF1E1E1E),
+                      fontSize: 15.5,
+                      fontWeight: FontWeight.w800,
+                      height: 1.32,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    excerpt,
+                    style: const TextStyle(
+                      color: Color(0xFF2B2B2B),
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w400,
+                      height: 1.54,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFF8C8C8C),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Read more',
+                      style: TextStyle(
+                        color: Color(0xFF1E1E1E),
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFriendshipDarkFooterCol(
+    BuildContext context, {
+    required String title,
+    required List<String> items,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: AviajTheme.loveRed,
+            fontSize: 19,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.3,
+          ),
+        ),
+        const SizedBox(height: 14),
+        for (final item in items)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 9),
+            child: InkWell(
+              onTap: () {
+                if (item.contains('Do not sell') || item.contains('Privacy')) {
+                  _showPrivacyChoicesModal(context);
+                } else if (item.contains('Submit a story')) {
+                  _openSubmitYourStoryModal(context);
+                } else {
+                  _scrollToSection(_affKey);
+                }
+              },
+              child: Text(
+                item,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  height: 1.35,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  void _openFriendshipHubGuideModal(
+    BuildContext context, {
+    required String title,
+    required String imageUrl,
+    required String excerpt,
+    required String fullBody,
+  }) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(20),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(26),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 720),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(26),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        AviajNetworkImage(
+                          imageUrl: imageUrl,
+                          height: 300,
+                          width: double.infinity,
+                          fallbackLabel: title,
+                        ),
+                        Positioned(
+                          top: 14,
+                          right: 14,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: IconButton(
+                              onPressed: () => Navigator.of(ctx).pop(),
+                              icon: const Icon(
+                                Icons.close_rounded,
+                                color: Color(0xFF1E1E1E),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AviajTheme.loveRed,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Text(
+                              'THE FRIENDSHIP HUB • AFF',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              color: Color(0xFF1E1E1E),
+                              fontSize: 30,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.8,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            excerpt.replaceAll(' ...', '.'),
+                            style: const TextStyle(
+                              color: Color(0xFF2B2B2B),
+                              fontSize: 16,
+                              height: 1.6,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            fullBody,
+                            style: const TextStyle(
+                              color: Color(0xFF2B2B2B),
+                              fontSize: 16,
+                              height: 1.6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class _NavbarLink extends StatelessWidget {
@@ -6987,4 +7880,127 @@ class _PerspectiveSlabClipper extends CustomClipper<Path> {
   bool shouldReclip(covariant _PerspectiveSlabClipper oldClipper) {
     return oldClipper.slant != slant || oldClipper.radius != radius;
   }
+}
+
+/// Custom clipper that produces the organic wavy / scalloped cloud silhouette
+/// around "The Friendship Hub" hero photograph.
+class _WavyFriendshipFrameClipper extends CustomClipper<Path> {
+  const _WavyFriendshipFrameClipper();
+
+  @override
+  Path getClip(Size size) {
+    final w = size.width;
+    final h = size.height;
+    final padX = w * 0.022;
+    final padY = h * 0.045;
+    final ampX = w * 0.014;
+    final ampY = h * 0.032;
+    final cornerR = math.min(w, h) * 0.14;
+
+    final path = Path();
+    // Start after top-left rounded corner
+    path.moveTo(padX + cornerR, padY);
+
+    // Top wavy edge (3 gentle sinusoidal waves)
+    const topSegments = 48;
+    final topStart = padX + cornerR;
+    final topEnd = w - padX - cornerR;
+    for (int i = 1; i <= topSegments; i++) {
+      final t = i / topSegments;
+      final x = topStart + (topEnd - topStart) * t;
+      final y = padY + math.sin(t * math.pi * 5) * ampY;
+      path.lineTo(x, y);
+    }
+
+    // Top-right rounded corner
+    path.quadraticBezierTo(w - padX, padY, w - padX, padY + cornerR);
+
+    // Right wavy edge (2 gentle sinusoidal waves)
+    const sideSegments = 32;
+    final sideStart = padY + cornerR;
+    final sideEnd = h - padY - cornerR;
+    for (int i = 1; i <= sideSegments; i++) {
+      final t = i / sideSegments;
+      final y = sideStart + (sideEnd - sideStart) * t;
+      final x = (w - padX) - math.sin(t * math.pi * 3) * ampX;
+      path.lineTo(x, y);
+    }
+
+    // Bottom-right rounded corner
+    path.quadraticBezierTo(
+      w - padX,
+      h - padY,
+      w - padX - cornerR,
+      h - padY,
+    );
+
+    // Bottom wavy edge (3 gentle sinusoidal waves)
+    for (int i = 1; i <= topSegments; i++) {
+      final t = i / topSegments;
+      final x = topEnd - (topEnd - topStart) * t;
+      final y = (h - padY) - math.sin(t * math.pi * 5) * ampY;
+      path.lineTo(x, y);
+    }
+
+    // Bottom-left rounded corner
+    path.quadraticBezierTo(padX, h - padY, padX, h - padY - cornerR);
+
+    // Left wavy edge (2 gentle sinusoidal waves)
+    for (int i = 1; i <= sideSegments; i++) {
+      final t = i / sideSegments;
+      final y = sideEnd - (sideEnd - sideStart) * t;
+      final x = padX + math.sin(t * math.pi * 3) * ampX;
+      path.lineTo(x, y);
+    }
+
+    // Top-left rounded corner
+    path.quadraticBezierTo(padX, padY, padX + cornerR, padY);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+}
+
+/// Custom painter for the multi-ring geometric spirograph rosette badge
+/// ("App Store • Trend of the Year: Connection • 2021").
+class _AppStoreTrendRosettePainter extends CustomPainter {
+  const _AppStoreTrendRosettePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final baseR = size.width * 0.44;
+    final paintOuter = Paint()
+      ..color = const Color(0xFF3E7BFA).withValues(alpha: 0.85)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.1;
+    final paintInner = Paint()
+      ..color = const Color(0xFF6DA8FF).withValues(alpha: 0.65)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.9;
+
+    for (int ring = 0; ring < 3; ring++) {
+      final phase = ring * 0.42;
+      final path = Path();
+      const steps = 180;
+      for (int i = 0; i <= steps; i++) {
+        final theta = (i / steps) * math.pi * 2;
+        final r = baseR + math.sin(theta * 10 + phase) * 5.2;
+        final x = center.dx + math.cos(theta) * r;
+        final y = center.dy + math.sin(theta) * r;
+        if (i == 0) {
+          path.moveTo(x, y);
+        } else {
+          path.lineTo(x, y);
+        }
+      }
+      path.close();
+      canvas.drawPath(path, ring.isEven ? paintOuter : paintInner);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
