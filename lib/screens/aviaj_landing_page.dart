@@ -4364,9 +4364,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 72 : 24,
-        vertical: isDesktop ? 68 : 44,
+      padding: EdgeInsets.fromLTRB(
+        isDesktop ? 72 : 24,
+        isDesktop ? 68 : 44,
+        isDesktop ? 72 : 24,
+        0,
       ),
       child: Center(
         child: ConstrainedBox(
@@ -4560,9 +4562,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               const SizedBox(height: 48),
               Center(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(26),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(26),
+                  ),
                   child: SizedBox(
-                    width: isDesktop ? 680 : double.infinity,
+                    width: isDesktop ? 720 : double.infinity,
                     child: _buildMonochromePanel(
                       primaryImageUrl,
                       height: isDesktop ? 420 : 300,
@@ -4744,15 +4748,15 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           'Share Your\nLove Story',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 54,
+            fontSize: 60,
             fontWeight: FontWeight.w900,
-            height: 1.04,
-            letterSpacing: -1.6,
+            height: 1.02,
+            letterSpacing: -1.8,
           ),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 20),
         const Text(
-          'Whether you found your person on Aviaj Date or finally found your people on AFF (Aviaj Friends Forever), we’d love to share your story and inspire people to find love too.',
+          'Whether you found your person on Aviaj or finally found your people on AFF, we’d love to share your story and inspire people to find love too.',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.5,
@@ -4762,18 +4766,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         ),
         const SizedBox(height: 28),
         FilledButton(
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Share your Aviaj or AFF story at stories@aviaj.com — our editorial team reads every submission!',
-                ),
-                backgroundColor: AviajTheme.midnightNavy,
-              ),
-            );
-          },
+          onPressed: () => _openSubmitYourStoryModal(context),
           style: FilledButton.styleFrom(
-            backgroundColor: AviajTheme.midnightNavy,
+            backgroundColor: const Color(0xFF242424),
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
             shape: RoundedRectangleBorder(
@@ -4785,15 +4780,15 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
           ),
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 32),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 38,
-              height: 38,
+              width: 40,
+              height: 40,
               decoration: const BoxDecoration(
-                color: AviajTheme.midnightNavy,
+                color: Color(0xFF242424),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -4803,14 +4798,26 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               ),
             ),
             const SizedBox(width: 14),
-            const Expanded(
-              child: Text(
-                'Prefer pen and paper? Send your story to:\nAviaj Love Stories Desk, P.O. Box 300940 Austin, Texas, 78703\nWe read every letter — and may occasionally even write back.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w600,
-                  height: 1.45,
+            Expanded(
+              child: RichText(
+                text: const TextSpan(
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    height: 1.48,
+                  ),
+                  children: [
+                    TextSpan(text: 'Prefer pen and paper? Send your story to:\n'),
+                    TextSpan(
+                      text: 'Aviaj P.O. Box 300940 Austin, Texas, 78703\n',
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                    TextSpan(
+                      text:
+                          'We read every letter — and may occasionally even write back.',
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -4822,63 +4829,246 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
   Widget _buildShareYourLoveStoryStackedFan(AviajRegionalContentPack pack) {
     return SizedBox(
-      height: 410,
+      height: 430,
       child: Stack(
         alignment: Alignment.centerLeft,
         children: [
+          // Back-Right 3rd Stepped Card
           Positioned(
-            left: 250,
-            top: 48,
-            width: 240,
-            height: 315,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(22),
-              child: _buildMonochromePanel(
-                pack.steppedCards[2].imageUrl,
-                height: 315,
-              ),
-            ),
-          ),
-          Positioned(
-            left: 135,
-            top: 26,
-            width: 265,
-            height: 355,
+            left: 265,
+            top: 56,
+            width: 225,
+            height: 318,
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white, width: 3),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.16),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(21),
+                borderRadius: BorderRadius.circular(18),
                 child: _buildMonochromePanel(
-                  pack.departureCirclePhotoUrl,
-                  height: 355,
+                  pack.steppedCards[2].imageUrl,
+                  height: 318,
                 ),
               ),
             ),
           ),
+          // Middle 2nd Stepped Card
+          Positioned(
+            left: 190,
+            top: 28,
+            width: 260,
+            height: 374,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.18),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: _buildMonochromePanel(
+                  pack.departureCirclePhotoUrl,
+                  height: 374,
+                ),
+              ),
+            ),
+          ),
+          // Front-Left Primary Card (Largest)
           Positioned(
             left: 0,
             top: 0,
-            width: 295,
-            height: 400,
+            width: 335,
+            height: 430,
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(26),
-                border: Border.all(color: Colors.white, width: 3),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.22),
+                    blurRadius: 24,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(23),
+                borderRadius: BorderRadius.circular(18),
                 child: _buildMonochromePanel(
                   pack.storyCoupleImageUrl,
-                  height: 400,
+                  height: 430,
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _openSubmitYourStoryModal(BuildContext context) {
+    final namesController = TextEditingController();
+    final locationController = TextEditingController();
+    final storyController = TextEditingController();
+    String selectedMode = 'Aviaj Date';
+
+    showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setModalState) {
+            return Dialog(
+              insetPadding: const EdgeInsets.all(20),
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(26),
+              ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 620),
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Expanded(
+                              child: Text(
+                                'Share Your Love Story',
+                                style: TextStyle(
+                                  color: Color(0xFF1E1E1E),
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.8,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => Navigator.of(ctx).pop(),
+                              icon: const Icon(Icons.close_rounded),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Whether you found your person on Aviaj or finally found your people on AFF, tell us how your journey began.',
+                          style: TextStyle(
+                            color: Color(0xFF4A4A4A),
+                            fontSize: 14.5,
+                            height: 1.45,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Wrap(
+                          spacing: 10,
+                          children: ['Aviaj Date', 'AFF — Aviaj Friends Forever']
+                              .map((mode) {
+                            final active = selectedMode == mode;
+                            return ChoiceChip(
+                              label: Text(mode),
+                              selected: active,
+                              selectedColor: AviajTheme.loveRed,
+                              labelStyle: TextStyle(
+                                color: active
+                                    ? Colors.white
+                                    : const Color(0xFF1E1E1E),
+                                fontWeight: FontWeight.w700,
+                              ),
+                              onSelected: (_) {
+                                setModalState(() => selectedMode = mode);
+                              },
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: namesController,
+                          decoration: InputDecoration(
+                            labelText: 'Your Names (e.g., Tosin & Kieron)',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        TextField(
+                          controller: locationController,
+                          decoration: InputDecoration(
+                            labelText:
+                                'Year & City / Destination (e.g., Met on Aviaj in 2024 • Manali / Austin)',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        TextField(
+                          controller: storyController,
+                          maxLines: 4,
+                          decoration: InputDecoration(
+                            labelText:
+                                'How did you meet, and what was your favorite date or trip together?',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 22),
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Thank you for sharing your Aviaj story! Our Love Stories Desk will be in touch.',
+                                  ),
+                                  backgroundColor: Color(0xFF242424),
+                                ),
+                              );
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: const Color(0xFF242424),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40),
+                              ),
+                            ),
+                            child: const Text(
+                              'Submit your story',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
