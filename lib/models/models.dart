@@ -51,13 +51,13 @@ extension ConnectionIntentX on ConnectionIntent {
   Color get color {
     switch (this) {
       case ConnectionIntent.travelBuddy:
-        return const Color(0xFF0EA5E9); // Sky Blue
+        return const Color(0xFFC81937); // Deep Love Red
       case ConnectionIntent.shortTermDating:
-        return const Color(0xFFF97316); // Sunset Orange
+        return const Color(0xFFE11D3F); // Pure Love Red
       case ConnectionIntent.longTermPartner:
-        return const Color(0xFFE11D48); // Rose Crimson
+        return const Color(0xFFE11D3F); // Pure Love Red
       case ConnectionIntent.soloGroupSquad:
-        return const Color(0xFF10B981); // Emerald Teal
+        return const Color(0xFFB91532); // Crimson Love Red
     }
   }
 }

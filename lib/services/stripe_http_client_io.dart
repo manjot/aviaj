@@ -29,3 +29,4 @@ class StripeGatewayClient {
     return null;
   }
 }
+

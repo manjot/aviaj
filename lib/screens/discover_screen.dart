@@ -963,7 +963,7 @@ class _CleanBrandSideCard extends StatelessWidget {
                     child: FilledButton.icon(
                       onPressed: () => showStripeStorefrontModal(context),
                       style: FilledButton.styleFrom(
-                        backgroundColor: const Color(0xFF635BFF),
+                        backgroundColor: AviajTheme.loveRed,
                         foregroundColor: Colors.white,
                         visualDensity: VisualDensity.compact,
                       ),

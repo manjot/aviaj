@@ -1,54 +1,53 @@
 import 'package:flutter/material.dart';
 
-/// Aviaj Solid-Color Travel & Romance Dating Brand Theme
-/// Original Mediterranean Sunset Terracotta (#D95338), Aegean Horizon Teal (#0D6E6E),
-/// Compass Sandstone Amber (#C98A2C), and Deep Midnight Navy (#0F172A).
-/// Strictly flat solid colors — zero gradients and zero third-party dating brand colors.
+/// Aviaj Red Love Single-Color Brand Theme
+/// Strictly monochromatic Red Love (#E11D3F / #B91532) paired with Pure White (#FFFFFF),
+/// Soft Rose Blush (#FFF2F4), and Deep Charcoal (#161215). Zero gradients.
 class AviajTheme {
-  // Primary solid travel-romance color: Mediterranean Sunset Terracotta
-  static const Color sunsetTerracotta = Color(0xFFD95338);
+  // Primary Red Love brand color
+  static const Color loveRed = Color(0xFFE11D3F);
 
-  // Secondary solid travel color: Aegean Horizon Teal
-  static const Color horizonTeal = Color(0xFF0D6E6E);
+  // Deep Red Love shade for badges & secondary contrast within the single-color theme
+  static const Color deepLoveRed = Color(0xFFB91532);
 
-  // Solid Compass Sandstone Amber for First-Class & Priority Boarding badges
-  static const Color compassAmber = Color(0xFFC98A2C);
+  // Soft Rose Blush background tint
+  static const Color softLoveBlush = Color(0xFFFFF2F4);
 
-  // Solid Deep Midnight Horizon Navy for high-contrast typography & cards
-  static const Color midnightNavy = Color(0xFF0F172A);
+  // Soft Rose border & chip fill
+  static const Color roseTint = Color(0xFFFFE0E6);
 
-  // Solid Warm Travertine Sand background
-  static const Color warmSand = Color(0xFFFAF7F2);
+  // High-contrast Deep Charcoal for readable typography & dark surfaces
+  static const Color charcoal = Color(0xFF161215);
 
-  // Solid Soft Terracotta surface for pills & tags
-  static const Color softTerracotta = Color(0xFFFCE8E3);
+  // All semantic aliases unified under the Red Love single-color theme
+  static const Color sunsetTerracotta = loveRed;
+  static const Color horizonTeal = loveRed;
+  static const Color compassAmber = deepLoveRed;
+  static const Color midnightNavy = charcoal;
+  static const Color warmSand = softLoveBlush;
+  static const Color softTerracotta = roseTint;
+  static const Color solidEmerald = loveRed;
+  static const Color skyAzure = loveRed;
 
-  // Solid Emerald for verified & match states
-  static const Color solidEmerald = Color(0xFF059669);
-
-  // Solid Aviation Sky Azure for destination radar & verified badges
-  static const Color skyAzure = Color(0xFF0284C7);
-
-  // Semantic aliases used across screens
-  static const Color coralPrimary = sunsetTerracotta;
-  static const Color loveCrimson = sunsetTerracotta;
-  static const Color oceanTeal = horizonTeal;
-  static const Color deepNavy = midnightNavy;
-  static const Color obsidian = midnightNavy;
-  static const Color roseRomance = sunsetTerracotta;
-  static const Color goldPassport = compassAmber;
-  static const Color sunsetOrange = compassAmber;
-  static const Color passportBlue = skyAzure;
-  static const Color warmCream = warmSand;
-  static const Color sandLight = warmSand;
-  static const Color softBlush = softTerracotta;
+  static const Color coralPrimary = loveRed;
+  static const Color loveCrimson = loveRed;
+  static const Color oceanTeal = loveRed;
+  static const Color deepNavy = charcoal;
+  static const Color obsidian = charcoal;
+  static const Color roseRomance = loveRed;
+  static const Color goldPassport = deepLoveRed;
+  static const Color sunsetOrange = loveRed;
+  static const Color passportBlue = loveRed;
+  static const Color warmCream = softLoveBlush;
+  static const Color sandLight = softLoveBlush;
+  static const Color softBlush = roseTint;
 
   static ThemeData lightTheme() {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: sunsetTerracotta,
-      primary: sunsetTerracotta,
-      secondary: horizonTeal,
-      tertiary: compassAmber,
+      seedColor: loveRed,
+      primary: loveRed,
+      secondary: deepLoveRed,
+      tertiary: loveRed,
       surface: Colors.white,
       brightness: Brightness.light,
     );
@@ -56,10 +55,10 @@ class AviajTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: warmSand,
+      scaffoldBackgroundColor: softLoveBlush,
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
-        foregroundColor: midnightNavy,
+        foregroundColor: charcoal,
         elevation: 0,
         centerTitle: false,
       ),
@@ -68,12 +67,12 @@ class AviajTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(28),
-          side: const BorderSide(color: Color(0xFFE8E2D9), width: 1.5),
+          side: const BorderSide(color: Color(0xFFF5D0D8), width: 1.5),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFF4EFEA),
+        fillColor: const Color(0xFFFFF5F7),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
         border: OutlineInputBorder(
@@ -82,11 +81,11 @@ class AviajTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFFE2DAD0)),
+          borderSide: const BorderSide(color: Color(0xFFF5D0D8)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: sunsetTerracotta, width: 2),
+          borderSide: const BorderSide(color: loveRed, width: 2),
         ),
       ),
     );
@@ -94,35 +93,35 @@ class AviajTheme {
 
   static ThemeData darkTheme() {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: sunsetTerracotta,
-      primary: sunsetTerracotta,
-      secondary: horizonTeal,
-      tertiary: compassAmber,
-      surface: const Color(0xFF1E293B),
+      seedColor: loveRed,
+      primary: loveRed,
+      secondary: deepLoveRed,
+      tertiary: loveRed,
+      surface: const Color(0xFF22181C),
       brightness: Brightness.dark,
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: midnightNavy,
+      scaffoldBackgroundColor: charcoal,
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF1E293B),
+        backgroundColor: Color(0xFF22181C),
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: false,
       ),
       cardTheme: CardThemeData(
-        color: const Color(0xFF1E293B),
+        color: const Color(0xFF22181C),
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(28),
-          side: const BorderSide(color: Color(0xFF334155), width: 1.5),
+          side: const BorderSide(color: Color(0xFF3D2830), width: 1.5),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF263349),
+        fillColor: const Color(0xFF2D1F25),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
         border: OutlineInputBorder(
@@ -131,11 +130,11 @@ class AviajTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFF3B4C66)),
+          borderSide: const BorderSide(color: Color(0xFF4A3039)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: sunsetTerracotta, width: 2),
+          borderSide: const BorderSide(color: loveRed, width: 2),
         ),
       ),
     );

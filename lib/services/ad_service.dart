@@ -617,7 +617,7 @@ class AviajAdBannerWidget extends StatelessWidget {
                   FilledButton.icon(
                     onPressed: () => showStripeStorefrontModal(context),
                     style: FilledButton.styleFrom(
-                      backgroundColor: const Color(0xFF635BFF),
+                      backgroundColor: AviajTheme.deepLoveRed,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 14,

@@ -578,7 +578,7 @@ class _TripCard extends StatelessWidget {
                 },
                 style: FilledButton.styleFrom(
                   backgroundColor:
-                      joined ? AviajTheme.obsidian : const Color(0xFF635BFF),
+                      joined ? AviajTheme.obsidian : AviajTheme.loveRed,
                 ),
                 icon: Icon(
                   joined

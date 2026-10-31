@@ -227,7 +227,7 @@ Future<void> showStripeStorefrontModal(
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF635BFF), // Stripe Blurple
+                                color: AviajTheme.loveRed,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Row(
@@ -395,7 +395,7 @@ Future<void> showStripeStorefrontModal(
                             fontSize: 11.5,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 0.8,
-                            color: Color(0xFF635BFF),
+                            color: AviajTheme.loveRed,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -412,7 +412,7 @@ Future<void> showStripeStorefrontModal(
                             return ChoiceChip(
                               label: Text(method),
                               selected: active,
-                              selectedColor: const Color(0xFF635BFF),
+                              selectedColor: AviajTheme.loveRed,
                               labelStyle: TextStyle(
                                 color: active
                                     ? Colors.white
@@ -502,7 +502,7 @@ Future<void> showStripeStorefrontModal(
                                     }
                                   },
                             style: FilledButton.styleFrom(
-                              backgroundColor: const Color(0xFF635BFF),
+                              backgroundColor: AviajTheme.loveRed,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
@@ -543,7 +543,7 @@ Future<void> showStripeStorefrontModal(
                                   style: TextStyle(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w900,
-                                    color: Color(0xFF635BFF),
+                                    color: AviajTheme.loveRed,
                                   ),
                                 ),
                                 const SizedBox(height: 4),

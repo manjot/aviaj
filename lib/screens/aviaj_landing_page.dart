@@ -176,11 +176,11 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
                   width: 38,
                   height: 38,
                   decoration: BoxDecoration(
-                    color: AviajTheme.sunsetTerracotta,
+                    color: AviajTheme.loveRed,
                     borderRadius: BorderRadius.circular(11),
                   ),
                   child: const Icon(
-                    Icons.flight_takeoff_rounded,
+                    Icons.favorite_rounded,
                     color: Colors.white,
                     size: 20,
                   ),
@@ -192,7 +192,7 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
                     fontWeight: FontWeight.w900,
                     fontSize: 27,
                     letterSpacing: -0.9,
-                    color: AviajTheme.midnightNavy,
+                    color: AviajTheme.loveRed,
                   ),
                 ),
               ],
@@ -253,7 +253,7 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
             FilledButton(
               onPressed: () => showMobileAppDownloadModal(context),
               style: FilledButton.styleFrom(
-                backgroundColor: AviajTheme.midnightNavy,
+                backgroundColor: AviajTheme.loveRed,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 22,
@@ -477,7 +477,7 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
                         Text(
                           '✈️ ${profile.nextDestination} • ${profile.nextTripWindow}',
                           style: const TextStyle(
-                            color: AviajTheme.compassAmber,
+                            color: Colors.white,
                             fontWeight: FontWeight.w800,
                             fontSize: 12.5,
                           ),
@@ -645,7 +645,7 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
                                 Text(
                                   p.badge,
                                   style: const TextStyle(
-                                    color: AviajTheme.compassAmber,
+                                    color: Colors.white70,
                                     fontWeight: FontWeight.w900,
                                     fontSize: 11.5,
                                     letterSpacing: 1.0,
@@ -1048,7 +1048,7 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF635BFF),
+                      color: AviajTheme.loveRed,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
@@ -1179,7 +1179,7 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
                                 customTripPlan: plan,
                               ),
                               style: FilledButton.styleFrom(
-                                backgroundColor: const Color(0xFF635BFF),
+                                backgroundColor: AviajTheme.loveRed,
                                 foregroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 15),

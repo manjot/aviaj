@@ -176,7 +176,7 @@ class AviajMobileAppShell extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
-                    Icons.flight_takeoff_rounded,
+                    Icons.favorite_rounded,
                     color: Colors.white,
                     size: 19,
                   ),
@@ -188,7 +188,7 @@ class AviajMobileAppShell extends StatelessWidget {
                     fontWeight: FontWeight.w900,
                     fontSize: 21,
                     letterSpacing: -0.5,
-                    color: AviajTheme.midnightNavy,
+                    color: AviajTheme.loveRed,
                   ),
                 ),
                 const Spacer(),
@@ -197,7 +197,7 @@ class AviajMobileAppShell extends StatelessWidget {
                   onPressed: () => showStripeStorefrontModal(context),
                   icon: const Icon(
                     Icons.workspace_premium_rounded,
-                    color: Color(0xFF635BFF),
+                    color: AviajTheme.loveRed,
                   ),
                 ),
                 IconButton(
