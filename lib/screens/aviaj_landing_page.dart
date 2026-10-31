@@ -40,9 +40,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   final GlobalKey _friendshipHubKey = GlobalKey();
   final GlobalKey _seasonalGuidesKey = GlobalKey();
   final GlobalKey _safetyCenterKey = GlobalKey();
+  final GlobalKey _supportCenterKey = GlobalKey();
   final GlobalKey _pricingKey = GlobalKey();
   int _selectedHeroIndex = 0;
   int _selectedStoryIndex = 0;
+  String _supportSearchQuery = '';
   bool _showDateMegaMenu = false;
   bool _showAffMegaMenu = false;
   bool _showStoriesMegaMenu = false;
@@ -302,6 +304,12 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       child: _buildSafetyCenterSection(context, isDesktop),
                     ),
 
+                    // SECTION 5J: "AVIAJ SUPPORT / HELP CENTER" ("HOW CAN WE HELP?" HERO + 3 CATEGORY CARDS + "POPULAR TOPICS" + "SAFETY CENTER" / "SUPPORT AND RESOURCES")
+                    Container(
+                      key: _supportCenterKey,
+                      child: _buildSupportCenterSection(context, isDesktop),
+                    ),
+
                     // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
                     _buildGetTheAppQrPhonesBanner(context, isDesktop),
 
@@ -439,7 +447,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                 _showAffMegaMenu = false;
                                 _showStoriesMegaMenu = false;
                               });
-                              _scrollToSection(_pricingKey);
+                              _scrollToSection(_supportCenterKey);
                             },
                           ),
                         ],
@@ -10045,6 +10053,1054 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       ),
                       child: const Text(
                         'Got it',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// SECTION 5J: Aviaj Support / Help Center ("How can we help?" Hero + 3 Category Cards + "Popular topics" + "Safety Center" / "Support and resources" + Support Footer)
+  Widget _buildSupportCenterSection(BuildContext context, bool isDesktop) {
+    final categories = [
+      (
+        title: 'Finding love',
+        subtitle:
+            'Tips on matching, starting conversations, using Compliments, SuperSwipe, and Travel Mode.',
+        body:
+            '1. Complete your profile with 4–6 verified photos and authentic travel prompts.\n2. Use Compliments to share what caught your eye before matching.\n3. Turn on Travel Mode before your next trip to match with locals and fellow travelers ahead of arrival.\n4. Use In-app Video Calls to catch a quick vibe check from anywhere.',
+      ),
+      (
+        title: 'Your profile',
+        subtitle:
+            'Manage your photos, prompts, verification badges, travel badges, and account settings.',
+        body:
+            '1. Tap Edit Profile to update your bio, Connection Intent (Travel Buddy, Romantic Date, or Local Host), and upcoming trips.\n2. Complete Photo Verification and ID Verification to earn your Verified badge.\n3. Switch between Date and AFF (Aviaj Friends Forever) anytime from your profile settings.',
+      ),
+      (
+        title: 'Staying safe and secure',
+        subtitle:
+            'Everything you need to know about privacy controls, Incognito Mode, and reporting tools.',
+        body:
+            '1. Enable Incognito Mode so your profile is only visible to people you swipe right on.\n2. Private Detector™ automatically blurs unsolicited explicit images in chat.\n3. Use Share Date to send your live date details (who, where, and when) to a trusted friend or family member.\n4. Use Block, Report and Unmatch anytime—reports are 100% confidential.',
+      ),
+    ];
+
+    final allTopics = [
+      (
+        title: 'Canceling subscriptions',
+        subtitle: 'How to manage, upgrade, or cancel your Aviaj subscription.',
+        body:
+            'You can manage or cancel your Aviaj Explorer Plus or First Class VIP subscription at any time through your Apple App Store settings (iOS), Google Play Store subscriptions (Android), or directly from your Aviaj Web Account Billing portal. Your premium perks remain active through the end of your current billing cycle.',
+      ),
+      (
+        title: 'Troubleshooting tips and current bugs',
+        subtitle: 'Quick fixes for login, notifications, or connection issues.',
+        body:
+            'If the app feels slow or messages aren’t refreshing:\n• Check that you’re running the latest version of Aviaj from the App Store or Google Play.\n• Toggle Wi-Fi / cellular data or refresh your browser session.\n• Sign out and sign back in to resync your matches and Departure Circles.',
+      ),
+      (
+        title: 'Verifying with your ID',
+        subtitle: 'How to complete ID Verification and earn your Verified badge.',
+        body:
+            'Open your Aviaj profile settings and tap "ID Verification". Upload a valid government-issued photo ID and complete a quick live selfie check. Once confirmed, a blue "✓ ID verified" badge will appear on your profile.',
+      ),
+      (
+        title: 'Our safety features',
+        subtitle:
+            'Explore Photo Verification, Private Detector, Deception Detector™, and Share Date.',
+        body:
+            'Aviaj combines automated AI protection (Deception Detector™ and Private Detector) with member-controlled tools (Photo & ID Verification, In-app Voice/Video Calls, Share Date, and 1-tap Block & Report) to keep every connection safe.',
+      ),
+      (
+        title: 'Reporting someone',
+        subtitle: 'How to confidentially block or report a profile or message.',
+        body:
+            'Tap the "•••" menu at the top of any profile or chat, or scroll to the bottom of a profile and select "Block and Report". Choose the reason for your report—the person will never be notified that you reported them, and our 24/7 Safety Team will review it immediately.',
+      ),
+      (
+        title: 'Taking a break from online dating',
+        subtitle: 'Pause your profile with Snooze Mode without losing your matches.',
+        body:
+            'Need a breather? Turn on Snooze Mode in Settings to hide your profile from discovery for 24 hours, 72 hours, a week, or indefinitely—while keeping all your existing matches and conversations intact.',
+      ),
+    ];
+
+    final filteredTopics = _supportSearchQuery.trim().isEmpty
+        ? allTopics
+        : allTopics
+              .where(
+                (t) =>
+                    t.title.toLowerCase().contains(
+                      _supportSearchQuery.trim().toLowerCase(),
+                    ) ||
+                    t.subtitle.toLowerCase().contains(
+                      _supportSearchQuery.trim().toLowerCase(),
+                    ),
+              )
+              .toList();
+
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      child: Column(
+        children: [
+          const Divider(height: 1, color: Color(0xFFEAEAEA)),
+          // 1. Top Support Sub-Navbar (Aviaj | Date • Friends • Stories • Events • Safety • [Support] | 🌐 ⌄ | [Sign in])
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isDesktop ? 64 : 20,
+              vertical: 18,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1200),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () => _scrollToSection(_modesKey),
+                      child: const Text(
+                        'Aviaj',
+                        style: TextStyle(
+                          color: Color(0xFF1E1E1E),
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -1.2,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    if (isDesktop)
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF6F6F6),
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (final nav in [
+                              (label: 'Date', key: _dateSectionKey, active: false),
+                              (label: 'Friends', key: _affKey, active: false),
+                              (label: 'Stories', key: _storiesKey, active: false),
+                              (label: 'Events', key: _radarKey, active: false),
+                              (
+                                label: 'Safety',
+                                key: _safetyCenterKey,
+                                active: false,
+                              ),
+                              (
+                                label: 'Support',
+                                key: _supportCenterKey,
+                                active: true,
+                              ),
+                            ])
+                              InkWell(
+                                onTap: () => _scrollToSection(nav.key),
+                                borderRadius: BorderRadius.circular(30),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 18,
+                                    vertical: 9,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: nav.active
+                                        ? Colors.white
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(30),
+                                    boxShadow: nav.active
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.black.withValues(
+                                                alpha: 0.06,
+                                              ),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Text(
+                                    nav.label,
+                                    style: TextStyle(
+                                      color: const Color(0xFF1E1E1E),
+                                      fontSize: 13.5,
+                                      fontWeight: nav.active
+                                          ? FontWeight.w700
+                                          : FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    const Spacer(),
+                    _buildRegionSelectorPill(
+                      isDarkPill: false,
+                      showFullLanguageLabel: false,
+                    ),
+                    const SizedBox(width: 10),
+                    InkWell(
+                      onTap: widget.onOpenFullMobilePreview,
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 11,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF242424),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Text(
+                          'Sign in',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Main Support Center Body Container
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isDesktop ? 64 : 20,
+              vertical: isDesktop ? 24 : 16,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1200),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // 2. "How can we help?" Rounded Hero Card with Search Bar
+                    Container(
+                      height: isDesktop ? 365 : 290,
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      decoration: BoxDecoration(
+                        color: AviajTheme.loveRed,
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'How can we help?',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: isDesktop ? 64 : 38,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -1.8,
+                              height: 1.05,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          const Text(
+                            'Search for answers about your account, connections, features, and more.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.5,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 28),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 520),
+                            child: Container(
+                              height: 50,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF3F3F3),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.search_rounded,
+                                    color: Color(0xFF2B2B2B),
+                                    size: 21,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: TextField(
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _supportSearchQuery = val;
+                                        });
+                                      },
+                                      style: const TextStyle(
+                                        color: Color(0xFF1E1E1E),
+                                        fontSize: 14.5,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      decoration: const InputDecoration(
+                                        hintText: 'Search',
+                                        hintStyle: TextStyle(
+                                          color: Color(0xFF6E6E6E),
+                                          fontSize: 14.5,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                    ),
+                                  ),
+                                  if (_supportSearchQuery.isNotEmpty)
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _supportSearchQuery = '';
+                                        });
+                                      },
+                                      child: const Icon(
+                                        Icons.close_rounded,
+                                        size: 18,
+                                        color: Color(0xFF5A5A5A),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 28),
+                    // 3. 3 Category Cards Row ("Finding love", "Your profile", "Staying safe and secure")
+                    if (isDesktop)
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            for (int i = 0; i < categories.length; i++) ...[
+                              if (i > 0) const SizedBox(width: 24),
+                              Expanded(
+                                child: _buildSupportCategoryCard(
+                                  context,
+                                  title: categories[i].title,
+                                  subtitle: categories[i].subtitle,
+                                  body: categories[i].body,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      )
+                    else
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (int i = 0; i < categories.length; i++) ...[
+                            if (i > 0) const SizedBox(height: 16),
+                            _buildSupportCategoryCard(
+                              context,
+                              title: categories[i].title,
+                              subtitle: categories[i].subtitle,
+                              body: categories[i].body,
+                            ),
+                          ],
+                        ],
+                      ),
+
+                    const SizedBox(height: 56),
+                    // 4. "Popular topics" 2-Column Split Layout ("Popular\ntopics" + "Contact us" on left, 6 topic rows on right)
+                    if (isDesktop)
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: _buildPopularTopicsLeftColumn(context),
+                          ),
+                          const SizedBox(width: 36),
+                          Expanded(
+                            flex: 8,
+                            child: _buildPopularTopicsList(
+                              context,
+                              filteredTopics,
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildPopularTopicsLeftColumn(context),
+                          const SizedBox(height: 24),
+                          _buildPopularTopicsList(context, filteredTopics),
+                        ],
+                      ),
+
+                    const SizedBox(height: 56),
+                    // 5. 2-Column Brand Callout Cards ("Safety Center" & "Support and resources")
+                    _buildSupportBottomCalloutRow(context, isDesktop),
+
+                    const SizedBox(height: 76),
+                    // 6. Support Upper White Footer ("Aviaj" wordmark + "Scan the QR code to download the app" + Our Apps / Company / Legal + English (United States) ⌄ + Sign in)
+                    _buildSupportWhiteFooter(context, isDesktop),
+                    const SizedBox(height: 36),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSupportCategoryCard(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required String body,
+  }) {
+    return InkWell(
+      onTap: () => _openSafetyFeatureModal(
+        context,
+        title: title,
+        subtitle: subtitle,
+        detailBody: body,
+      ),
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        padding: const EdgeInsets.all(28),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF3F3F3),
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: Color(0xFF1E1E1E),
+                fontSize: 27,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.7,
+                height: 1.15,
+              ),
+            ),
+            const SizedBox(height: 14),
+            const Text(
+              'Read more',
+              style: TextStyle(
+                color: Color(0xFF1E1E1E),
+                fontSize: 14.5,
+                fontWeight: FontWeight.w600,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPopularTopicsLeftColumn(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Popular\ntopics',
+          style: TextStyle(
+            color: Color(0xFF1E1E1E),
+            fontSize: 56,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -1.6,
+            height: 1.05,
+          ),
+        ),
+        const SizedBox(height: 24),
+        InkWell(
+          onTap: () => _openContactSupportModal(context),
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: const Color(0xFF1E1E1E), width: 1.1),
+            ),
+            child: const Text(
+              'Contact us',
+              style: TextStyle(
+                color: Color(0xFF1E1E1E),
+                fontSize: 14.5,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPopularTopicsList(
+    BuildContext context,
+    List<({String title, String subtitle, String body})> topics,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (int i = 0; i < topics.length; i++) ...[
+          if (i > 0) const SizedBox(height: 12),
+          InkWell(
+            onTap: () => _openSafetyFeatureModal(
+              context,
+              title: topics[i].title,
+              subtitle: topics[i].subtitle,
+              detailBody: topics[i].body,
+            ),
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF3F3F3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      topics[i].title,
+                      style: const TextStyle(
+                        color: Color(0xFF1E1E1E),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: Color(0xFF1E1E1E),
+                    size: 22,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildSupportBottomCalloutRow(BuildContext context, bool isDesktop) {
+    final safetyCenterCard = Container(
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: AviajTheme.loveRed,
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Safety Center',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.7,
+            ),
+          ),
+          const SizedBox(height: 14),
+          const Text(
+            'For more information on how to make the most of your safety features and resources, visit our Safety Center.',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.5,
+              fontWeight: FontWeight.w500,
+              height: 1.48,
+            ),
+          ),
+          const SizedBox(height: 24),
+          InkWell(
+            onTap: () => _scrollToSection(_safetyCenterKey),
+            borderRadius: BorderRadius.circular(30),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              decoration: BoxDecoration(
+                color: const Color(0xFF242424),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'Visit Safety Center',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    final supportResourcesCard = Container(
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: AviajTheme.loveRed,
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Support and resources',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.7,
+            ),
+          ),
+          const SizedBox(height: 14),
+          const Text(
+            'For emotional support, find a free, confidential helpline using the button below. Helplines can’t respond to emergencies. If you’re in immediate danger, call your local emergency number.',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.5,
+              fontWeight: FontWeight.w500,
+              height: 1.48,
+            ),
+          ),
+          const SizedBox(height: 24),
+          InkWell(
+            onTap: () => _openSafetyFeatureModal(
+              context,
+              title: 'Global Confidential Helplines Directory',
+              subtitle:
+                  'Free, confidential 24/7 emotional support and crisis resources worldwide.',
+              detailBody:
+                  '• United States: National Domestic Violence Hotline — 1-800-799-SAFE (7233) or text "START" to 88788\n• India: National Commission for Women Helpline — 7827-170-170 / Emergency 112\n• United Kingdom: Refuge 24-Hour National Domestic Abuse Helpline — 0808 2000 247\n• Australia: 1800RESPECT — 1800 737 732 & The Survivor Hub\n• Global Online Support: Bloom powered by Chayn (bloom.chayn.co)',
+            ),
+            borderRadius: BorderRadius.circular(30),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              decoration: BoxDecoration(
+                color: const Color(0xFF242424),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'Find a helpline',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (isDesktop) {
+      return IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: safetyCenterCard),
+            const SizedBox(width: 26),
+            Expanded(child: supportResourcesCard),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        safetyCenterCard,
+        const SizedBox(height: 18),
+        supportResourcesCard,
+      ],
+    );
+  }
+
+  Widget _buildSupportWhiteFooter(BuildContext context, bool isDesktop) {
+    Widget buildFooterCol(
+      String heading,
+      List<({String label, VoidCallback onTap})> links,
+    ) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            heading,
+            style: const TextStyle(
+              color: Color(0xFF7A7A7A),
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 14),
+          for (final item in links) ...[
+            InkWell(
+              onTap: item.onTap,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: Text(
+                  item.label,
+                  style: TextStyle(
+                    color: const Color(0xFF1E1E1E),
+                    fontSize: heading == 'Legal' ? 12.5 : 16,
+                    fontWeight: heading == 'Legal'
+                        ? FontWeight.w600
+                        : FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      );
+    }
+
+    final leftColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Aviaj',
+          style: TextStyle(
+            color: Color(0xFF242424),
+            fontSize: 72,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -2.6,
+            height: 1.0,
+          ),
+        ),
+        const SizedBox(height: 44),
+        InkWell(
+          onTap: widget.onOpenFullMobilePreview,
+          borderRadius: BorderRadius.circular(18),
+          child: Container(
+            width: 325,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AviajTheme.loveRed,
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 112,
+                  height: 112,
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Icon(
+                        Icons.qr_code_2_rounded,
+                        size: 96,
+                        color: AviajTheme.midnightNavy,
+                      ),
+                      Container(
+                        width: 22,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Icon(
+                          Icons.favorite_rounded,
+                          color: AviajTheme.loveRed,
+                          size: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                const Expanded(
+                  child: Text(
+                    'Scan the QR code to\ndownload the app',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      height: 1.32,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
+    final rightColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: 56,
+          runSpacing: 28,
+          children: [
+            buildFooterCol('Our Apps', [
+              (
+                label: 'Aviaj Date',
+                onTap: () => _scrollToSection(_dateSectionKey),
+              ),
+              (label: 'AFF', onTap: () => _scrollToSection(_affKey)),
+              (
+                label: 'Departure Circles ↗',
+                onTap: () => _scrollToSection(_radarKey),
+              ),
+            ]),
+            buildFooterCol('Company', [
+              (label: 'About', onTap: () => _scrollToSection(_modesKey)),
+              (
+                label: 'Contact us',
+                onTap: () => _openContactSupportModal(context),
+              ),
+              (label: 'Careers ↗', onTap: widget.onOpenFullMobilePreview),
+              (label: 'Investors ↗', onTap: () => _scrollToSection(_pricingKey)),
+              (label: 'The shop ↗', onTap: () => _scrollToSection(_pricingKey)),
+              (
+                label: 'Support',
+                onTap: () => _scrollToSection(_supportCenterKey),
+              ),
+            ]),
+            buildFooterCol('Legal', [
+              (
+                label: 'Guidelines',
+                onTap: () => _scrollToSection(_safetyCenterKey),
+              ),
+              (
+                label: 'Manage cookies',
+                onTap: () => _showPrivacyChoicesModal(context),
+              ),
+              (
+                label: 'Privacy policy',
+                onTap: () => _showPrivacyChoicesModal(context),
+              ),
+              (
+                label: 'Terms and conditions',
+                onTap: () => _showPrivacyChoicesModal(context),
+              ),
+              (
+                label: 'Accessibility Statement',
+                onTap: () => _showPrivacyChoicesModal(context),
+              ),
+              (
+                label: 'Notice at collection',
+                onTap: () => _showPrivacyChoicesModal(context),
+              ),
+              (
+                label: 'Modern Slavery act',
+                onTap: () => _showPrivacyChoicesModal(context),
+              ),
+              (
+                label: 'Washington Consumer\nHealth Privacy Policy',
+                onTap: () => _showPrivacyChoicesModal(context),
+              ),
+            ]),
+          ],
+        ),
+        const SizedBox(height: 36),
+        Wrap(
+          spacing: 14,
+          runSpacing: 12,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            _buildRegionSelectorPill(
+              isDarkPill: false,
+              showFullLanguageLabel: true,
+            ),
+            InkWell(
+              onTap: widget.onOpenFullMobilePreview,
+              borderRadius: BorderRadius.circular(30),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(
+                    color: const Color(0xFF1E1E1E),
+                    width: 1.1,
+                  ),
+                ),
+                child: const Text(
+                  'Sign in',
+                  style: TextStyle(
+                    color: Color(0xFF1E1E1E),
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    if (isDesktop) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(flex: 5, child: leftColumn),
+          Expanded(flex: 7, child: rightColumn),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        leftColumn,
+        const SizedBox(height: 32),
+        rightColumn,
+      ],
+    );
+  }
+
+  void _openContactSupportModal(BuildContext context) {
+    final subjectCtrl = TextEditingController();
+    final messageCtrl = TextEditingController();
+    showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(20),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(26),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AviajTheme.loveRed,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'AVIAJ HELP CENTER',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () => Navigator.of(ctx).pop(),
+                        icon: const Icon(Icons.close_rounded),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Contact Aviaj Support',
+                    style: TextStyle(
+                      color: Color(0xFF1E1E1E),
+                      fontSize: 28,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.8,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Our 24/7 Support & Trust specialists typically respond within 2 hours.',
+                    style: TextStyle(
+                      color: Color(0xFF4A4A4A),
+                      fontSize: 14.5,
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  TextField(
+                    controller: subjectCtrl,
+                    decoration: InputDecoration(
+                      labelText: 'Topic (e.g. Subscription, ID Verification, Bug)',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  TextField(
+                    controller: messageCtrl,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'How can we help?',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 22),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FilledButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Your support request has been sent to the Aviaj Help Center team.',
+                            ),
+                          ),
+                        );
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xFF242424),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 26,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                      ),
+                      child: const Text(
+                        'Send message',
                         style: TextStyle(fontWeight: FontWeight.w700),
                       ),
                     ),
