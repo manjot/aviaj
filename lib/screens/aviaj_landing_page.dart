@@ -8214,7 +8214,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             children: [
               AviajNetworkImage(
                 imageUrl:
-                    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=85',
+                    'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1600&q=85',
                 width: double.infinity,
                 height: double.infinity,
                 fallbackLabel: 'Aviaj Safety Center',
@@ -8416,7 +8416,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       fit: StackFit.expand,
       children: [
         AviajNetworkImage(
-          imageUrl: pack.profiles[0].imageUrl,
+          imageUrl:
+              'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=900&q=85',
           width: double.infinity,
           height: 290,
           fallbackLabel: 'Photo Verification',
@@ -8448,7 +8449,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             ),
           ),
         ),
-        // Bottom-left "✓ Photo verified" pill with sparkle
+        // Bottom-left "✓ Photo verified" pill with 4-point sparkle
         Positioned(
           left: 64,
           bottom: 24,
@@ -8464,16 +8465,25 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                   color: const Color(0xFF242424).withValues(alpha: 0.90),
                   borderRadius: BorderRadius.circular(30),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.verified_outlined,
-                      color: Colors.white,
-                      size: 19,
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.6),
+                      ),
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.check_rounded,
+                        color: Colors.white,
+                        size: 13,
+                      ),
                     ),
-                    SizedBox(width: 7),
-                    Text(
+                    const SizedBox(width: 8),
+                    const Text(
                       'Photo verified',
                       style: TextStyle(
                         color: Colors.white,
@@ -8485,12 +8495,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                 ),
               ),
               const Positioned(
-                left: 16,
+                left: 14,
                 top: -12,
-                child: Icon(
-                  Icons.auto_awesome,
-                  color: Colors.white,
-                  size: 20,
+                child: CustomPaint(
+                  size: Size(22, 22),
+                  painter: _SafetySparkleStarPainter(),
                 ),
               ),
             ],
@@ -8892,16 +8901,16 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 30,
-                      height: 30,
+                      width: 32,
+                      height: 32,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        Icons.block_rounded,
-                        color: Color(0xFFD9232E),
-                        size: 24,
+                      alignment: Alignment.center,
+                      child: const CustomPaint(
+                        size: Size(24, 24),
+                        painter: _SafetyProhibitedPainter(),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -8948,14 +8957,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         child: Stack(
           alignment: Alignment.center,
           children: [
-            const Icon(
-              Icons.person_rounded,
-              size: 92,
-              color: Color(0xFF242424),
+            const CustomPaint(
+              size: Size(92, 92),
+              painter: _SafetySpamSilhouettePainter(),
             ),
             Positioned(
-              right: 18,
-              bottom: 14,
+              right: 16,
+              bottom: 12,
               child: Container(
                 width: 24,
                 height: 24,
@@ -8963,10 +8971,14 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                   color: Color(0xFFFFD43B),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.remove_rounded,
-                  size: 16,
-                  color: Color(0xFF242424),
+                alignment: Alignment.center,
+                child: Container(
+                  width: 11,
+                  height: 2.6,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF242424),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
             ),
@@ -9091,22 +9103,19 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Icon(
-                    Icons.format_quote_rounded,
-                    size: 20,
-                    color: Color(0xFF1E1E1E),
+                  const Text(
+                    '99',
+                    style: TextStyle(
+                      color: Color(0xFF1E1E1E),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                    ),
                   ),
                   const SizedBox(width: 10),
-                  const Icon(
-                    Icons.video_call_outlined,
-                    size: 22,
-                    color: Color(0xFF1E1E1E),
-                  ),
-                  const SizedBox(width: 10),
-                  const Icon(
-                    Icons.mic_none_rounded,
-                    size: 20,
-                    color: Color(0xFF1E1E1E),
+                  const CustomPaint(
+                    size: Size(48, 20),
+                    painter: _SafetyCallBarIconsPainter(),
                   ),
                 ],
               ),
@@ -9244,10 +9253,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                   color: AviajTheme.loveRed,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.warning_amber_rounded,
-                  color: Colors.white,
-                  size: 28,
+                alignment: Alignment.center,
+                child: const CustomPaint(
+                  size: Size(26, 26),
+                  painter: _SafetyWarningTrianglePainter(),
                 ),
               ),
               const SizedBox(height: 10),
@@ -9704,6 +9713,182 @@ class _AppStoreTrendRosettePainter extends CustomPainter {
       path.close();
       canvas.drawPath(path, ring.isEven ? paintOuter : paintInner);
     }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _SafetySparkleStarPainter extends CustomPainter {
+  const _SafetySparkleStarPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final r = size.width * 0.48;
+    final path = Path()
+      ..moveTo(cx, cy - r)
+      ..quadraticBezierTo(cx, cy, cx + r, cy)
+      ..quadraticBezierTo(cx, cy, cx, cy + r)
+      ..quadraticBezierTo(cx, cy, cx - r, cy)
+      ..quadraticBezierTo(cx, cy, cx, cy - r)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _SafetyProhibitedPainter extends CustomPainter {
+  const _SafetyProhibitedPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final r = size.width * 0.42;
+    final strokePaint = Paint()
+      ..color = const Color(0xFFD9232E)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.4
+      ..strokeCap = StrokeCap.round;
+
+    // Inner purple shape
+    final innerPaint = Paint()
+      ..color = const Color(0xFF6B2D83)
+      ..style = PaintingStyle.fill;
+    canvas.drawOval(
+      Rect.fromCenter(center: center, width: r * 1.1, height: r * 0.65),
+      innerPaint,
+    );
+
+    // Outer red circle and diagonal slash
+    canvas.drawCircle(center, r, strokePaint);
+    final d = r * 0.707;
+    canvas.drawLine(
+      Offset(center.dx - d, center.dy - d),
+      Offset(center.dx + d, center.dy + d),
+      strokePaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _SafetySpamSilhouettePainter extends CustomPainter {
+  const _SafetySpamSilhouettePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFF242424)
+      ..style = PaintingStyle.fill;
+    final cx = size.width / 2;
+    // Head circle
+    canvas.drawCircle(Offset(cx, size.height * 0.30), size.width * 0.19, paint);
+    // Shoulders dome
+    final path = Path()
+      ..moveTo(cx - size.width * 0.38, size.height * 0.84)
+      ..quadraticBezierTo(
+        cx - size.width * 0.36,
+        size.height * 0.56,
+        cx,
+        size.height * 0.56,
+      )
+      ..quadraticBezierTo(
+        cx + size.width * 0.36,
+        size.height * 0.56,
+        cx + size.width * 0.38,
+        size.height * 0.84,
+      )
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _SafetyCallBarIconsPainter extends CustomPainter {
+  const _SafetyCallBarIconsPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFF1E1E1E)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    // 1. Video camera icon on left (x: 0..22)
+    final camRect = RRect.fromRectAndRadius(
+      const Rect.fromLTWH(1, 4, 13, 12),
+      const Radius.circular(3),
+    );
+    canvas.drawRRect(camRect, paint);
+    final lensPath = Path()
+      ..moveTo(14, 8)
+      ..lineTo(20, 5)
+      ..lineTo(20, 15)
+      ..lineTo(14, 12);
+    canvas.drawPath(lensPath, paint);
+
+    // 2. Microphone icon on right (x: 30..46)
+    final micRect = RRect.fromRectAndRadius(
+      const Rect.fromLTWH(35, 2, 6, 10),
+      const Radius.circular(3),
+    );
+    canvas.drawRRect(micRect, paint);
+    canvas.drawArc(
+      const Rect.fromLTWH(32, 5, 12, 10),
+      0,
+      math.pi,
+      false,
+      paint,
+    );
+    canvas.drawLine(const Offset(38, 15), const Offset(38, 18), paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _SafetyWarningTrianglePainter extends CustomPainter {
+  const _SafetyWarningTrianglePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final strokePaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.2
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round;
+
+    final cx = size.width / 2;
+    final path = Path()
+      ..moveTo(cx, 3)
+      ..lineTo(size.width - 2, size.height - 3)
+      ..lineTo(2, size.height - 3)
+      ..close();
+    canvas.drawPath(path, strokePaint);
+
+    // Exclamation mark inside triangle
+    canvas.drawLine(
+      Offset(cx, 10),
+      Offset(cx, 16.5),
+      strokePaint,
+    );
+    final dotPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(cx, 20), 1.4, dotPaint);
   }
 
   @override
