@@ -37,6 +37,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   final GlobalKey _radarKey = GlobalKey();
   final GlobalKey _storiesKey = GlobalKey();
   final GlobalKey _friendshipHubKey = GlobalKey();
+  final GlobalKey _seasonalGuidesKey = GlobalKey();
   final GlobalKey _pricingKey = GlobalKey();
   int _selectedHeroIndex = 0;
   int _selectedStoryIndex = 0;
@@ -283,6 +284,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     Container(
                       key: _friendshipHubKey,
                       child: _buildFriendshipHubSection(context, isDesktop),
+                    ),
+
+                    // SECTION 5H: "SEASONAL DATING GUIDES" (FOREST HIKING HERO + INTRO + WINTER / SPRING / SUMMER 4-CARD GRIDS)
+                    Container(
+                      key: _seasonalGuidesKey,
+                      child:
+                          _buildSeasonalDatingGuidesSection(context, isDesktop),
                     ),
 
                     // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
@@ -3440,7 +3448,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         child: InkWell(
                           onTap: () {
                             setState(() => _showStoriesMegaMenu = false);
-                            _scrollToSection(_storiesKey);
+                            _scrollToSection(_seasonalGuidesKey);
                           },
                           child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -7679,6 +7687,442 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         );
       },
+    );
+  }
+
+  /// SECTION 5H: "Seasonal Dating Guides" (Sub-Navbar + Forest Hiking Hero + Intro + Winter / Spring / Summer 4-Card Grids)
+  Widget _buildSeasonalDatingGuidesSection(
+    BuildContext context,
+    bool isDesktop,
+  ) {
+    final winterGuides = [
+      (
+        title: '12 Fun Things to Do as a Couple',
+        excerpt:
+            'Spending quality time with each other is what keeps relationships strong. Whether you’re in the early days of dating or years into a marriage, finding new and exciting things to do as a couple can keep the spark alive. To inspire you, here’s a list of date ideas for you and your partner. 1. Cooking ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            '1. Take a regional cooking class together. 2. Plan a spontaneous weekend winter trek in Manali or Aspen. 3. Shoot a roll of vintage film on a frosty morning walk. 4. Host a two-person board game tournament with mulled cider.',
+      ),
+      (
+        title: '9 Cozy Date Ideas',
+        excerpt:
+            'Winter is the perfect excuse to cancel your plans and stay indoors. Sure, frosty strolls have their charm, but let’s be real—snuggling up on the couch with a mug of cocoa takes cozy to a whole new level. To give you some inspo, we’ve created a list of intimate, cozy date ideas that keep the ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'From building an indoor reading nook with artisanal hot chocolate to curating a vinyl listening night or planning your next Aviaj spring getaway together from the couch, cozy dates create space for unhurried conversation.',
+      ),
+      (
+        title: 'Snow date ideas',
+        excerpt:
+            'Everyone knows the best rom-coms are the winter ones. From cozying up with hot cocoa to helping each other learn how to ice-skate, snow makes the perfect backdrop for romance. Winter dates feel extra special, especially when you’re first getting to know the person. Here are ten snow date ideas that give you the perfect ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Whether you’re gliding across an outdoor ice rink, riding an illuminated winter carousel, or trekking snow-dusted trails in Solang Valley or Kedarkantha, snow dates turn simple moments into cinematic memories.',
+      ),
+      (
+        title: 'Birthday Date Ideas',
+        excerpt:
+            'Summer birthdays bring the heat, but winter birthdays are where the real magic happens. There are plenty of cozy ways you can make someone’s special day unforgettable—even in the chilliest months. Here are seven winter-themed birthday date ideas straight out of your favorite rom-com. 1. Visit a festive market Wrap up warm and take your ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            '1. Visit a festive twilight market. 2. Book a scenic lakeside or mountain overlook picnic with thermoses of spiced tea. 3. Surprise them with tickets to a candlelit acoustic concert or weekend cabin escape.',
+      ),
+    ];
+
+    final springGuides = [
+      (
+        title: 'Why VR Gaming Makes for an Incredible Date Night',
+        excerpt:
+            'Looking for new ideas for date nights? Virtual reality (VR) gaming could be just the twist you need. It really is as fun as it sounds: You and your partner explore new worlds, solve puzzles, and compete in exciting challenges, all from your living room or a local VR arcade. VR dates bring something different ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'VR gaming breaks the ice immediately by putting both of you into a collaborative adventure—whether you’re solving escape-room puzzles in zero gravity or exploring virtual destinations before booking your next real-world trip on Aviaj.',
+      ),
+      (
+        title: 'How to Pick the Perfect Dessert Wine Pairing for Date Night',
+        excerpt:
+            'Interested in the art of dessert wine pairing and want to make your next date night one to remember? Whether you’re planning a laid-back evening of learning together or aiming to dazzle a date with your wine-pairing knowledge, we’ve got your back. We’re here to demystify dessert wines and how to match them with different ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Rule number one of dessert wine pairing: the wine should always be slightly sweeter than the dessert itself. Pair late-harvest Riesling with fruit tarts, Tawny Port with dark chocolate truffles, or Moscato d’Asti with fresh berries.',
+      ),
+      (
+        title: 'The Ultimate Guide to Skydiving Dates',
+        excerpt:
+            'You’re plummeting from the sky, the wind’s a wild rush in your ears, and your heart is beating harder than ever. If that’s your idea of a great way to get to know someone and test romantic connections, a skydiving date may be made for you. Whether you’re up for the real thrill of jumping ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1521673252667-e05da380b252?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Nothing bonds two people faster than shared adrenaline. Whether you choose outdoor tandem skydiving over the coast or an indoor vertical wind tunnel session followed by brunch, high-thrill dates create unforgettable stories.',
+      ),
+      (
+        title:
+            'Date Night at the Museum: Why Scavenger Hunts Beat Dinner and a Movie',
+        excerpt:
+            'A museum scavenger hunt turns a regular museum visit into a fun adventure. Whether you follow a museum’s pre-set hunt or design your own, it’s a fun, competitive quest that adds excellent conversation starters and fun competition to your date. What’s a museum scavenger hunt? You and your date use a list of clues or ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Create a list of playful prompts—like “Find a portrait that looks like your reaction on Monday morning” or “Spot the most dramatic sculpture in the wing”—and compare your discoveries over espresso in the museum courtyard.',
+      ),
+    ];
+
+    final summerGuides = [
+      (
+        title: 'Your Guide to Summer Road Trip Quest Dates',
+        excerpt:
+            'Are you thinking about taking a date on a summer road trip? Here’s how to turn the hours spent in the car into something memorable. Summer road trip quests ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Trade GPS highways for scenic coastal backroads—from Goa’s Cabo de Rama cliffs to California’s Highway 1. Alternate DJ duties every 30 minutes, stop at roadside fruit stands, and let spontaneous detours lead the day.',
+      ),
+      (
+        title: 'Why Calligraphy Workshops Are the Next Big Date Night Trend',
+        excerpt:
+            'In a digital world, calligraphy workshops are a beautiful way to help you connect with a date in a unique, creative way. As you and your partner try out the craft, you’ll bond over the shared experience ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Tactile creative dates slow down the pace of modern dating. Learning brush lettering or fountain-pen calligraphy side by side gives you something fun to focus on while conversation flows naturally.',
+      ),
+      (
+        title: 'Summer Date Styles: What to Wear to Keep Cool and Look Hot',
+        excerpt:
+            'Summer’s the time to make new connections and enjoy the outdoors, but nailing comfort and style can be tricky. Whether you’re prepping for a coffee catch-up or an adventure in the sun, ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Breathable linen layers, relaxed cotton silhouettes, and polarized sunglasses keep you comfortable from golden-hour rooftop drinks to sunset beach walks in Andaman, Ibiza, or Maui.',
+      ),
+      (
+        title: 'Take Your Date on a Hot Air Balloon Ride',
+        excerpt:
+            'Whether you’re looking for a fancy date night or a new way to connect, a hot air balloon ride is a great way to create lasting memories together. A hot air balloon date is one of those experiences you won’t forget—think romance, ...',
+        imageUrl:
+            'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?auto=format&fit=crop&w=800&q=80',
+        fullBody:
+            'Drifting above valleys and coastlines at sunrise in a hot air balloon offers 360-degree views and serene quiet that make milestone anniversaries and third dates alike feel extraordinary.',
+      ),
+    ];
+
+    Widget buildSeasonBlock(
+      String seasonTitle,
+      List<({String title, String excerpt, String imageUrl, String fullBody})>
+          guides,
+    ) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            seasonTitle,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: isDesktop ? 40 : 30,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -1.0,
+            ),
+          ),
+          const SizedBox(height: 24),
+          isDesktop
+              ? IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: guides.asMap().entries.map((entry) {
+                      final idx = entry.key;
+                      final guide = entry.value;
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            right: idx < guides.length - 1 ? 22 : 0,
+                          ),
+                          child: _buildFriendshipHubGuideCard(
+                            context,
+                            title: guide.title,
+                            excerpt: guide.excerpt,
+                            imageUrl: guide.imageUrl,
+                            fullBody: guide.fullBody,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                )
+              : Column(
+                  children: guides.map((guide) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 22),
+                      child: _buildFriendshipHubGuideCard(
+                        context,
+                        title: guide.title,
+                        excerpt: guide.excerpt,
+                        imageUrl: guide.imageUrl,
+                        fullBody: guide.fullBody,
+                      ),
+                    );
+                  }).toList(),
+                ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        // 1. Top White Sub-Navigation Bar (`≡ aviaj | About • The Buzz • The Shop • Ambassadors | [Download the App] [Sign In]`)
+        Container(
+          width: double.infinity,
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 56 : 20,
+            vertical: 16,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1280),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () => _scrollToSection(_dateSectionKey),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: AviajTheme.loveRed,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.menu_rounded,
+                            color: Colors.white,
+                            size: 19,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'aviaj',
+                          style: TextStyle(
+                            color: AviajTheme.loveRed,
+                            fontSize: 27,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.9,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (isDesktop) ...[
+                    const SizedBox(width: 36),
+                    for (final navItem in const [
+                      'About',
+                      'The Buzz',
+                      'The Shop',
+                      'Ambassadors',
+                    ])
+                      Padding(
+                        padding: const EdgeInsets.only(right: 28),
+                        child: InkWell(
+                          onTap: () => _scrollToSection(_dateSectionKey),
+                          child: Text(
+                            navItem,
+                            style: const TextStyle(
+                              color: Color(0xFF1E1E1E),
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                  const Spacer(),
+                  FilledButton(
+                    onPressed: () => showMobileAppDownloadModal(context),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AviajTheme.loveRed,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
+                    child: const Text(
+                      'Download the App',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  OutlinedButton(
+                    onPressed: widget.onOpenFullMobilePreview,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFF1E1E1E),
+                      side: const BorderSide(
+                        color: Color(0xFF1E1E1E),
+                        width: 1.2,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
+                    child: const Text(
+                      'Sign In',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // 2. Full-Bleed Forest Hiking Couple Hero Banner ("Seasonal\nDating Guides")
+        SizedBox(
+          width: double.infinity,
+          height: isDesktop ? 560 : 400,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              AviajNetworkImage(
+                imageUrl:
+                    'https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=1600&q=85',
+                width: double.infinity,
+                height: double.infinity,
+                fallbackLabel: 'Seasonal Dating Guides',
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.12),
+                      Colors.black.withValues(alpha: 0.52),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    24,
+                    24,
+                    24,
+                    isDesktop ? 54 : 32,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 920),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Seasonal',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: isDesktop ? 40 : 24,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.8,
+                            height: 1.0,
+                          ),
+                        ),
+                        Text(
+                          'Dating Guides',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: isDesktop ? 98 : 48,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -2.8,
+                            height: 0.96,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // 3. White Editorial Intro Block
+        Container(
+          width: double.infinity,
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 72 : 24,
+            vertical: isDesktop ? 68 : 44,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 660),
+              child: const Text(
+                'At Aviaj, we want to support you through every milestone in your dating life—from your first meet-up to nights sitting on the couch together, eating chips in your sweats. So our dating experts have created these seasonal guides to help you plan the perfect date, no matter when, where, or who you’re dating. Check the seasons below and find your next date idea!',
+                style: TextStyle(
+                  color: Color(0xFF1E1E1E),
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w500,
+                  height: 1.54,
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // 4. Rounded-Top Full-Width Seasonal Canvas with Winter, Spring, and Summer 4-Column Grids
+        Container(
+          width: double.infinity,
+          color: Colors.white,
+          child: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: AviajTheme.loveRed,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(36),
+              ),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: isDesktop ? 56 : 20,
+              vertical: isDesktop ? 64 : 44,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1280),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildSeasonBlock('Winter', winterGuides),
+                    SizedBox(height: isDesktop ? 64 : 44),
+                    buildSeasonBlock('Spring', springGuides),
+                    SizedBox(height: isDesktop ? 64 : 44),
+                    buildSeasonBlock('Summer', summerGuides),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
