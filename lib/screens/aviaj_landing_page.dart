@@ -117,96 +117,170 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     _bannerIntroController.forward(from: 0);
   }
 
-  void _selectRegion(AviajRegion region) {
+  String _selectedLanguageLabel = 'English (United Kingdom)';
+
+  static const List<({String label, AviajRegion region})> _languageOptions = [
+    (label: 'English (United States)', region: AviajRegion.americas),
+    (label: 'English (United Kingdom)', region: AviajRegion.europe),
+    (label: 'English (Canada)', region: AviajRegion.americas),
+    (label: 'English (Australia)', region: AviajRegion.asiaPacific),
+    (label: 'English (India)', region: AviajRegion.india),
+    (label: 'Deutsch', region: AviajRegion.europe),
+    (label: 'Français', region: AviajRegion.europe),
+    (label: 'Français (Canada)', region: AviajRegion.americas),
+    (label: 'Español (España)', region: AviajRegion.europe),
+    (label: 'Italiano', region: AviajRegion.europe),
+    (label: 'Português (Brasil)', region: AviajRegion.americas),
+    (label: 'Русский', region: AviajRegion.europe),
+    (label: '中文 (简体)', region: AviajRegion.asiaPacific),
+    (label: 'Bahasa Indonesia', region: AviajRegion.asiaPacific),
+    (label: 'Dansk', region: AviajRegion.europe),
+    (label: 'Español (México)', region: AviajRegion.americas),
+    (label: 'Español (Colombia)', region: AviajRegion.americas),
+    (label: 'Español (Argentina)', region: AviajRegion.americas),
+    (label: 'Nederlands', region: AviajRegion.europe),
+    (label: 'Norsk bokmål', region: AviajRegion.europe),
+    (label: 'Polski', region: AviajRegion.europe),
+    (label: 'Português (Portugal)', region: AviajRegion.europe),
+    (label: 'Suomi', region: AviajRegion.europe),
+    (label: 'Svenska', region: AviajRegion.europe),
+    (label: 'हिंदी', region: AviajRegion.india),
+    (label: '中文 (繁體)', region: AviajRegion.asiaPacific),
+    (label: '日本語', region: AviajRegion.asiaPacific),
+    (label: '한국어', region: AviajRegion.asiaPacific),
+  ];
+
+  void _selectRegion(AviajRegion region, {String? languageLabel}) {
     setState(() {
       _selectedHeroIndex = 0;
+      if (languageLabel != null) {
+        _selectedLanguageLabel = languageLabel;
+      } else {
+        _selectedLanguageLabel = region.languageLabel;
+      }
     });
     widget.state.setRegion(region);
     _replayBannerAnimation();
+  }
+
+  void _openLanguageSelectorMenu(BuildContext pillContext) {
+    final box = pillContext.findRenderObject() as RenderBox?;
+    final overlay =
+        Overlay.of(pillContext).context.findRenderObject() as RenderBox?;
+    Offset anchor = const Offset(100, 24);
+    if (box != null && overlay != null) {
+      anchor = box.localToGlobal(Offset.zero, ancestor: overlay);
+    }
+
+    showGeneralDialog<void>(
+      context: pillContext,
+      barrierDismissible: true,
+      barrierLabel: 'Close language selector',
+      barrierColor: Colors.transparent,
+      transitionDuration: const Duration(milliseconds: 140),
+      pageBuilder: (dialogContext, anim1, anim2) {
+        final screenSize = MediaQuery.of(dialogContext).size;
+        const menuWidth = 248.0;
+        const menuCardHeight = 472.0;
+        const tabHeight = 46.0;
+        const totalHeight = menuCardHeight + tabHeight;
+
+        final left = anchor.dx
+            .clamp(12.0, math.max(12.0, screenSize.width - menuWidth - 16.0))
+            .toDouble();
+        final top = anchor.dy
+            .clamp(12.0, math.max(12.0, screenSize.height - totalHeight - 16.0))
+            .toDouble();
+
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () => Navigator.of(dialogContext).pop(),
+                child: const SizedBox.expand(),
+              ),
+            ),
+            Positioned(
+              left: left,
+              top: top,
+              child: Material(
+                color: Colors.transparent,
+                child: _LanguageSelectorDropdownCard(
+                  selectedLanguageLabel: _selectedLanguageLabel,
+                  options: _languageOptions,
+                  onSelect: (option) {
+                    Navigator.of(dialogContext).pop();
+                    _selectRegion(
+                      option.region,
+                      languageLabel: option.label,
+                    );
+                  },
+                  onClose: () => Navigator.of(dialogContext).pop(),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildRegionSelectorPill({
     required bool isDarkPill,
     required bool showFullLanguageLabel,
   }) {
-    final activeRegion = widget.state.activeRegion;
-    return PopupMenuButton<AviajRegion>(
-      tooltip: 'Switch Location / Region Imagery',
-      onSelected: _selectRegion,
-      offset: const Offset(0, 48),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      color: Colors.white,
-      itemBuilder: (context) => AviajRegion.values.map((region) {
-        final isSelected = region == activeRegion;
-        return PopupMenuItem<AviajRegion>(
-          value: region,
-          child: Row(
-            children: [
-              Text(
-                region.flag,
-                style: const TextStyle(fontSize: 18),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  '${region.label} (${region.code})',
-                  style: TextStyle(
-                    color: AviajTheme.midnightNavy,
-                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                    fontSize: 14,
+    return Builder(
+      builder: (pillContext) {
+        return InkWell(
+          onTap: () => _openLanguageSelectorMenu(pillContext),
+          borderRadius: BorderRadius.circular(18),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: showFullLanguageLabel ? 18 : 18,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              color: isDarkPill ? const Color(0xFF220207) : Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              border: isDarkPill
+                  ? Border.all(color: Colors.white24, width: 1)
+                  : Border.all(
+                      color: const Color(0xFFE0DFD9),
+                      width: 1.1,
+                    ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.language_rounded,
+                  color: isDarkPill ? Colors.white : const Color(0xFF1E1E1E),
+                  size: 20,
+                ),
+                if (showFullLanguageLabel) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    _selectedLanguageLabel,
+                    style: TextStyle(
+                      color:
+                          isDarkPill ? Colors.white : const Color(0xFF1E1E1E),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13.5,
+                    ),
                   ),
+                ],
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: isDarkPill ? Colors.white : const Color(0xFF1E1E1E),
+                  size: 22,
                 ),
-              ),
-              if (isSelected)
-                const Icon(
-                  Icons.check_circle_rounded,
-                  color: AviajTheme.loveRed,
-                  size: 18,
-                ),
-            ],
+              ],
+            ),
           ),
         );
-      }).toList(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 10,
-        ),
-        decoration: BoxDecoration(
-          color: isDarkPill ? const Color(0xFF220207) : Colors.white,
-          borderRadius: BorderRadius.circular(40),
-          border: isDarkPill
-              ? Border.all(color: Colors.white24, width: 1)
-              : Border.all(color: AviajTheme.midnightNavy.withValues(alpha: 0.22), width: 1.2),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.language_rounded,
-              color: isDarkPill ? Colors.white : AviajTheme.midnightNavy,
-              size: 18,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              '${activeRegion.flag} ${showFullLanguageLabel ? activeRegion.languageLabel : activeRegion.label}',
-              style: TextStyle(
-                color: isDarkPill ? Colors.white : AviajTheme.midnightNavy,
-                fontWeight: FontWeight.w800,
-                fontSize: 13,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: isDarkPill ? Colors.white : AviajTheme.midnightNavy,
-              size: 19,
-            ),
-          ],
-        ),
-      ),
+      },
     );
   }
 
@@ -12484,4 +12558,164 @@ class _AppSwitchIdCardsPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _LanguageSelectorDropdownCard extends StatefulWidget {
+  final String selectedLanguageLabel;
+  final List<({String label, AviajRegion region})> options;
+  final ValueChanged<({String label, AviajRegion region})> onSelect;
+  final VoidCallback onClose;
+
+  const _LanguageSelectorDropdownCard({
+    required this.selectedLanguageLabel,
+    required this.options,
+    required this.onSelect,
+    required this.onClose,
+  });
+
+  @override
+  State<_LanguageSelectorDropdownCard> createState() =>
+      _LanguageSelectorDropdownCardState();
+}
+
+class _LanguageSelectorDropdownCardState
+    extends State<_LanguageSelectorDropdownCard> {
+  final ScrollController _scrollController = ScrollController();
+  int? _hoveredIndex;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 248,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Top Connected Globe + Up-Chevron Tab ("🌐 ∧")
+          GestureDetector(
+            onTap: widget.onClose,
+            child: Container(
+              width: 98,
+              height: 46,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFAF9F4),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
+                border: Border.all(
+                  color: const Color(0xFFE5E4DD),
+                  width: 1,
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.language_rounded,
+                    color: Color(0xFF1E1E1E),
+                    size: 21,
+                  ),
+                  SizedBox(width: 8),
+                  Icon(
+                    Icons.keyboard_arrow_up_rounded,
+                    color: Color(0xFF1E1E1E),
+                    size: 25,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Scrollable 28-Language Dropdown List Card
+          Container(
+            width: 248,
+            height: 472,
+            decoration: BoxDecoration(
+              color: const Color(0xFFFAF9F4),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(18),
+                bottomLeft: Radius.circular(18),
+                bottomRight: Radius.circular(18),
+              ),
+              border: Border.all(
+                color: const Color(0xFFE5E4DD),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 22,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(18),
+                bottomLeft: Radius.circular(18),
+                bottomRight: Radius.circular(18),
+              ),
+              child: ScrollConfiguration(
+                behavior:
+                    ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                child: ListView.builder(
+                  controller: _scrollController,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 12,
+                  ),
+                  itemCount: widget.options.length,
+                  itemBuilder: (context, index) {
+                    final option = widget.options[index];
+                    final isSelected =
+                        option.label == widget.selectedLanguageLabel;
+                    final isHovered = _hoveredIndex == index;
+                    final isHighlighted = isSelected || isHovered;
+
+                    return MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      onEnter: (_) => setState(() => _hoveredIndex = index),
+                      onExit: (_) => setState(() {
+                        if (_hoveredIndex == index) _hoveredIndex = null;
+                      }),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => widget.onSelect(option),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8.5,
+                            horizontal: 8,
+                          ),
+                          child: Text(
+                            option.label,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: isHighlighted
+                                  ? const Color(0xFF141414)
+                                  : const Color(0xFF595959),
+                              fontSize: 15.5,
+                              fontWeight: isHighlighted
+                                  ? FontWeight.w500
+                                  : FontWeight.w400,
+                              height: 1.25,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
