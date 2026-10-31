@@ -4828,6 +4828,14 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   }
 
   Widget _buildShareYourLoveStoryStackedFan(AviajRegionalContentPack pack) {
+    final frontPortrait = pack.storyCoupleImageUrl;
+    final middlePortrait = pack.profiles.length > 1
+        ? pack.profiles[1].imageUrl
+        : pack.steppedCards[0].imageUrl;
+    final backPortrait = pack.profiles.length > 2
+        ? pack.profiles[2].imageUrl
+        : pack.steppedCards[2].imageUrl;
+
     return SizedBox(
       height: 430,
       child: Stack(
@@ -4854,7 +4862,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
                 child: _buildMonochromePanel(
-                  pack.steppedCards[2].imageUrl,
+                  backPortrait,
                   height: 318,
                 ),
               ),
@@ -4881,7 +4889,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
                 child: _buildMonochromePanel(
-                  pack.departureCirclePhotoUrl,
+                  middlePortrait,
                   height: 374,
                 ),
               ),
@@ -4908,7 +4916,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
                 child: _buildMonochromePanel(
-                  pack.storyCoupleImageUrl,
+                  frontPortrait,
                   height: 430,
                 ),
               ),
