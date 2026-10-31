@@ -54,54 +54,54 @@ class AviajStripeService extends ChangeNotifier {
 
   String stripeAccountId = defaultStripeAccountId;
   String publishableKey =
-      'pk_live_51TNTVyJD1U0jWVOT_aviaj_single_love_travel_checkout';
+      'pk_live_51TNTVyJD1U0jWVOT_aviaj_travel_dating_checkout';
   String checkoutMode = 'Live / Instant Stripe Payment Sheet';
-  String activeTier = 'Free Single Passport'; // 'Aviaj Gold™', 'Aviaj Platinum™'
+  String activeTier = 'Economy Boarding Pass';
   bool isPremiumSubscriber = false;
 
   final List<StripePaymentReceipt> receipts = [];
 
   static const List<StripeProductPlan> plans = [
     StripeProductPlan(
-      id: 'price_aviaj_gold_monthly',
-      name: 'Aviaj Gold™ (Tinder Gold + Bumble Boost)',
-      subtitle: 'Most Popular for Single Travellers',
+      id: 'price_aviaj_business_monthly',
+      name: 'Aviaj Business Class™',
+      subtitle: 'Most Popular for Solo & Romantic Travellers',
       amountUsd: 14.99,
       interval: 'month',
-      badgeColor: AviajTheme.bumbleHoney,
+      badgeColor: AviajTheme.horizonTeal,
       perks: [
-        'Unlimited Right Swipes & First Moves Worldwide',
-        'Passport™ Teleport to Any Destination Before You Fly',
-        '5 Free Super Boarding Passes Every Week',
+        'Unlimited Co-Pilot Connects & Destination Matches Worldwide',
+        'Destination Radar: Match in Any City Before Your Flight Departs',
+        '5 Free Priority Boarding Passes Every Week',
         '100% Ad-Free Experience (Disables AdMob & Unity Ads)',
         'Unlimited Rewinds on Accidental Passes',
       ],
     ),
     StripeProductPlan(
-      id: 'price_aviaj_platinum_monthly',
-      name: 'Aviaj Platinum™ First-Class',
-      subtitle: 'Ultimate Single Love & VIP Villa Access',
+      id: 'price_aviaj_first_class_monthly',
+      name: 'Aviaj First Class™ VIP',
+      subtitle: 'Ultimate Travel Dating & Villa Concierge Access',
       amountUsd: 29.99,
       interval: 'month',
-      badgeColor: AviajTheme.loveCrimson,
+      badgeColor: AviajTheme.sunsetTerracotta,
       perks: [
-        'Everything in Aviaj Gold™ Included',
-        'Priority First Move: Your Messages Appear Top of Lounge',
-        'See Who Already Swiped Right on You in Your Next City',
-        '2x Weekly 60-Minute Bumble Spotlight Boosts',
+        'Everything in Aviaj Business Class™ Included',
+        'Priority Departure Lounge: Your Invites Appear First',
+        'See Everyone Already Heading to Your Next Destination',
+        '2x Weekly 60-Minute Horizon Radar Boosts',
         '\$150 Off Any Curated Singles Villa or Group Departure',
       ],
     ),
     StripeProductPlan(
-      id: 'price_aviaj_super_pack',
-      name: '10x Super Boarding Passes + 2x Spotlights',
-      subtitle: 'One-Time Instant Boost Pack',
+      id: 'price_aviaj_boarding_pack',
+      name: '10x Priority Boarding Passes + 2x Radar Boosts',
+      subtitle: 'One-Time Instant Travel Boost Pack',
       amountUsd: 9.99,
       interval: 'one_time',
-      badgeColor: AviajTheme.passportBlue,
+      badgeColor: AviajTheme.compassAmber,
       perks: [
-        '+10 Instant Super Boarding Passes',
-        '+60 Minutes Priority Spotlight in Your Target City',
+        '+10 Instant Priority Boarding Passes',
+        '+60 Minutes Destination Radar Boost in Your Target City',
         'Never Expires',
       ],
     ),
@@ -138,12 +138,12 @@ class AviajStripeService extends ChangeNotifier {
 
     if (plan.interval == 'month') {
       isPremiumSubscriber = true;
-      activeTier = plan.name.split(' (').first;
-      // Automatically disable ads and grant bonus Super Passes + Spotlight
+      activeTier = plan.name;
+      // Automatically disable ads and grant bonus Boarding Passes + Radar Boost
       AviajAdService.instance.toggleAdsEnabled(false);
       AviajAdService.instance.superBoardingPassCredits += 10;
       AviajAdService.instance.spotlightBoostMinutes += 60;
-    } else if (plan.id == 'price_aviaj_super_pack') {
+    } else if (plan.id == 'price_aviaj_boarding_pack') {
       AviajAdService.instance.superBoardingPassCredits += 10;
       AviajAdService.instance.spotlightBoostMinutes += 60;
     }
@@ -154,17 +154,17 @@ class AviajStripeService extends ChangeNotifier {
 }
 
 /// Opens the Aviaj Storefront & Stripe Checkout Modal (`acct_1TNTVyJD1U0jWVOT`)
-/// for Subscriptions (Aviaj Gold / Platinum), Super Pass Packs, or Trip Deposits.
+/// for Subscriptions (Business Class / First Class), Priority Boarding Packs, or Trip Deposits.
 Future<void> showStripeStorefrontModal(
   BuildContext context, {
   StripeProductPlan? customTripPlan,
   VoidCallback? onCustomPlanPaid,
 }) async {
   final stripe = AviajStripeService.instance;
-  StripeProductPlan selectedPlan = customTripPlan ?? AviajStripeService.plans[0];
+  StripeProductPlan selectedPlan =
+      customTripPlan ?? AviajStripeService.plans[0];
   String selectedMethod = 'Card (Visa / Mastercard / Amex)';
-  final cardNumberCtrl =
-      TextEditingController(text: '4242 •••• •••• 4242');
+  final cardNumberCtrl = TextEditingController(text: '4242 •••• •••• 4242');
   final expiryCtrl = TextEditingController(text: '12 / 28');
   final cvcCtrl = TextEditingController(text: '884');
   final nameCtrl = TextEditingController(text: 'Aarav Mehta');
@@ -239,11 +239,11 @@ Future<void> showStripeStorefrontModal(
                         Text(
                           customTripPlan != null
                               ? 'Reserve Your Trip Spot or Upgrade with Stripe'
-                              : 'Upgrade to Aviaj Gold™ & Platinum™ First-Class',
+                              : 'Upgrade to Aviaj Business Class™ & First Class™',
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w900,
-                            color: AviajTheme.obsidian,
+                            color: AviajTheme.midnightNavy,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -272,13 +272,13 @@ Future<void> showStripeStorefrontModal(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? AviajTheme.warmCream
+                                    ? AviajTheme.warmSand
                                     : Colors.white,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
                                   color: isSelected
-                                      ? AviajTheme.loveCrimson
-                                      : const Color(0xFFE6DCDF),
+                                      ? AviajTheme.sunsetTerracotta
+                                      : const Color(0xFFE2DAD0),
                                   width: isSelected ? 2.2 : 1.2,
                                 ),
                               ),
@@ -292,7 +292,7 @@ Future<void> showStripeStorefrontModal(
                                             ? Icons.radio_button_checked_rounded
                                             : Icons.radio_button_off_rounded,
                                         color: isSelected
-                                            ? AviajTheme.loveCrimson
+                                            ? AviajTheme.sunsetTerracotta
                                             : Colors.grey,
                                         size: 20,
                                       ),
@@ -303,7 +303,7 @@ Future<void> showStripeStorefrontModal(
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w900,
                                             fontSize: 15,
-                                            color: AviajTheme.obsidian,
+                                            color: AviajTheme.midnightNavy,
                                           ),
                                         ),
                                       ),
@@ -321,11 +321,8 @@ Future<void> showStripeStorefrontModal(
                                           plan.interval == 'month'
                                               ? '\$${plan.amountUsd.toStringAsFixed(2)}/mo'
                                               : '\$${plan.amountUsd.toStringAsFixed(2)}',
-                                          style: TextStyle(
-                                            color: plan.badgeColor ==
-                                                    AviajTheme.bumbleHoney
-                                                ? AviajTheme.obsidian
-                                                : Colors.white,
+                                          style: const TextStyle(
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w900,
                                             fontSize: 12.5,
                                           ),
@@ -394,7 +391,9 @@ Future<void> showStripeStorefrontModal(
                               selected: active,
                               selectedColor: const Color(0xFF635BFF),
                               labelStyle: TextStyle(
-                                color: active ? Colors.white : AviajTheme.obsidian,
+                                color: active
+                                    ? Colors.white
+                                    : AviajTheme.midnightNavy,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 12,
                               ),
@@ -551,4 +550,3 @@ Future<void> showStripeStorefrontModal(
     },
   );
 }
-

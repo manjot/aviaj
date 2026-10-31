@@ -124,11 +124,11 @@ class AviajAdService extends ChangeNotifier {
     }
   }
 
-  /// Triggers a Rewarded Video Ad via Unity Ads or Google AdMob and grants Super Boarding Passes + Spotlight.
+  /// Triggers a Rewarded Video Ad via Unity Ads or Google AdMob and grants Priority Boarding Passes + Horizon Radar Boost.
   Future<void> showRewardedAd(
     BuildContext context, {
     String rewardDescription =
-        '+3 Super Boarding Passes & 30m Bumble Spotlight',
+        '+3 Priority Boarding Passes & 30m Horizon Radar Boost',
   }) async {
     final preferUnity = activeProvider != AdNetworkProvider.googleAdMob;
 
@@ -163,7 +163,7 @@ class AviajAdService extends ChangeNotifier {
       context: context,
       builder: (ctx) {
         return Dialog(
-          backgroundColor: AviajTheme.obsidian,
+          backgroundColor: AviajTheme.midnightNavy,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
           child: ConstrainedBox(
@@ -183,17 +183,16 @@ class AviajAdService extends ChangeNotifier {
                         ),
                         decoration: BoxDecoration(
                           color: isUnity
-                              ? AviajTheme.bumbleHoney
-                              : AviajTheme.passportBlue,
+                              ? AviajTheme.compassAmber
+                              : AviajTheme.skyAzure,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           isUnity
                               ? 'UNITY ADS INTERSTITIAL • SPONSORED'
                               : 'GOOGLE ADMOB INTERSTITIAL • SPONSORED',
-                          style: TextStyle(
-                            color:
-                                isUnity ? AviajTheme.obsidian : Colors.white,
+                          style: const TextStyle(
+                            color: Colors.white,
                             fontWeight: FontWeight.w900,
                             fontSize: 10.5,
                           ),
@@ -214,7 +213,7 @@ class AviajAdService extends ChangeNotifier {
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AviajTheme.loveCrimson,
+                      color: AviajTheme.horizonTeal,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Column(
@@ -227,7 +226,7 @@ class AviajAdService extends ChangeNotifier {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          '2-for-1 Romantic Flights to Santorini & Kyoto',
+                          '2-for-1 Co-Pilot Flights to Santorini & Kyoto',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 21,
@@ -236,7 +235,7 @@ class AviajAdService extends ChangeNotifier {
                         ),
                         SizedBox(height: 6),
                         Text(
-                          'Book with your Aviaj match and get 35% off boutique cliffside villas + zero single supplement.',
+                          'Book with your Aviaj travel partner and get 35% off boutique cliffside villas + zero single supplement.',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 13.5,
@@ -262,12 +261,12 @@ class AviajAdService extends ChangeNotifier {
                     child: FilledButton(
                       onPressed: () => Navigator.of(ctx).pop(),
                       style: FilledButton.styleFrom(
-                        backgroundColor: AviajTheme.bumbleHoney,
-                        foregroundColor: AviajTheme.obsidian,
+                        backgroundColor: AviajTheme.compassAmber,
+                        foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                       child: const Text(
-                        'Continue Swiping on Aviaj',
+                        'Continue Exploring on Aviaj',
                         style: TextStyle(fontWeight: FontWeight.w900),
                       ),
                     ),
@@ -311,7 +310,7 @@ class AviajAdService extends ChangeNotifier {
 
             final completed = secondsRemaining == 0;
             return Dialog(
-              backgroundColor: AviajTheme.obsidian,
+              backgroundColor: AviajTheme.midnightNavy,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(28),
               ),
@@ -332,18 +331,16 @@ class AviajAdService extends ChangeNotifier {
                             ),
                             decoration: BoxDecoration(
                               color: isUnity
-                                  ? AviajTheme.bumbleHoney
-                                  : AviajTheme.passportBlue,
+                                  ? AviajTheme.compassAmber
+                                  : AviajTheme.skyAzure,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
                               isUnity
                                   ? 'UNITY REWARDED VIDEO AD'
                                   : 'GOOGLE ADMOB REWARDED VIDEO AD',
-                              style: TextStyle(
-                                color: isUnity
-                                    ? AviajTheme.obsidian
-                                    : Colors.white,
+                              style: const TextStyle(
+                                color: Colors.white,
                                 fontWeight: FontWeight.w900,
                                 fontSize: 10.5,
                               ),
@@ -379,7 +376,7 @@ class AviajAdService extends ChangeNotifier {
                         width: double.infinity,
                         padding: const EdgeInsets.all(22),
                         decoration: BoxDecoration(
-                          color: AviajTheme.loveCrimson,
+                          color: AviajTheme.horizonTeal,
                           borderRadius: BorderRadius.circular(22),
                         ),
                         child: Column(
@@ -409,7 +406,7 @@ class AviajAdService extends ChangeNotifier {
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              'Unlock VIP Airport Lounge Access & Priority Matchmaking on your next international flight.',
+                              'Unlock VIP Airport Lounge Access & Priority Co-Pilot Matchmaking on your next international flight.',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 13.5,
@@ -419,7 +416,7 @@ class AviajAdService extends ChangeNotifier {
                             LinearProgressIndicator(
                               value: (3 - secondsRemaining) / 3,
                               backgroundColor: Colors.white24,
-                              color: AviajTheme.bumbleHoney,
+                              color: AviajTheme.compassAmber,
                               minHeight: 7,
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -430,7 +427,7 @@ class AviajAdService extends ChangeNotifier {
                       Text(
                         'Reward: $rewardDescription',
                         style: const TextStyle(
-                          color: AviajTheme.bumbleHoney,
+                          color: AviajTheme.compassAmber,
                           fontWeight: FontWeight.w800,
                           fontSize: 13,
                         ),
@@ -458,8 +455,8 @@ class AviajAdService extends ChangeNotifier {
                                 }
                               : null,
                           style: FilledButton.styleFrom(
-                            backgroundColor: AviajTheme.bumbleHoney,
-                            foregroundColor: AviajTheme.obsidian,
+                            backgroundColor: AviajTheme.compassAmber,
+                            foregroundColor: Colors.white,
                             disabledBackgroundColor: Colors.white12,
                             disabledForegroundColor: Colors.white54,
                             padding: const EdgeInsets.symmetric(vertical: 15),
@@ -467,7 +464,7 @@ class AviajAdService extends ChangeNotifier {
                           icon: const Icon(Icons.card_giftcard_rounded),
                           label: Text(
                             completed
-                                ? 'Claim +3 Super Passes & 30m Boost'
+                                ? 'Claim +3 Boarding Passes & 30m Boost'
                                 : 'Watching Ad (${secondsRemaining}s)...',
                             style:
                                 const TextStyle(fontWeight: FontWeight.w900),
@@ -515,9 +512,9 @@ class AviajAdBannerWidget extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
           decoration: BoxDecoration(
-            color: AviajTheme.obsidian,
+            color: AviajTheme.midnightNavy,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AviajTheme.bumbleHoney, width: 1.5),
+            border: Border.all(color: AviajTheme.compassAmber, width: 1.5),
           ),
           child: Wrap(
             alignment: WrapAlignment.spaceBetween,
@@ -534,13 +531,13 @@ class AviajAdBannerWidget extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: AviajTheme.bumbleHoney,
+                      color: AviajTheme.compassAmber,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       'AD • $badgeText',
                       style: const TextStyle(
-                        color: AviajTheme.obsidian,
+                        color: Colors.white,
                         fontWeight: FontWeight.w900,
                         fontSize: 10,
                         letterSpacing: 0.5,
@@ -553,7 +550,7 @@ class AviajAdBannerWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Get +3 Free Super Likes & 30m Bumble Spotlight!',
+                          'Get +3 Free Priority Boarding Passes & 30m Radar Boost!',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w900,
@@ -561,7 +558,7 @@ class AviajAdBannerWidget extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Credits: ${adService.superBoardingPassCredits} Super Passes • ${adService.spotlightBoostMinutes}m Spotlight Active',
+                          'Credits: ${adService.superBoardingPassCredits} Priority Passes • ${adService.spotlightBoostMinutes}m Radar Active',
                           style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 11.5,
@@ -580,7 +577,7 @@ class AviajAdBannerWidget extends StatelessWidget {
                   FilledButton.icon(
                     onPressed: () => adService.showRewardedAd(context),
                     style: FilledButton.styleFrom(
-                      backgroundColor: AviajTheme.loveCrimson,
+                      backgroundColor: AviajTheme.sunsetTerracotta,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 14,
@@ -608,7 +605,7 @@ class AviajAdBannerWidget extends StatelessWidget {
                     ),
                     icon: const Icon(Icons.credit_card_rounded, size: 16),
                     label: const Text(
-                      'Go Gold • Stripe (\$14.99)',
+                      'Business Class • Stripe (\$14.99)',
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 12,
@@ -618,8 +615,8 @@ class AviajAdBannerWidget extends StatelessWidget {
                   OutlinedButton.icon(
                     onPressed: () => showAdMobUnityConsoleModal(context),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AviajTheme.bumbleHoney,
-                      side: const BorderSide(color: AviajTheme.bumbleHoney),
+                      foregroundColor: AviajTheme.compassAmber,
+                      side: const BorderSide(color: AviajTheme.compassAmber),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 10,
@@ -685,7 +682,7 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: AviajTheme.obsidian,
+                            color: AviajTheme.midnightNavy,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: const Row(
@@ -693,7 +690,7 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                             children: [
                               Icon(
                                 Icons.monetization_on_rounded,
-                                color: AviajTheme.bumbleHoney,
+                                color: AviajTheme.compassAmber,
                                 size: 16,
                               ),
                               SizedBox(width: 6),
@@ -721,12 +718,12 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                       style: TextStyle(
                         fontSize: 21,
                         fontWeight: FontWeight.w900,
-                        color: AviajTheme.obsidian,
+                        color: AviajTheme.midnightNavy,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Integrated with google_mobile_ads & unity_ads_plugin • Super Credits Earned: ${adService.superBoardingPassCredits} • Rewarded Views: ${adService.rewardedVideosCompleted}',
+                      'Integrated with google_mobile_ads & unity_ads_plugin • Priority Credits Earned: ${adService.superBoardingPassCredits} • Rewarded Views: ${adService.rewardedVideosCompleted}',
                       style: const TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w700,
@@ -743,9 +740,11 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                         return ChoiceChip(
                           label: Text(p.label),
                           selected: selected,
-                          selectedColor: AviajTheme.loveCrimson,
+                          selectedColor: AviajTheme.horizonTeal,
                           labelStyle: TextStyle(
-                            color: selected ? Colors.white : AviajTheme.obsidian,
+                            color: selected
+                                ? Colors.white
+                                : AviajTheme.midnightNavy,
                             fontWeight: FontWeight.w800,
                           ),
                           onSelected: (_) => adService.setProvider(p),
@@ -763,7 +762,7 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                               adService.showInterstitialAd(context);
                             },
                             style: FilledButton.styleFrom(
-                              backgroundColor: AviajTheme.obsidian,
+                              backgroundColor: AviajTheme.midnightNavy,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 13),
                             ),
@@ -782,7 +781,7 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                               adService.showRewardedAd(context);
                             },
                             style: FilledButton.styleFrom(
-                              backgroundColor: AviajTheme.loveCrimson,
+                              backgroundColor: AviajTheme.sunsetTerracotta,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 13),
                             ),
@@ -799,30 +798,48 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                       ],
                     ),
                     const Divider(height: 28),
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text(
+                        'Enable AdMob & Unity Banner / Interstitial Ads',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 14,
+                        ),
+                      ),
+                      subtitle: const Text(
+                        'Rewarded Video Ads remain available for free Priority Boarding Passes',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      value: adService.adsEnabled,
+                      activeTrackColor: AviajTheme.horizonTeal,
+                      onChanged: adService.toggleAdsEnabled,
+                    ),
+                    const SizedBox(height: 10),
                     const Text(
-                      'GOOGLE ADMOB CONFIGURATION',
+                      'GOOGLE ADMOB CONFIGURATION (Android & iOS)',
                       style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w900,
-                        color: AviajTheme.loveCrimson,
                         letterSpacing: 0.8,
+                        color: AviajTheme.horizonTeal,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     TextField(
                       controller: admobAppCtrl,
                       decoration: const InputDecoration(
-                        labelText: 'AdMob App ID (Android / iOS)',
+                        labelText: 'AdMob App ID (ca-app-pub-...)',
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(
                           child: TextField(
                             controller: admobBannerCtrl,
                             decoration: const InputDecoration(
-                              labelText: 'AdMob Banner Unit ID',
+                              labelText: 'Banner Ad Unit ID',
                             ),
                           ),
                         ),
@@ -831,30 +848,30 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                           child: TextField(
                             controller: admobRewardCtrl,
                             decoration: const InputDecoration(
-                              labelText: 'AdMob Rewarded Unit ID',
+                              labelText: 'Rewarded Video Unit ID',
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 14),
                     const Text(
-                      'UNITY ADS CONFIGURATION',
+                      'UNITY ADS CONFIGURATION (Game IDs & Placements)',
                       style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w900,
-                        color: AviajTheme.obsidian,
                         letterSpacing: 0.8,
+                        color: AviajTheme.midnightNavy,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(
                           child: TextField(
                             controller: unityAndroidCtrl,
                             decoration: const InputDecoration(
-                              labelText: 'Unity Ads Android Game ID',
+                              labelText: 'Unity Android Game ID',
                             ),
                           ),
                         ),
@@ -863,7 +880,7 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                           child: TextField(
                             controller: unityIosCtrl,
                             decoration: const InputDecoration(
-                              labelText: 'Unity Ads iOS Game ID',
+                              labelText: 'Unity iOS Game ID',
                             ),
                           ),
                         ),
@@ -879,28 +896,27 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
                             newAdmobBannerId: admobBannerCtrl.text.trim(),
                             newAdmobInterstitialId: admobInterCtrl.text.trim(),
                             newAdmobRewardedId: admobRewardCtrl.text.trim(),
-                            newUnityAndroidGameId:
-                                unityAndroidCtrl.text.trim(),
+                            newUnityAndroidGameId: unityAndroidCtrl.text.trim(),
                             newUnityIosGameId: unityIosCtrl.text.trim(),
                           );
                           Navigator.of(ctx).pop();
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              backgroundColor: AviajTheme.obsidian,
+                              backgroundColor: AviajTheme.midnightNavy,
                               content: Text(
-                                'Google AdMob & Unity Ads SDK configuration saved!',
+                                'Saved Google AdMob & Unity Ads SDK Configuration!',
                               ),
                             ),
                           );
                         },
                         style: FilledButton.styleFrom(
-                          backgroundColor: AviajTheme.bumbleHoney,
-                          foregroundColor: AviajTheme.obsidian,
+                          backgroundColor: AviajTheme.compassAmber,
+                          foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 15),
                         ),
                         icon: const Icon(Icons.save_rounded),
                         label: const Text(
-                          'Save AdMob & Unity Ads Config',
+                          'Save AdMob & Unity Ads Keys',
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
@@ -915,4 +931,3 @@ Future<void> showAdMobUnityConsoleModal(BuildContext context) async {
     },
   );
 }
-

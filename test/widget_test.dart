@@ -4,17 +4,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets(
-      'Aviaj web renders Bumble.com-style solid-color landing page with App Store & Google Play badges',
+      'Aviaj web renders original travel dating landing page with App Store & Google Play badges',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
 
     await tester.pumpWidget(const AviajApp(forceMobileAppMode: false));
     await tester.pumpAndSettle();
 
-    // Brand header and Bumble-style hero headline should be visible
+    // Brand header and original travel-dating hero headline should be visible
     expect(find.text('aviaj'), findsWidgets);
     expect(
-      find.textContaining('Make the first move on your next horizon'),
+      find.textContaining('Meet your next co-pilot'),
       findsOneWidget,
     );
 

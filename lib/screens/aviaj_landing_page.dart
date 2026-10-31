@@ -6,24 +6,24 @@ import '../state/aviaj_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 
-/// Bumble.com & Tinder.com inspired Solid-Color Marketing Landing Page for Web (`aviaj.com`),
+/// Original Aviaj Solid-Color Travel & Romance Marketing Landing Page for Web (`aviaj.com`),
 /// directing users to download the iOS App Store & Google Play Store mobile apps,
 /// with an embedded interactive iPhone mobile app preview.
-class BumbleStyleLandingPage extends StatefulWidget {
+class AviajLandingPage extends StatefulWidget {
   final AviajState state;
   final VoidCallback onOpenFullMobilePreview;
 
-  const BumbleStyleLandingPage({
+  const AviajLandingPage({
     super.key,
     required this.state,
     required this.onOpenFullMobilePreview,
   });
 
   @override
-  State<BumbleStyleLandingPage> createState() => _BumbleStyleLandingPageState();
+  State<AviajLandingPage> createState() => _AviajLandingPageState();
 }
 
-class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
+class _AviajLandingPageState extends State<AviajLandingPage> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _modesKey = GlobalKey();
   final GlobalKey _pricingKey = GlobalKey();
@@ -56,25 +56,25 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(72),
-        child: _buildBumbleNavbar(context, isDesktop),
+        child: _buildAviajNavbar(context, isDesktop),
       ),
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
           children: [
-            // 1. BOLD BUMBLE.COM-STYLE SOLID COLOR HERO SECTION
+            // 1. SOLID AEGEAN TEAL & TERRACOTTA TRAVEL-DATING HERO SECTION
             _buildHeroSection(context, isDesktop),
 
-            // 2. THREE BUMBLE-STYLE PILLARS: AVIAJ DATE • AVIAJ BFF • AVIAJ TRIPS
+            // 2. THREE AVIAJ TRAVEL PILLARS: ROMANCE • CO-PILOT • GROUP CREW
             Container(
               key: _modesKey,
               child: _buildThreeModesSection(context, isDesktop),
             ),
 
-            // 3. HOW IT WORKS ON MOBILE (TINDER PASSPORT™ + BUMBLE 24H FIRST MOVE)
+            // 3. HOW IT WORKS ON MOBILE (DESTINATION RADAR + DEPARTURE LOUNGE)
             _buildMobileAppFeaturesBanner(context, isDesktop),
 
-            // 4. AVIAJ GOLD™ & PLATINUM™ MEMBERSHIP (POWERED BY STRIPE)
+            // 4. AVIAJ BUSINESS CLASS™ & FIRST CLASS™ (POWERED BY STRIPE)
             Container(
               key: _pricingKey,
               child: _buildStripePricingSection(context, isDesktop),
@@ -91,20 +91,20 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
     );
   }
 
-  Widget _buildBumbleNavbar(BuildContext context, bool isDesktop) {
+  Widget _buildAviajNavbar(BuildContext context, bool isDesktop) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: isDesktop ? 48 : 20),
       decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(
-          bottom: BorderSide(color: Color(0xFFF2ECEE), width: 1.5),
+          bottom: BorderSide(color: Color(0xFFE8E2D9), width: 1.5),
         ),
       ),
       child: SafeArea(
         bottom: false,
         child: Row(
           children: [
-            // Solid Brand Logo (Bumble/Tinder minimal wordmark)
+            // Solid Aviaj Aviation & Romance Brand Logo
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -112,11 +112,11 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: AviajTheme.loveCrimson,
+                    color: AviajTheme.sunsetTerracotta,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
-                    Icons.favorite_rounded,
+                    Icons.flight_takeoff_rounded,
                     color: Colors.white,
                     size: 22,
                   ),
@@ -128,7 +128,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                     fontWeight: FontWeight.w900,
                     fontSize: 28,
                     letterSpacing: -1.0,
-                    color: AviajTheme.obsidian,
+                    color: AviajTheme.midnightNavy,
                   ),
                 ),
               ],
@@ -136,19 +136,19 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
             const Spacer(),
             if (isDesktop) ...[
               _NavbarLink(
-                label: 'Aviaj Date',
+                label: 'Travel Romance',
                 onTap: () => _scrollToSection(_modesKey),
               ),
               _NavbarLink(
-                label: 'Travel Buddy (BFF)',
+                label: 'Solo Co-Pilot',
                 onTap: () => _scrollToSection(_modesKey),
               ),
               _NavbarLink(
-                label: 'Solo & Group Trips',
+                label: 'Group Departures',
                 onTap: () => _scrollToSection(_modesKey),
               ),
               _NavbarLink(
-                label: 'Aviaj Gold™',
+                label: 'First Class™',
                 onTap: () => _scrollToSection(_pricingKey),
               ),
               _NavbarLink(
@@ -160,7 +160,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
             FilledButton.icon(
               onPressed: () => showMobileAppDownloadModal(context),
               style: FilledButton.styleFrom(
-                backgroundColor: AviajTheme.obsidian,
+                backgroundColor: AviajTheme.midnightNavy,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -191,7 +191,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
 
     return Container(
       width: double.infinity,
-      color: AviajTheme.loveCrimson, // Strictly SOLID signature brand color
+      color: AviajTheme.horizonTeal, // Solid Aegean Horizon Teal
       padding: EdgeInsets.symmetric(
         horizontal: isDesktop ? 64 : 24,
         vertical: isDesktop ? 56 : 36,
@@ -241,17 +241,17 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Solid Bumble-Yellow Pill
+        // Solid Compass Sandstone Amber Pill
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: AviajTheme.bumbleHoney,
+            color: AviajTheme.compassAmber,
             borderRadius: BorderRadius.circular(30),
           ),
           child: const Text(
-            'SINGLE LOVE • SHORT & LONG-TERM DATING • TRAVEL BUDDY APP',
+            'SOLO & GROUP TRAVEL BUDDY • SHORT & LONG-TERM TRAVEL DATING APP',
             style: TextStyle(
-              color: AviajTheme.obsidian,
+              color: Colors.white,
               fontWeight: FontWeight.w900,
               fontSize: 11.5,
               letterSpacing: 0.8,
@@ -260,21 +260,21 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
         ),
         const SizedBox(height: 22),
         const Text(
-          'Make the first move on your next horizon.',
+          'Meet your next co-pilot.\nTravel together. Fall in love abroad.',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 54,
+            fontSize: 50,
             fontWeight: FontWeight.w900,
-            height: 1.06,
-            letterSpacing: -1.5,
+            height: 1.08,
+            letterSpacing: -1.4,
           ),
         ),
         const SizedBox(height: 18),
         const Text(
-          'Never travel single unless you want to. Meet verified solo & group travellers on the Aviaj mobile app for spontaneous vacation romance, a lifelong relationship partner, or a platonic travel buddy.',
+          'Connect with verified solo and group travellers heading to the same destination. Whether you want a spontaneous vacation romance, a lifelong relationship partner, or a trusted travel buddy to split a coastal villa, your journey starts on the Aviaj mobile app.',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: 17.5,
             fontWeight: FontWeight.w500,
             height: 1.45,
           ),
@@ -299,7 +299,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: AviajTheme.obsidian,
+                  color: AviajTheme.midnightNavy,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: const Icon(
@@ -314,7 +314,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                   Text(
                     'Get the Aviaj App on iOS & Android',
                     style: TextStyle(
-                      color: AviajTheme.obsidian,
+                      color: AviajTheme.midnightNavy,
                       fontWeight: FontWeight.w900,
                       fontSize: 14.5,
                     ),
@@ -334,7 +334,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
           ),
         ),
         const SizedBox(height: 14),
-        // Hidden compatibility markers so automated tests find intent labels
+        // Travel & Relationship Intent Pills
         Wrap(
           spacing: 8,
           runSpacing: 6,
@@ -363,7 +363,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
     );
   }
 
-  /// Interactive iPhone 16 Pro Frame showcasing the Mobile App right inside the Hero!
+  /// Interactive iPhone 16 Pro Frame showcasing the Aviaj Mobile App right inside the Hero!
   Widget _buildInteractivePhoneMockup(
     BuildContext context,
     TravellerProfile profile,
@@ -372,7 +372,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
       width: 340,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AviajTheme.obsidian,
+        color: AviajTheme.midnightNavy,
         borderRadius: BorderRadius.circular(46),
         border: Border.all(color: Colors.white24, width: 3),
       ),
@@ -397,14 +397,14 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 12,
-                      color: AviajTheme.obsidian,
+                      color: AviajTheme.midnightNavy,
                     ),
                   ),
                   Container(
                     width: 76,
                     height: 18,
                     decoration: BoxDecoration(
-                      color: AviajTheme.obsidian,
+                      color: AviajTheme.midnightNavy,
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
@@ -427,7 +427,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                   const Text(
                     'aviaj',
                     style: TextStyle(
-                      color: AviajTheme.loveCrimson,
+                      color: AviajTheme.sunsetTerracotta,
                       fontWeight: FontWeight.w900,
                       fontSize: 20,
                       letterSpacing: -0.5,
@@ -436,17 +436,19 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                   Flexible(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
-                        color: AviajTheme.bumbleHoney,
+                        color: AviajTheme.horizonTeal,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text(
-                        'Passport™',
+                        'Destination Radar',
                         style: TextStyle(
-                          color: AviajTheme.obsidian,
+                          color: Colors.white,
                           fontWeight: FontWeight.w900,
-                          fontSize: 10.5,
+                          fontSize: 10,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -455,7 +457,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                 ],
               ),
             ),
-            // Mobile Swipe Card inside the Phone Frame
+            // Mobile Traveller Card inside the Phone Frame
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: ClipRRect(
@@ -484,7 +486,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AviajTheme.obsidian.withValues(alpha: 0.92),
+                          color: AviajTheme.midnightNavy.withValues(alpha: 0.92),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Column(
@@ -504,7 +506,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                                 ),
                                 const Icon(
                                   Icons.verified_rounded,
-                                  color: AviajTheme.passportBlue,
+                                  color: AviajTheme.skyAzure,
                                   size: 16,
                                 ),
                               ],
@@ -513,7 +515,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                             Text(
                               '✈️ ${profile.nextDestination} (${profile.nextTripWindow})',
                               style: const TextStyle(
-                                color: AviajTheme.bumbleHoney,
+                                color: AviajTheme.compassAmber,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 11.5,
                               ),
@@ -526,7 +528,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                 ),
               ),
             ),
-            // Mobile Tinder-style Buttons inside the Phone Frame
+            // Mobile Co-Pilot Action Buttons inside the Phone Frame
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Row(
@@ -535,7 +537,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                   _MiniPhoneCircleBtn(
                     icon: Icons.close_rounded,
                     bgColor: const Color(0xFFF3F4F6),
-                    fgColor: AviajTheme.obsidian,
+                    fgColor: AviajTheme.midnightNavy,
                     onTap: () {
                       setState(() {
                         _previewCardIndex++;
@@ -543,14 +545,14 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                     },
                   ),
                   _MiniPhoneCircleBtn(
-                    icon: Icons.star_rounded,
-                    bgColor: AviajTheme.passportBlue,
+                    icon: Icons.airplane_ticket_rounded,
+                    bgColor: AviajTheme.compassAmber,
                     fgColor: Colors.white,
                     onTap: () => showMobileAppDownloadModal(context),
                   ),
                   _MiniPhoneCircleBtn(
                     icon: Icons.favorite_rounded,
-                    bgColor: AviajTheme.loveCrimson,
+                    bgColor: AviajTheme.sunsetTerracotta,
                     fgColor: Colors.white,
                     onTap: () {
                       setState(() {
@@ -569,7 +571,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                 width: double.infinity,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
-                color: AviajTheme.bumbleHoney,
+                color: AviajTheme.sunsetTerracotta,
                 alignment: Alignment.center,
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -577,14 +579,14 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                     Icon(
                       Icons.smartphone_rounded,
                       size: 15,
-                      color: AviajTheme.obsidian,
+                      color: Colors.white,
                     ),
                     SizedBox(width: 6),
                     Flexible(
                       child: Text(
                         'Open Mobile App Demo →',
                         style: TextStyle(
-                          color: AviajTheme.obsidian,
+                          color: Colors.white,
                           fontWeight: FontWeight.w900,
                           fontSize: 11.5,
                         ),
@@ -601,41 +603,41 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
     );
   }
 
-  /// Section 2: Bumble.com-style 3 Product Modes (Aviaj Date, Aviaj BFF, Aviaj Trips)
+  /// Section 2: Three Original Aviaj Travel Pillars (Romance, Co-Pilot, Crew)
   Widget _buildThreeModesSection(BuildContext context, bool isDesktop) {
     final modes = [
       (
-        badge: 'AVIAJ DATE™',
-        title: 'Single Love: Short-Term Spark or Long-Term Partner',
+        badge: 'AVIAJ ROMANCE',
+        title: 'Short-Term Vacation Chemistry & Long-Term Partners',
         description:
-            'Swipe right on verified singles heading to the same destination. Women & First-Movers unlock the chat with 24-hour Bumble Opening Moves™.',
-        bgColor: AviajTheme.loveCrimson,
+            'Connect with verified single travellers heading to the same destination. Share Departure Prompts and propose sunset rooftop dates before your flight lands.',
+        bgColor: AviajTheme.sunsetTerracotta,
         textColor: Colors.white,
-        btnColor: AviajTheme.bumbleHoney,
-        btnTextColor: AviajTheme.obsidian,
+        btnColor: AviajTheme.midnightNavy,
+        btnTextColor: Colors.white,
         imageUrl:
             'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
       ),
       (
-        badge: 'AVIAJ BFF™',
-        title: 'Platonic Travel Buddy & Co-Living Pods',
+        badge: 'AVIAJ CO-PILOT',
+        title: 'Platonic Travel Buddies & Shared Roadtrips',
         description:
-            'Looking for a trusted co-explorer to split a 4x4 in Patagonia, an oceanfront villa in Madeira, or sunrise treks without single supplements?',
-        bgColor: AviajTheme.bumbleHoney,
-        textColor: AviajTheme.obsidian,
-        btnColor: AviajTheme.obsidian,
+            'Looking for a trusted co-explorer to split a 4x4 in Patagonia, an oceanfront villa in Madeira, or sunrise treks without paying single supplements?',
+        bgColor: AviajTheme.horizonTeal,
+        textColor: Colors.white,
+        btnColor: AviajTheme.compassAmber,
         btnTextColor: Colors.white,
         imageUrl:
             'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
       ),
       (
-        badge: 'AVIAJ SQUAD™',
-        title: 'Solo Group Trips & Singles Sunset Villas',
+        badge: 'AVIAJ CREW',
+        title: 'Curated Solo Group Trips & Sunset Villas',
         description:
             'Reserve a verified spot on 4-to-8 person solo group departures in Amalfi, Kyoto, and Bali directly inside the Aviaj mobile app.',
-        bgColor: AviajTheme.obsidian,
+        bgColor: AviajTheme.midnightNavy,
         textColor: Colors.white,
-        btnColor: AviajTheme.loveCrimson,
+        btnColor: AviajTheme.sunsetTerracotta,
         btnTextColor: Colors.white,
         imageUrl:
             'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=800&q=80',
@@ -644,7 +646,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
 
     return Container(
       width: double.infinity,
-      color: AviajTheme.warmCream,
+      color: AviajTheme.warmSand,
       padding: EdgeInsets.symmetric(
         horizontal: isDesktop ? 64 : 24,
         vertical: 64,
@@ -656,9 +658,9 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'ONE MOBILE APP. THREE WAYS TO CONNECT ABROAD.',
+                'ONE TRAVEL DATING APP. THREE WAYS TO EXPLORE TOGETHER.',
                 style: TextStyle(
-                  color: AviajTheme.loveCrimson,
+                  color: AviajTheme.sunsetTerracotta,
                   fontWeight: FontWeight.w900,
                   fontSize: 12.5,
                   letterSpacing: 1.0,
@@ -666,9 +668,9 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Built for Single Love, Spontaneous Romance & Solo Group Adventures.',
+                'Designed for Romantic Co-Pilots, Solo Travel Buddies & Group Crews.',
                 style: TextStyle(
-                  color: AviajTheme.obsidian,
+                  color: AviajTheme.midnightNavy,
                   fontSize: 36,
                   fontWeight: FontWeight.w900,
                   height: 1.15,
@@ -734,7 +736,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                                 Text(
                                   m.description,
                                   style: TextStyle(
-                                    color: m.textColor.withValues(alpha: 0.86),
+                                    color: m.textColor.withValues(alpha: 0.88),
                                     fontSize: 14,
                                     height: 1.45,
                                     fontWeight: FontWeight.w500,
@@ -782,11 +784,11 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
     );
   }
 
-  /// Section 3: Solid Bumble-Yellow Banner highlighting Mobile-Only Features
+  /// Section 3: Solid Sunset Terracotta Banner highlighting Mobile-Only Features
   Widget _buildMobileAppFeaturesBanner(BuildContext context, bool isDesktop) {
     return Container(
       width: double.infinity,
-      color: AviajTheme.bumbleHoney,
+      color: AviajTheme.sunsetTerracotta,
       padding: EdgeInsets.symmetric(
         horizontal: isDesktop ? 64 : 24,
         vertical: 56,
@@ -808,7 +810,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                     Text(
                       'EXCLUSIVELY IN THE AVIAJ MOBILE APP',
                       style: TextStyle(
-                        color: AviajTheme.obsidian,
+                        color: Colors.white,
                         fontWeight: FontWeight.w900,
                         fontSize: 12,
                         letterSpacing: 1.0,
@@ -816,9 +818,9 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'Tinder’s Global Passport™ Meets Bumble’s 24-Hour First Move.',
+                      'Destination Radar Meets Verified Departure Lounge Dating.',
                       style: TextStyle(
-                        color: AviajTheme.obsidian,
+                        color: Colors.white,
                         fontSize: 34,
                         fontWeight: FontWeight.w900,
                         height: 1.15,
@@ -827,9 +829,9 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                     ),
                     SizedBox(height: 12),
                     Text(
-                      'Download the Aviaj mobile app on the App Store or Google Play to teleport your location pin before you board, send Super Boarding Passes, and unlock free boosts with Rewarded Ads.',
+                      'Download the Aviaj mobile app on the App Store or Google Play to set your upcoming travel dates, send Priority Boarding Passes, and unlock free radar boosts with Rewarded Ads.',
                       style: TextStyle(
-                        color: AviajTheme.obsidian,
+                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         height: 1.45,
@@ -849,9 +851,9 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                       OutlinedButton.icon(
                         onPressed: () => showAdMobUnityConsoleModal(context),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: AviajTheme.obsidian,
+                          foregroundColor: Colors.white,
                           side: const BorderSide(
-                            color: AviajTheme.obsidian,
+                            color: Colors.white,
                             width: 1.8,
                           ),
                         ),
@@ -868,7 +870,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                       FilledButton.icon(
                         onPressed: widget.onOpenFullMobilePreview,
                         style: FilledButton.styleFrom(
-                          backgroundColor: AviajTheme.loveCrimson,
+                          backgroundColor: AviajTheme.midnightNavy,
                           foregroundColor: Colors.white,
                         ),
                         icon: const Icon(Icons.phone_iphone_rounded, size: 17),
@@ -925,9 +927,9 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
               ),
               const SizedBox(height: 12),
               const Text(
-                'Upgrade Your Mobile Passport with Aviaj Gold™ & Platinum™',
+                'Upgrade Your Travel Boarding Pass with Business & First Class™',
                 style: TextStyle(
-                  color: AviajTheme.obsidian,
+                  color: AviajTheme.midnightNavy,
                   fontSize: 34,
                   fontWeight: FontWeight.w900,
                   letterSpacing: -0.8,
@@ -943,7 +945,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                     child: Container(
                       padding: const EdgeInsets.all(26),
                       decoration: BoxDecoration(
-                        color: AviajTheme.warmCream,
+                        color: AviajTheme.warmSand,
                         borderRadius: BorderRadius.circular(28),
                         border: Border.all(
                           color: plan.badgeColor,
@@ -964,10 +966,8 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                             ),
                             child: Text(
                               plan.subtitle,
-                              style: TextStyle(
-                                color: plan.badgeColor == AviajTheme.bumbleHoney
-                                    ? AviajTheme.obsidian
-                                    : Colors.white,
+                              style: const TextStyle(
+                                color: Colors.white,
                                 fontWeight: FontWeight.w900,
                                 fontSize: 11,
                               ),
@@ -979,7 +979,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
-                              color: AviajTheme.obsidian,
+                              color: AviajTheme.midnightNavy,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -990,7 +990,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                             style: const TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.w900,
-                              color: AviajTheme.loveCrimson,
+                              color: AviajTheme.sunsetTerracotta,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -1012,7 +1012,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                                       style: const TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w700,
-                                        color: AviajTheme.obsidian,
+                                        color: AviajTheme.midnightNavy,
                                       ),
                                     ),
                                   ),
@@ -1060,11 +1060,11 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
     );
   }
 
-  /// Section 5: Solid Obsidian Footer with App Store & Google Play Store Download CTAs
+  /// Section 5: Solid Midnight Navy Footer with App Store & Google Play Store Download CTAs
   Widget _buildDownloadAndFooterSection(BuildContext context, bool isDesktop) {
     return Container(
       width: double.infinity,
-      color: AviajTheme.obsidian,
+      color: AviajTheme.midnightNavy,
       padding: EdgeInsets.symmetric(
         horizontal: isDesktop ? 64 : 24,
         vertical: 56,
@@ -1089,7 +1089,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                         Text(
                           'aviaj',
                           style: TextStyle(
-                            color: AviajTheme.loveCrimson,
+                            color: AviajTheme.sunsetTerracotta,
                             fontSize: 36,
                             fontWeight: FontWeight.w900,
                             letterSpacing: -1.0,
@@ -1106,7 +1106,7 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                         ),
                         SizedBox(height: 6),
                         Text(
-                          'All swipe, matching, solo-group trip booking, and Departure Lounge chat functionality is built into the Aviaj iOS and Android apps.',
+                          'All co-pilot matching, destination radar, solo-group trip booking, and Departure Lounge chat functionality is built into the Aviaj iOS and Android apps.',
                           style: TextStyle(
                             color: Colors.white70,
                             fontSize: 14,
@@ -1125,13 +1125,13 @@ class _BumbleStyleLandingPageState extends State<BumbleStyleLandingPage> {
                 alignment: WrapAlignment.spaceBetween,
                 children: [
                   const Text(
-                    '© 2026 Aviaj Inc. • Single Love, Short & Long-Term Relationship Travel App',
+                    '© 2026 Aviaj Inc. • Travel Buddy, Short-Term & Long-Term Travel Dating App',
                     style: TextStyle(color: Colors.white54, fontSize: 12.5),
                   ),
                   Text(
                     'Stripe (${AviajStripeService.defaultStripeAccountId}) • Google AdMob • Unity Ads',
                     style: const TextStyle(
-                      color: AviajTheme.bumbleHoney,
+                      color: AviajTheme.compassAmber,
                       fontWeight: FontWeight.w800,
                       fontSize: 12.5,
                     ),
@@ -1161,7 +1161,7 @@ class _NavbarLink extends StatelessWidget {
         child: Text(
           label,
           style: const TextStyle(
-            color: AviajTheme.obsidian,
+            color: AviajTheme.midnightNavy,
             fontWeight: FontWeight.w800,
             fontSize: 14,
           ),
@@ -1202,3 +1202,4 @@ class _MiniPhoneCircleBtn extends StatelessWidget {
     );
   }
 }
+

@@ -369,13 +369,13 @@ class _MessagesScreenState extends State<MessagesScreen> {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: AviajTheme.bumbleHoney,
+                              color: AviajTheme.horizonTeal,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Text(
-                              '⏱ 22h First Move Active',
+                              '✈️ Departure Lounge Active',
                               style: TextStyle(
-                                color: AviajTheme.obsidian,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w900,
                                 fontSize: 10.5,
                               ),

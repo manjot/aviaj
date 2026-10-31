@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'screens/bumble_landing_page.dart';
+import 'screens/aviaj_landing_page.dart';
 import 'screens/discover_screen.dart';
 import 'screens/matchmaker_screen.dart';
 import 'screens/messages_screen.dart';
@@ -36,7 +36,7 @@ class _AviajAppState extends State<AviajApp> {
   void initState() {
     super.initState();
     _state = AviajState();
-    // On Web (aviaj.com), default to the Bumble.com-style marketing landing page.
+    // On Web (aviaj.com), default to the Aviaj travel-dating marketing landing page.
     // On native iOS & Android (!kIsWeb), boot directly into the full mobile app functionality.
     _showMobileAppExperience = widget.forceMobileAppMode ?? (!kIsWeb);
   }
@@ -53,7 +53,7 @@ class _AviajAppState extends State<AviajApp> {
       listenable: _state,
       builder: (context, _) {
         return MaterialApp(
-          title: 'Aviaj — Single Love & Relationship Travel App',
+          title: 'Aviaj — Solo & Group Travel Buddy & Romance Dating App',
           debugShowCheckedModeBanner: false,
           theme: AviajTheme.lightTheme(),
           darkTheme: AviajTheme.darkTheme(),
@@ -65,7 +65,7 @@ class _AviajAppState extends State<AviajApp> {
                       ? () => setState(() => _showMobileAppExperience = false)
                       : null,
                 )
-              : BumbleStyleLandingPage(
+              : AviajLandingPage(
                   state: _state,
                   onOpenFullMobilePreview: () =>
                       setState(() => _showMobileAppExperience = true),
@@ -89,9 +89,9 @@ class AviajMobileAppShell extends StatelessWidget {
 
   static const _navItems = [
     (
-      icon: Icons.local_fire_department_outlined,
-      activeIcon: Icons.local_fire_department_rounded,
-      label: 'Swipe',
+      icon: Icons.explore_outlined,
+      activeIcon: Icons.explore_rounded,
+      label: 'Discover',
     ),
     (
       icon: Icons.luggage_outlined,
@@ -101,12 +101,12 @@ class AviajMobileAppShell extends StatelessWidget {
     (
       icon: Icons.favorite_border_rounded,
       activeIcon: Icons.favorite_rounded,
-      label: 'Match',
+      label: 'Co-Pilot',
     ),
     (
       icon: Icons.chat_bubble_outline_rounded,
       activeIcon: Icons.chat_bubble_rounded,
-      label: 'Chats',
+      label: 'Lounge',
     ),
     (
       icon: Icons.badge_outlined,
@@ -133,11 +133,11 @@ class AviajMobileAppShell extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1C1C22) : Colors.white,
+            color: isDark ? const Color(0xFF1E293B) : Colors.white,
             border: Border(
               bottom: BorderSide(
                 color:
-                    isDark ? const Color(0xFF2D2D38) : const Color(0xFFF0E4E6),
+                    isDark ? const Color(0xFF334155) : const Color(0xFFE8E2D9),
                 width: 1.5,
               ),
             ),
@@ -150,8 +150,8 @@ class AviajMobileAppShell extends StatelessWidget {
                   TextButton.icon(
                     onPressed: onBackToLandingPage,
                     style: TextButton.styleFrom(
-                      foregroundColor: AviajTheme.obsidian,
-                      backgroundColor: AviajTheme.bumbleHoney,
+                      foregroundColor: Colors.white,
+                      backgroundColor: AviajTheme.horizonTeal,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 8,
@@ -172,11 +172,11 @@ class AviajMobileAppShell extends StatelessWidget {
                   width: 34,
                   height: 34,
                   decoration: BoxDecoration(
-                    color: AviajTheme.loveCrimson,
+                    color: AviajTheme.sunsetTerracotta,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
-                    Icons.favorite_rounded,
+                    Icons.flight_takeoff_rounded,
                     color: Colors.white,
                     size: 19,
                   ),
@@ -188,12 +188,12 @@ class AviajMobileAppShell extends StatelessWidget {
                     fontWeight: FontWeight.w900,
                     fontSize: 21,
                     letterSpacing: -0.5,
-                    color: AviajTheme.loveCrimson,
+                    color: AviajTheme.midnightNavy,
                   ),
                 ),
                 const Spacer(),
                 IconButton(
-                  tooltip: 'Aviaj Gold™ • Stripe Checkout',
+                  tooltip: 'Business Class™ • Stripe Checkout',
                   onPressed: () => showStripeStorefrontModal(context),
                   icon: const Icon(
                     Icons.workspace_premium_rounded,
@@ -205,7 +205,7 @@ class AviajMobileAppShell extends StatelessWidget {
                   onPressed: () => showAdMobUnityConsoleModal(context),
                   icon: const Icon(
                     Icons.monetization_on_rounded,
-                    color: AviajTheme.obsidian,
+                    color: AviajTheme.compassAmber,
                   ),
                 ),
                 IconButton(
@@ -213,7 +213,7 @@ class AviajMobileAppShell extends StatelessWidget {
                   onPressed: () => showMobileAppDownloadModal(context),
                   icon: const Icon(
                     Icons.phone_iphone_rounded,
-                    color: AviajTheme.loveCrimson,
+                    color: AviajTheme.horizonTeal,
                   ),
                 ),
                 IconButton(
@@ -243,7 +243,7 @@ class AviajMobileAppShell extends StatelessWidget {
                 icon: Icon(item.icon),
                 selectedIcon: Icon(
                   item.activeIcon,
-                  color: AviajTheme.loveCrimson,
+                  color: AviajTheme.sunsetTerracotta,
                 ),
                 label: item.label,
               ),

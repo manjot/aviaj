@@ -38,7 +38,7 @@ class _MatchmakerScreenState extends State<MatchmakerScreen> {
           width: double.infinity,
           padding: const EdgeInsets.all(26),
           decoration: BoxDecoration(
-            color: AviajTheme.loveCrimson,
+            color: AviajTheme.horizonTeal,
             borderRadius: BorderRadius.circular(28),
           ),
           child: Column(
@@ -48,22 +48,22 @@ class _MatchmakerScreenState extends State<MatchmakerScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                 decoration: BoxDecoration(
-                  color: AviajTheme.bumbleHoney,
+                  color: AviajTheme.compassAmber,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.favorite_rounded,
-                      color: AviajTheme.obsidian,
+                      Icons.explore_rounded,
+                      color: Colors.white,
                       size: 16,
                     ),
                     SizedBox(width: 6),
                     Text(
-                      'AVIAJ SINGLE LOVE & TRAVEL MATCHMAKER',
+                      'AVIAJ CO-PILOT & TRAVEL ROMANCE MATCHMAKER',
                       style: TextStyle(
-                        color: AviajTheme.obsidian,
+                        color: Colors.white,
                         fontWeight: FontWeight.w900,
                         fontSize: 11,
                         letterSpacing: 0.8,

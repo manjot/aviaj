@@ -32,13 +32,13 @@ class AviajNetworkImage extends StatelessWidget {
         return Container(
           width: width,
           height: height,
-          color: AviajTheme.loveCrimson,
+          color: AviajTheme.horizonTeal,
           alignment: Alignment.center,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(
-                Icons.favorite_rounded,
+                Icons.flight_takeoff_rounded,
                 color: Colors.white,
                 size: 36,
               ),
@@ -130,7 +130,7 @@ class CompatibilityPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
       decoration: BoxDecoration(
-        color: AviajTheme.loveCrimson,
+        color: AviajTheme.sunsetTerracotta,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
@@ -139,7 +139,7 @@ class CompatibilityPill extends StatelessWidget {
           const Icon(Icons.favorite_rounded, color: Colors.white, size: 13),
           const SizedBox(width: 5),
           Text(
-            '$score% Love Match',
+            '$score% Co-Pilot Match',
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w800,
@@ -215,10 +215,11 @@ class _StoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = lightOnDark ? AviajTheme.obsidian : Colors.white;
-    final fgColor = lightOnDark ? Colors.white : AviajTheme.obsidian;
-    final borderColor =
-        lightOnDark ? Colors.white24 : AviajTheme.obsidian.withValues(alpha: 0.2);
+    final bgColor = lightOnDark ? AviajTheme.midnightNavy : Colors.white;
+    final fgColor = lightOnDark ? Colors.white : AviajTheme.midnightNavy;
+    final borderColor = lightOnDark
+        ? Colors.white24
+        : AviajTheme.midnightNavy.withValues(alpha: 0.2);
 
     return InkWell(
       onTap: onTap,
@@ -304,7 +305,7 @@ Future<void> showMobileAppDownloadModal(
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: AviajTheme.loveCrimson,
+                            color: AviajTheme.horizonTeal,
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: const Row(
@@ -333,24 +334,24 @@ Future<void> showMobileAppDownloadModal(
                           onPressed: () => Navigator.of(ctx).pop(),
                           icon: const Icon(
                             Icons.close_rounded,
-                            color: AviajTheme.obsidian,
+                            color: AviajTheme.midnightNavy,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 14),
                     const Text(
-                      'Swipe Destinations. Make the First Move. Fall in Love Abroad.',
+                      'Meet Your Next Co-Pilot. Travel Together. Fall in Love Abroad.',
                       style: TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.w900,
-                        color: AviajTheme.obsidian,
+                        color: AviajTheme.midnightNavy,
                         height: 1.2,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Selected: $initialStore • Rated 4.9 ★ by 140,000+ single solo & group travellers worldwide.',
+                      'Selected: $initialStore • Rated 4.9 ★ by 140,000+ solo & group travellers worldwide.',
                       style: const TextStyle(
                         fontSize: 13.5,
                         color: Color(0xFF555560),
@@ -362,9 +363,12 @@ Future<void> showMobileAppDownloadModal(
                     Container(
                       padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
-                        color: AviajTheme.warmCream,
+                        color: AviajTheme.warmSand,
                         borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: AviajTheme.softBlush, width: 2),
+                        border: Border.all(
+                          color: AviajTheme.softTerracotta,
+                          width: 2,
+                        ),
                       ),
                       child: Wrap(
                         spacing: 20,
@@ -376,7 +380,7 @@ Future<void> showMobileAppDownloadModal(
                             height: 116,
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: AviajTheme.obsidian,
+                              color: AviajTheme.midnightNavy,
                               borderRadius: BorderRadius.circular(18),
                             ),
                             child: const Column(
@@ -390,7 +394,7 @@ Future<void> showMobileAppDownloadModal(
                                 Text(
                                   'SCAN TO GET APP',
                                   style: TextStyle(
-                                    color: AviajTheme.bumbleHoney,
+                                    color: AviajTheme.compassAmber,
                                     fontSize: 8.5,
                                     fontWeight: FontWeight.w900,
                                   ),
@@ -405,23 +409,23 @@ Future<void> showMobileAppDownloadModal(
                               children: [
                                 _AppFeatureBullet(
                                   icon: Icons.public_rounded,
-                                  color: AviajTheme.passportBlue,
+                                  color: AviajTheme.horizonTeal,
                                   text:
-                                      'Tinder-Style Passport™: Match in Kyoto, Amalfi, or Bali before you fly.',
+                                      'Aviaj Destination Radar: Connect in Kyoto, Amalfi, or Bali before your flight departs.',
                                 ),
                                 SizedBox(height: 8),
                                 _AppFeatureBullet(
-                                  icon: Icons.bolt_rounded,
-                                  color: AviajTheme.obsidian,
+                                  icon: Icons.airplane_ticket_rounded,
+                                  color: AviajTheme.sunsetTerracotta,
                                   text:
-                                      'Bumble-Style 24h First Move & Opening Moves for real romantic spark.',
+                                      'Departure Prompts & Boarding Date Invites for real romantic travel chemistry.',
                                 ),
                                 SizedBox(height: 8),
                                 _AppFeatureBullet(
                                   icon: Icons.verified_user_rounded,
                                   color: AviajTheme.solidEmerald,
                                   text:
-                                      'Photo + Passport Verified Singles & Solo Group Villa Crews.',
+                                      'Photo + Passport Verified Solo Travellers & Curated Villa Crews.',
                                 ),
                               ],
                             ),
@@ -438,15 +442,15 @@ Future<void> showMobileAppDownloadModal(
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  backgroundColor: AviajTheme.obsidian,
+                                  backgroundColor: AviajTheme.midnightNavy,
                                   content: Text(
-                                    'Redirecting to Apple App Store: Aviaj — Single Love & Travel Dating (iOS)...',
+                                    'Redirecting to Apple App Store: Aviaj — Travel Buddy & Romance Dating (iOS)...',
                                   ),
                                 ),
                               );
                             },
                             style: FilledButton.styleFrom(
-                              backgroundColor: AviajTheme.obsidian,
+                              backgroundColor: AviajTheme.midnightNavy,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 15),
                               shape: RoundedRectangleBorder(
@@ -466,15 +470,15 @@ Future<void> showMobileAppDownloadModal(
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  backgroundColor: AviajTheme.loveCrimson,
+                                  backgroundColor: AviajTheme.sunsetTerracotta,
                                   content: Text(
-                                    'Redirecting to Google Play Store: Aviaj — Single Love & Travel Dating (Android)...',
+                                    'Redirecting to Google Play Store: Aviaj — Travel Buddy & Romance Dating (Android)...',
                                   ),
                                 ),
                               );
                             },
                             style: FilledButton.styleFrom(
-                              backgroundColor: AviajTheme.loveCrimson,
+                              backgroundColor: AviajTheme.sunsetTerracotta,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 15),
                               shape: RoundedRectangleBorder(
@@ -497,7 +501,7 @@ Future<void> showMobileAppDownloadModal(
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 13,
-                        color: AviajTheme.obsidian,
+                        color: AviajTheme.midnightNavy,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -520,8 +524,8 @@ Future<void> showMobileAppDownloadModal(
                             });
                           },
                           style: FilledButton.styleFrom(
-                            backgroundColor: AviajTheme.bumbleHoney,
-                            foregroundColor: AviajTheme.obsidian,
+                            backgroundColor: AviajTheme.compassAmber,
+                            foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 18,
                               vertical: 16,
@@ -572,7 +576,7 @@ class _AppFeatureBullet extends StatelessWidget {
             style: const TextStyle(
               fontSize: 12.5,
               fontWeight: FontWeight.w700,
-              color: AviajTheme.obsidian,
+              color: AviajTheme.midnightNavy,
               height: 1.3,
             ),
           ),
@@ -590,10 +594,10 @@ class GlobalIntentFilterBar extends StatelessWidget {
     super.key,
     required this.state,
     this.searchHint =
-        'Passport™ Search: Kyoto, Amalfi, Bali, Paris, or traveller name...',
+        'Destination Radar: Kyoto, Amalfi, Bali, Paris, or traveller name...',
   });
 
-  static const List<String> _passportCities = [
+  static const List<String> _radarCities = [
     'All Destinations',
     'Amalfi',
     'Kyoto',
@@ -609,10 +613,10 @@ class GlobalIntentFilterBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1C1C22) : Colors.white,
+        color: isDark ? const Color(0xFF1E293B) : Colors.white,
         border: Border(
           bottom: BorderSide(
-            color: isDark ? const Color(0xFF2D2D38) : const Color(0xFFF0E4E6),
+            color: isDark ? const Color(0xFF334155) : const Color(0xFFE8E2D9),
           ),
         ),
       ),
@@ -633,7 +637,7 @@ class GlobalIntentFilterBar extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                   prefixIcon: const Icon(
                     Icons.search_rounded,
-                    color: AviajTheme.loveCrimson,
+                    color: AviajTheme.horizonTeal,
                     size: 18,
                   ),
                   suffixIcon: state.searchQuery.isNotEmpty
@@ -656,9 +660,9 @@ class GlobalIntentFilterBar extends StatelessWidget {
                 children: [
                   _FilterChipItem(
                     label: 'All Modes',
-                    icon: Icons.favorite_rounded,
+                    icon: Icons.explore_rounded,
                     isSelected: state.selectedIntentFilter == null,
-                    activeColor: AviajTheme.loveCrimson,
+                    activeColor: AviajTheme.horizonTeal,
                     onTap: () => state.setIntentFilter(null),
                   ),
                   const SizedBox(width: 6),
@@ -681,9 +685,9 @@ class GlobalIntentFilterBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          // Compact Passport™ City Switcher
+          // Compact Destination Radar City Switcher
           PopupMenuButton<String>(
-            tooltip: 'Teleport Passport™ Location',
+            tooltip: 'Switch Destination Radar City',
             onSelected: (city) {
               if (city == 'All Destinations') {
                 state.setSearchQuery('');
@@ -691,7 +695,7 @@ class GlobalIntentFilterBar extends StatelessWidget {
                 state.setSearchQuery(city);
               }
             },
-            itemBuilder: (ctx) => _passportCities
+            itemBuilder: (ctx) => _radarCities
                 .map(
                   (c) => PopupMenuItem<String>(
                     value: c,
@@ -700,7 +704,7 @@ class GlobalIntentFilterBar extends StatelessWidget {
                         const Icon(
                           Icons.place_rounded,
                           size: 17,
-                          color: AviajTheme.loveCrimson,
+                          color: AviajTheme.sunsetTerracotta,
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -715,22 +719,20 @@ class GlobalIntentFilterBar extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: AviajTheme.obsidian,
+                color: AviajTheme.midnightNavy,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(
-                    Icons.public_rounded,
-                    color: AviajTheme.bumbleHoney,
+                    Icons.flight_takeoff_rounded,
+                    color: AviajTheme.compassAmber,
                     size: 15,
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    state.searchQuery.isEmpty
-                        ? 'Passport™'
-                        : state.searchQuery,
+                    state.searchQuery.isEmpty ? 'Radar' : state.searchQuery,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w800,
@@ -774,12 +776,12 @@ class _FilterChipItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? activeColor
-              : (isDark ? const Color(0xFF25252E) : const Color(0xFFF6F1F2)),
+              : (isDark ? const Color(0xFF263349) : const Color(0xFFF4EFEA)),
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
             color: isSelected
                 ? activeColor
-                : (isDark ? const Color(0xFF353542) : const Color(0xFFE6DCDF)),
+                : (isDark ? const Color(0xFF3B4C66) : const Color(0xFFE2DAD0)),
           ),
         ),
         child: Row(
@@ -790,7 +792,7 @@ class _FilterChipItem extends StatelessWidget {
               size: 16,
               color: isSelected
                   ? Colors.white
-                  : (isDark ? Colors.white70 : AviajTheme.obsidian),
+                  : (isDark ? Colors.white70 : AviajTheme.midnightNavy),
             ),
             const SizedBox(width: 6),
             Text(
@@ -798,7 +800,7 @@ class _FilterChipItem extends StatelessWidget {
               style: TextStyle(
                 color: isSelected
                     ? Colors.white
-                    : (isDark ? Colors.white : AviajTheme.obsidian),
+                    : (isDark ? Colors.white : AviajTheme.midnightNavy),
                 fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
                 fontSize: 13,
               ),
@@ -830,14 +832,14 @@ Future<void> showBoardingMatchModal({
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Solid Bumble/Tinder Match Header Pill
+                // Solid Aviaj Boarding Match Header Pill
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                   decoration: BoxDecoration(
                     color: isSuperBoardingPass
-                        ? AviajTheme.bumbleHoney
-                        : AviajTheme.loveCrimson,
+                        ? AviajTheme.compassAmber
+                        : AviajTheme.horizonTeal,
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Row(
@@ -845,22 +847,18 @@ Future<void> showBoardingMatchModal({
                     children: [
                       Icon(
                         isSuperBoardingPass
-                            ? Icons.star_rounded
+                            ? Icons.airplane_ticket_rounded
                             : Icons.favorite_rounded,
-                        color: isSuperBoardingPass
-                            ? AviajTheme.obsidian
-                            : Colors.white,
+                        color: Colors.white,
                         size: 16,
                       ),
                       const SizedBox(width: 6),
                       Text(
                         isSuperBoardingPass
-                            ? 'SUPER BOARDING PASS • FIRST MOVE UNLOCKED!'
-                            : 'IT’S A TRAVEL LOVE MATCH!',
-                        style: TextStyle(
-                          color: isSuperBoardingPass
-                              ? AviajTheme.obsidian
-                              : Colors.white,
+                            ? 'PRIORITY BOARDING PASS • INSTANT MATCH!'
+                            : 'CO-PILOT & TRAVEL ROMANCE MATCH!',
+                        style: const TextStyle(
+                          color: Colors.white,
                           fontWeight: FontWeight.w900,
                           fontSize: 11.5,
                           letterSpacing: 0.6,
@@ -875,7 +873,7 @@ Future<void> showBoardingMatchModal({
                   children: [
                     CircleAvatar(
                       radius: 42,
-                      backgroundColor: AviajTheme.loveCrimson,
+                      backgroundColor: AviajTheme.horizonTeal,
                       child: ClipOval(
                         child: AviajNetworkImage(
                           imageUrl: state.currentUser.imageUrl,
@@ -890,12 +888,12 @@ Future<void> showBoardingMatchModal({
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: const BoxDecoration(
-                          color: AviajTheme.softBlush,
+                          color: AviajTheme.softTerracotta,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Icons.favorite_rounded,
-                          color: AviajTheme.loveCrimson,
+                          Icons.flight_takeoff_rounded,
+                          color: AviajTheme.sunsetTerracotta,
                           size: 24,
                         ),
                       ),
@@ -916,11 +914,11 @@ Future<void> showBoardingMatchModal({
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'You & ${profile.name} Matched!',
+                  'You & ${profile.name} Are Co-Pilots!',
                   style: const TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.w900,
-                    color: AviajTheme.obsidian,
+                    color: AviajTheme.midnightNavy,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -929,13 +927,13 @@ Future<void> showBoardingMatchModal({
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                   decoration: BoxDecoration(
-                    color: AviajTheme.bumbleHoney,
+                    color: AviajTheme.compassAmber,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text(
-                    '⏱ 24h Bumble Timer Active: Make the First Move!',
+                    '✈️ Departure Lounge Unlocked: Plan Your Trip Together!',
                     style: TextStyle(
-                      color: AviajTheme.obsidian,
+                      color: Colors.white,
                       fontWeight: FontWeight.w900,
                       fontSize: 11.5,
                     ),
@@ -943,7 +941,7 @@ Future<void> showBoardingMatchModal({
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Destination Match: ${profile.nextDestination} (${profile.nextTripWindow})',
+                  'Shared Destination: ${profile.nextDestination} (${profile.nextTripWindow})',
                   style: const TextStyle(
                     color: Color(0xFF555560),
                     fontWeight: FontWeight.w700,
@@ -957,19 +955,19 @@ Future<void> showBoardingMatchModal({
                     width: double.infinity,
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AviajTheme.warmCream,
+                      color: AviajTheme.warmSand,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AviajTheme.softBlush),
+                      border: Border.all(color: AviajTheme.softTerracotta),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${profile.name.split(' ').first}’s Opening Move:',
+                          '${profile.name.split(' ').first}’s Travel Icebreaker:',
                           style: const TextStyle(
                             fontSize: 11.5,
                             fontWeight: FontWeight.w900,
-                            color: AviajTheme.loveCrimson,
+                            color: AviajTheme.sunsetTerracotta,
                           ),
                         ),
                         const SizedBox(height: 3),
@@ -978,7 +976,7 @@ Future<void> showBoardingMatchModal({
                           style: const TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w600,
-                            color: AviajTheme.obsidian,
+                            color: AviajTheme.midnightNavy,
                           ),
                         ),
                       ],
@@ -989,11 +987,11 @@ Future<void> showBoardingMatchModal({
                   controller: noteController,
                   decoration: InputDecoration(
                     hintText:
-                        'Reply to ${profile.name.split(' ').first}’s Opening Move...',
+                        'Send a travel note to ${profile.name.split(' ').first}...',
                     prefixIcon: const Icon(
                       Icons.send_rounded,
                       size: 18,
-                      color: AviajTheme.loveCrimson,
+                      color: AviajTheme.sunsetTerracotta,
                     ),
                   ),
                 ),
@@ -1009,7 +1007,7 @@ Future<void> showBoardingMatchModal({
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: const Text('Keep Swiping'),
+                        child: const Text('Keep Exploring'),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -1027,14 +1025,14 @@ Future<void> showBoardingMatchModal({
                           state.setActiveTab(3);
                         },
                         style: FilledButton.styleFrom(
-                          backgroundColor: AviajTheme.loveCrimson,
+                          backgroundColor: AviajTheme.sunsetTerracotta,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         icon: const Icon(Icons.chat_bubble_rounded, size: 18),
-                        label: const Text('Make First Move'),
+                        label: const Text('Open Lounge Chat'),
                       ),
                     ),
                   ],

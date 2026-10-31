@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(26),
                     decoration: const BoxDecoration(
-                      color: AviajTheme.loveCrimson,
+                      color: AviajTheme.horizonTeal,
                     ),
                     child: Wrap(
                       spacing: 24,
@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundColor: AviajTheme.bumbleHoney,
+                          backgroundColor: AviajTheme.compassAmber,
                           child: ClipOval(
                             child: AviajNetworkImage(
                               imageUrl: user.imageUrl,
@@ -114,13 +114,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   vertical: 5,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AviajTheme.bumbleHoney,
+                                  color: AviajTheme.compassAmber,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: const Text(
-                                  'VERIFIED AVIAJ SINGLE LOVE & TRAVEL PASSPORT',
+                                  'VERIFIED AVIAJ TRAVEL & ROMANCE PASSPORT',
                                   style: TextStyle(
-                                    color: AviajTheme.obsidian,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w900,
                                     fontSize: 11,
                                     letterSpacing: 0.7,
