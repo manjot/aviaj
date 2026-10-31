@@ -34,25 +34,28 @@ class AviajNetworkImage extends StatelessWidget {
           height: height,
           color: AviajTheme.horizonTeal,
           alignment: Alignment.center,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.flight_takeoff_rounded,
-                color: Colors.white,
-                size: 36,
-              ),
-              const SizedBox(height: 6),
-              Text(
-                fallbackLabel,
-                style: const TextStyle(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.flight_takeoff_rounded,
                   color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13,
+                  size: 36,
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+                const SizedBox(height: 6),
+                Text(
+                  fallbackLabel,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         );
       },

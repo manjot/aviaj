@@ -38,6 +38,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   final GlobalKey _storiesKey = GlobalKey();
   final GlobalKey _friendshipHubKey = GlobalKey();
   final GlobalKey _seasonalGuidesKey = GlobalKey();
+  final GlobalKey _safetyCenterKey = GlobalKey();
   final GlobalKey _pricingKey = GlobalKey();
   int _selectedHeroIndex = 0;
   int _selectedStoryIndex = 0;
@@ -293,6 +294,12 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           _buildSeasonalDatingGuidesSection(context, isDesktop),
                     ),
 
+                    // SECTION 5I: "AVIAJ SAFETY CENTER" ("YOUR SAFETY COMES FIRST, ALWAYS" HERO + 8 ILLUSTRATED SAFETY FEATURE CARDS)
+                    Container(
+                      key: _safetyCenterKey,
+                      child: _buildSafetyCenterSection(context, isDesktop),
+                    ),
+
                     // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
                     _buildGetTheAppQrPhonesBanner(context, isDesktop),
 
@@ -419,7 +426,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                 _showAffMegaMenu = false;
                                 _showStoriesMegaMenu = false;
                               });
-                              _scrollToSection(_radarKey);
+                              _scrollToSection(_safetyCenterKey);
                             },
                           ),
                           _NavbarLink(
@@ -8123,6 +8130,1260 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         ),
       ],
+    );
+  }
+
+  /// SECTION 5I: "Aviaj Safety Center" ("Your safety comes first, always" Hero + 8 Illustrated Safety Feature Cards)
+  Widget _buildSafetyCenterSection(BuildContext context, bool isDesktop) {
+    final pack = widget.state.regionalPack;
+    final safetyCards = [
+      (
+        title: 'Photo Verification',
+        subtitle:
+            'A quick photo to verify the person you’re chatting with is real.',
+        graphic: _buildPhotoVerificationGraphic(pack),
+        detailBody:
+            'Aviaj Photo Verification combines real-time liveness selfie prompts with automated AI and human moderation so you can be confident your match looks like their profile photos before you ever say hello.',
+      ),
+      (
+        title: 'ID Verification and Verified badge',
+        subtitle:
+            'Add an extra layer of trust by confirming your identity with a verified badge.',
+        graphic: _buildIdVerificationGraphic(pack),
+        detailBody:
+            'Verify your government-issued ID in seconds to display the official blue “ID verified” badge on your profile—giving matches and AFF travel companions peace of mind when planning trips together.',
+      ),
+      (
+        title: '‘Review Before You Send’ prompt',
+        subtitle:
+            'A gentle nudge to rethink messages that may come across the wrong way.',
+        graphic: _buildReviewBeforeYouSendGraphic(pack),
+        detailBody:
+            'Our on-device language model detects potentially harmful or disrespectful phrasing before a message is sent, prompting the sender to edit their message and keeping conversations respectful.',
+      ),
+      (
+        title: 'Private Detector',
+        subtitle:
+            'Explicit photos are blurred automatically, so you choose what you see.',
+        graphic: _buildPrivateDetectorGraphic(pack),
+        detailBody:
+            'Private Detector™ automatically blurs unsolicited explicit images in chat and alerts you first, letting you decide whether to view, delete, or block and report the sender in one tap.',
+      ),
+      (
+        title: 'Deception Detector™',
+        subtitle:
+            'AI works in the background to spot fake or scam accounts before you do.',
+        graphic: _buildDeceptionDetectorGraphic(pack),
+        detailBody:
+            'Deception Detector™ uses machine-learning behavioral signals to block 95% of spam, scam, and automated fake profiles before they ever appear in your swipe deck or Departure Circles.',
+      ),
+      (
+        title: 'In-app voice and video calls',
+        subtitle:
+            'Chat face-to-face or by voice without needing to give out your number.',
+        graphic: _buildInAppCallsGraphic(pack),
+        detailBody:
+            'Catch a vibe check from the comfort of home using built-in HD voice and video calls inside Aviaj—no phone number, social handle, or personal contact details required.',
+      ),
+      (
+        title: 'Safe Date Planning & Check-Ins',
+        subtitle:
+            'Share your live date itinerary and check-in times with trusted friends.',
+        graphic: _buildSafeDateChatGraphic(pack),
+        detailBody:
+            'Planning a coffee date or weekend trek? Share who you’re meeting, where you’re going, and when you expect to check in directly with trusted contacts.',
+      ),
+      (
+        title: 'Unmatch, Block, and Report',
+        subtitle:
+            'You’re always in control—unmatch, block, or report anyone confidentially.',
+        graphic: _buildBlockAndReportGraphic(),
+        detailBody:
+            'If someone ever makes you feel uncomfortable, you can unmatch, pre-emptively block contacts, or submit a confidential report to our 24/7 Safety & Trust team.',
+      ),
+    ];
+
+    return Column(
+      children: [
+        // 1. Full-Bleed Warm Restaurant / Café Couple Hero Banner ("Your safety comes first, always")
+        SizedBox(
+          width: double.infinity,
+          height: isDesktop ? 560 : 400,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              AviajNetworkImage(
+                imageUrl:
+                    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=85',
+                width: double.infinity,
+                height: double.infinity,
+                fallbackLabel: 'Aviaj Safety Center',
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.36),
+                      Colors.black.withValues(alpha: 0.56),
+                    ],
+                  ),
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 960),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Your safety comes first, always',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: isDesktop ? 64 : 36,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -1.8,
+                            height: 1.06,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        Text(
+                          'The Aviaj Safety Center is here to guide you toward safe and meaningful connections.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: isDesktop ? 17.5 : 14.5,
+                            fontWeight: FontWeight.w600,
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // 2. "Safety features" Heading + 2-Column Large Illustrated Safety Cards Grid (8 Cards)
+        Container(
+          width: double.infinity,
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 64 : 20,
+            vertical: isDesktop ? 76 : 48,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              child: Column(
+                children: [
+                  Text(
+                    'Safety features',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: const Color(0xFF1E1E1E),
+                      fontSize: isDesktop ? 58 : 36,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1.8,
+                      height: 1.05,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Safety features designed to protect and empower you throughout your dating journey.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF3A3A3A),
+                      fontSize: 16.5,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 44),
+                  Wrap(
+                    spacing: 26,
+                    runSpacing: 26,
+                    children: safetyCards.map((card) {
+                      final cardWidth = isDesktop ? 575.0 : double.infinity;
+                      return SizedBox(
+                        width: cardWidth,
+                        child: _buildSafetyFeatureIllustratedCard(
+                          context,
+                          title: card.title,
+                          subtitle: card.subtitle,
+                          graphic: card.graphic,
+                          detailBody: card.detailBody,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSafetyFeatureIllustratedCard(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required Widget graphic,
+    required String detailBody,
+  }) {
+    return InkWell(
+      onTap: () => _openSafetyFeatureModal(
+        context,
+        title: title,
+        subtitle: subtitle,
+        detailBody: detailBody,
+      ),
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AviajTheme.loveRed,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: SizedBox(
+                height: 290,
+                width: double.infinity,
+                child: graphic,
+              ),
+            ),
+            const SizedBox(height: 22),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 27,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.7,
+                      height: 1.15,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15.5,
+                      fontWeight: FontWeight.w500,
+                      height: 1.44,
+                    ),
+                  ),
+                  const SizedBox(height: 22),
+                  const Text(
+                    'Learn More',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Card 1 Mockup: Photo Verification (Viewfinder frame + "✓ Photo verified" sparkle badge)
+  Widget _buildPhotoVerificationGraphic(AviajRegionalContentPack pack) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        AviajNetworkImage(
+          imageUrl: pack.profiles[0].imageUrl,
+          width: double.infinity,
+          height: 290,
+          fallbackLabel: 'Photo Verification',
+        ),
+        // Soft side vignettes outside the face viewfinder
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                color: Colors.white.withValues(alpha: 0.35),
+              ),
+            ),
+            const SizedBox(width: 210),
+            Expanded(
+              child: Container(
+                color: Colors.white.withValues(alpha: 0.35),
+              ),
+            ),
+          ],
+        ),
+        // Centered White Viewfinder Outline Frame
+        Center(
+          child: Container(
+            width: 210,
+            height: 245,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Colors.white, width: 2.2),
+            ),
+          ),
+        ),
+        // Bottom-left "✓ Photo verified" pill with sparkle
+        Positioned(
+          left: 64,
+          bottom: 24,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 9,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF242424).withValues(alpha: 0.90),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.verified_outlined,
+                      color: Colors.white,
+                      size: 19,
+                    ),
+                    SizedBox(width: 7),
+                    Text(
+                      'Photo verified',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Positioned(
+                left: 16,
+                top: -12,
+                child: Icon(
+                  Icons.auto_awesome,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Card 2 Mockup: ID Verification and Verified badge (5 fanned cards + center phone mockup + blue "✓ ID verified" pills)
+  Widget _buildIdVerificationGraphic(AviajRegionalContentPack pack) {
+    Widget buildSideCard(String imageUrl, double height) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: SizedBox(
+          width: 76,
+          height: height,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              AviajNetworkImage(
+                imageUrl: imageUrl,
+                width: 76,
+                height: height,
+                fallbackLabel: 'ID Verified',
+              ),
+              Positioned(
+                left: 5,
+                bottom: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF4267E8),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.verified_rounded,
+                        color: Colors.white,
+                        size: 9,
+                      ),
+                      SizedBox(width: 3),
+                      Text(
+                        'ID verified',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 7.5,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      color: const Color(0xFFFAF9F5),
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 14),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                buildSideCard(pack.profiles[1].imageUrl, 165),
+                const SizedBox(width: 6),
+                buildSideCard(pack.profiles[2].imageUrl, 195),
+                const SizedBox(width: 175),
+                buildSideCard(pack.profiles[3].imageUrl, 195),
+                const SizedBox(width: 6),
+                buildSideCard(pack.profiles[4].imageUrl, 165),
+              ],
+            ),
+          ),
+          // Center Smartphone Mockup ("Aviaj" + "Tiana, 30")
+          Container(
+            width: 172,
+            height: 274,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+              border: Border.all(color: const Color(0xFF1E1E1E), width: 2.2),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Aviaj',
+                        style: TextStyle(
+                          color: Color(0xFF1E1E1E),
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        Icons.tune_rounded,
+                        size: 14,
+                        color: Colors.grey.shade800,
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(14),
+                      ),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          AviajNetworkImage(
+                            imageUrl: pack.profiles[0].imageUrl,
+                            width: double.infinity,
+                            height: double.infinity,
+                            fallbackLabel: 'Tiana, 30',
+                          ),
+                          Positioned(
+                            left: 10,
+                            bottom: 10,
+                            child: Text(
+                              '${pack.profiles[0].name.split(' ').first}, ${pack.profiles[0].age}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Card 3 Mockup: 'Review Before You Send' prompt
+  Widget _buildReviewBeforeYouSendGraphic(AviajRegionalContentPack pack) {
+    return Container(
+      color: const Color(0xFFE9E9E9),
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          // Phone frame
+          Container(
+            width: 215,
+            height: 255,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(26),
+              ),
+              border: Border.all(color: const Color(0xFF1E1E1E), width: 2),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.chevron_left_rounded, size: 18),
+                      ClipOval(
+                        child: AviajNetworkImage(
+                          imageUrl: pack.profiles[1].imageUrl,
+                          width: 20,
+                          height: 20,
+                          fallbackLabel: 'M',
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Text(
+                        'Matt',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.videocam_outlined, size: 15),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.more_vert_rounded, size: 15),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  width: 180,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF242424),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: const Text(
+                    'Edit message',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Send anyway',
+                  style: TextStyle(
+                    color: Color(0xFF3A3A3A),
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 14),
+              ],
+            ),
+          ),
+          // Overlapping "Your message" nudge card
+          Positioned(
+            top: 82,
+            child: Container(
+              width: 256,
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: AviajTheme.loveRed,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.16),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Your message',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      'This is an inappropriate message\nthat I am sending',
+                      style: TextStyle(
+                        color: Color(0xFF2B2B2B),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        height: 1.35,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Card 4 Mockup: Private Detector ("This might be explicit" blurred photo preview)
+  Widget _buildPrivateDetectorGraphic(AviajRegionalContentPack pack) {
+    return Container(
+      color: const Color(0xFFE9E9E9),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          width: 225,
+          height: 255,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(26),
+            ),
+            border: Border.all(color: const Color(0xFF1E1E1E), width: 2),
+          ),
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.chevron_left_rounded, size: 18),
+                  ClipOval(
+                    child: AviajNetworkImage(
+                      imageUrl: pack.profiles[2].imageUrl,
+                      width: 20,
+                      height: 20,
+                      fallbackLabel: 'M',
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  const Text(
+                    'Marco',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const Spacer(),
+                  const Icon(Icons.videocam_outlined, size: 15),
+                  const SizedBox(width: 6),
+                  const Icon(Icons.more_vert_rounded, size: 15),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F1F1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    'Hello!',
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: AviajTheme.loveRed,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text(
+                  'How are you?',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Blurred Explicit Warning Box
+              Container(
+                width: 108,
+                height: 126,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF5D6B57),
+                      Color(0xFF8C7B70),
+                      Color(0xFF475245),
+                    ],
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.block_rounded,
+                        color: Color(0xFFD9232E),
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'This might be\nexplicit',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        height: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Card 5 Mockup: Deception Detector™ (4x2 Grid of real portraits + blocked spam silhouette tiles)
+  Widget _buildDeceptionDetectorGraphic(AviajRegionalContentPack pack) {
+    Widget buildRealTile(String url) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: AviajNetworkImage(
+          imageUrl: url,
+          width: double.infinity,
+          height: double.infinity,
+          fallbackLabel: 'Verified User',
+        ),
+      );
+    }
+
+    Widget buildBlockedSpamTile() {
+      return Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFEA79),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            const Icon(
+              Icons.person_rounded,
+              size: 92,
+              color: Color(0xFF242424),
+            ),
+            Positioned(
+              right: 18,
+              bottom: 14,
+              child: Container(
+                width: 24,
+                height: 24,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFFD43B),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.remove_rounded,
+                  size: 16,
+                  color: Color(0xFF242424),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(6),
+      child: Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(child: buildRealTile(pack.profiles[0].imageUrl)),
+                const SizedBox(width: 6),
+                Expanded(child: buildRealTile(pack.profiles[1].imageUrl)),
+                const SizedBox(width: 6),
+                Expanded(child: buildBlockedSpamTile()),
+                const SizedBox(width: 6),
+                Expanded(child: buildRealTile(pack.profiles[2].imageUrl)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(child: buildBlockedSpamTile()),
+                const SizedBox(width: 6),
+                Expanded(child: buildRealTile(pack.profiles[3].imageUrl)),
+                const SizedBox(width: 6),
+                Expanded(child: buildRealTile(pack.profiles[4].imageUrl)),
+                const SizedBox(width: 6),
+                Expanded(child: buildBlockedSpamTile()),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Card 6 Mockup: In-app voice and video calls
+  Widget _buildInAppCallsGraphic(AviajRegionalContentPack pack) {
+    return Container(
+      color: const Color(0xFFE9E9E9),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Phone frame with video call portrait
+          Container(
+            width: 265,
+            height: 290,
+            decoration: BoxDecoration(
+              border: Border.symmetric(
+                vertical: const BorderSide(color: Color(0xFF1E1E1E), width: 3),
+              ),
+            ),
+            child: AviajNetworkImage(
+              imageUrl: pack.profiles[1].imageUrl,
+              width: 265,
+              height: 290,
+              fallbackLabel: 'In-app Video Call',
+            ),
+          ),
+          // Floating white chat/call input pill bar
+          Positioned(
+            bottom: 62,
+            child: Container(
+              width: 380,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(40),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.18),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.camera_alt_outlined,
+                    size: 20,
+                    color: Color(0xFF1E1E1E),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Send a message...',
+                      style: TextStyle(
+                        color: Color(0xFF5A5A5A),
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color(0xFF1E1E1E),
+                        width: 1.2,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      'GIF',
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Icon(
+                    Icons.format_quote_rounded,
+                    size: 20,
+                    color: Color(0xFF1E1E1E),
+                  ),
+                  const SizedBox(width: 10),
+                  const Icon(
+                    Icons.video_call_outlined,
+                    size: 22,
+                    color: Color(0xFF1E1E1E),
+                  ),
+                  const SizedBox(width: 10),
+                  const Icon(
+                    Icons.mic_none_rounded,
+                    size: 20,
+                    color: Color(0xFF1E1E1E),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Card 7 Mockup: Safe Date Planning & Check-Ins ("Shall we go on a coffee date?" / "Yes, that sounds lovely")
+  Widget _buildSafeDateChatGraphic(AviajRegionalContentPack pack) {
+    return Container(
+      color: Colors.white,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            left: 56,
+            bottom: 18,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: AviajNetworkImage(
+                imageUrl: pack.profiles[2].imageUrl,
+                width: 165,
+                height: 205,
+                fallbackLabel: 'Coffee Date',
+              ),
+            ),
+          ),
+          Positioned(
+            left: 195,
+            bottom: 10,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: AviajNetworkImage(
+                imageUrl: pack.profiles[3].imageUrl,
+                width: 165,
+                height: 185,
+                fallbackLabel: 'Coffee Date',
+              ),
+            ),
+          ),
+          Positioned(
+            left: 112,
+            top: 42,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: AviajTheme.loveRed,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Text(
+                'Shall we go on a coffee date?',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 136,
+            top: 88,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: const Text(
+                'Yes, that sounds lovely',
+                style: TextStyle(
+                  color: Color(0xFF1E1E1E),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Card 8 Mockup: Unmatch, Block, and Report (Phone `9:41` status bar + safety warning shield)
+  Widget _buildBlockAndReportGraphic() {
+    return Container(
+      color: const Color(0xFFE9E9E9),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          width: 220,
+          height: 245,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(26),
+            ),
+            border: Border.all(color: const Color(0xFF1E1E1E), width: 2),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              const Row(
+                children: [
+                  Text(
+                    '9:41',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  Spacer(),
+                  Icon(Icons.signal_cellular_alt_rounded, size: 13),
+                  SizedBox(width: 4),
+                  Icon(Icons.wifi_rounded, size: 13),
+                  SizedBox(width: 4),
+                  Icon(Icons.battery_full_rounded, size: 13),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: 52,
+                height: 52,
+                decoration: const BoxDecoration(
+                  color: AviajTheme.loveRed,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Block & Report',
+                style: TextStyle(
+                  color: Color(0xFF1E1E1E),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'They won’t be notified and won’t be able to see your profile.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF5A5A5A),
+                  fontSize: 10.5,
+                  height: 1.35,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openSafetyFeatureModal(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required String detailBody,
+  }) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(20),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(26),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 620),
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AviajTheme.loveRed,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'AVIAJ SAFETY CENTER',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () => Navigator.of(ctx).pop(),
+                        icon: const Icon(Icons.close_rounded),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Color(0xFF1E1E1E),
+                      fontSize: 28,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.8,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: Color(0xFF2B2B2B),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      height: 1.45,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    detailBody,
+                    style: const TextStyle(
+                      color: Color(0xFF4A4A4A),
+                      fontSize: 15,
+                      height: 1.58,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FilledButton(
+                      onPressed: () => Navigator.of(ctx).pop(),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xFF242424),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 26,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                      ),
+                      child: const Text(
+                        'Got it',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
