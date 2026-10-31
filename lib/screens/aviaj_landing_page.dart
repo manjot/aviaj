@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math' as math;
+import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../services/ad_service.dart';
@@ -7,10 +10,9 @@ import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
 
 /// Lengthy, spacious, editorial Marketing Landing Page for Web (`aviaj.com`).
-/// Inspired by modern multi-section scroll architecture (minimal copy per section,
-/// bold typography, generous whitespace, alternating 50/50 visual splits, story showcase,
-/// and full-width conversion banners) while using 100% original Aviaj travel-dating
-/// keywords and the solid Aegean Teal + Sunset Terracotta + Compass Amber palette.
+/// Features the two-stage animated full-bleed Red Love hero banner:
+///   1) Giant edge-to-edge `Aviaj` brand name staggered entrance animation
+///   2) 3D angled perspective Profiles Slider fan-out + continuous smooth carousel
 class AviajLandingPage extends StatefulWidget {
   final AviajState state;
   final VoidCallback onOpenFullMobilePreview;
@@ -25,7 +27,8 @@ class AviajLandingPage extends StatefulWidget {
   State<AviajLandingPage> createState() => _AviajLandingPageState();
 }
 
-class _AviajLandingPageState extends State<AviajLandingPage> {
+class _AviajLandingPageState extends State<AviajLandingPage>
+    with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _modesKey = GlobalKey();
   final GlobalKey _radarKey = GlobalKey();
@@ -33,8 +36,62 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
   final GlobalKey _pricingKey = GlobalKey();
   int _selectedHeroIndex = 0;
 
+  late final AnimationController _bannerIntroController;
+  late final AnimationController _profileSliderController;
+  Timer? _autoSlideTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Phase 1 (0.0 -> 0.55): Giant "Aviaj" display letters animate in.
+    // Phase 2 (0.42 -> 1.00): 3D angled profile cards fan out over the center.
+    _bannerIntroController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1650),
+    )..forward();
+
+    // Phase 3: Continuous smooth 3D profile slider morphing Slot 3 -> 2 -> 1 -> 0 -> -1.
+    _profileSliderController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 850),
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed && mounted) {
+          setState(() {
+            _selectedHeroIndex =
+                (_selectedHeroIndex + 1) % widget.state.allProfiles.length;
+          });
+          _profileSliderController.reset();
+        }
+      });
+
+    // Automatically advance the 3D profiles slider after the banner intro completes.
+    _autoSlideTimer = Timer.periodic(
+      const Duration(milliseconds: 2900),
+      (_) {
+        if (!mounted) return;
+        if (_bannerIntroController.isCompleted &&
+            !_profileSliderController.isAnimating) {
+          _profileSliderController.forward(from: 0);
+        }
+      },
+    );
+  }
+
+  void _triggerNextProfileSlide() {
+    if (_profileSliderController.isAnimating) return;
+    _profileSliderController.forward(from: 0);
+  }
+
+  void _replayBannerAnimation() {
+    _profileSliderController.reset();
+    _bannerIntroController.forward(from: 0);
+  }
+
   @override
   void dispose() {
+    _autoSlideTimer?.cancel();
+    _bannerIntroController.dispose();
+    _profileSliderController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -57,16 +114,15 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(76),
-        child: _buildMinimalNavbar(context, isDesktop),
-      ),
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
           children: [
-            // SECTION 1: SPACIOUS ABOVE-THE-FOLD HERO (MINIMAL COPY + VISUAL)
+            // SECTION 1: FULL-BLEED ANIMATED BANNER (GIANT NAME + 3D PROFILES SLIDER)
             _buildSpaciousHeroSection(context, isDesktop),
+
+            // SECTION 1B: CONCISE EDITORIAL HEADLINE + APP STORE & GOOGLE PLAY STRIP
+            _buildBelowBannerIntroStrip(context, isDesktop),
 
             // SECTION 2: THREE CORE TRAVEL MODES (AVIAJ ROMANCE • CO-PILOT • CREW)
             Container(
@@ -154,120 +210,300 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
     );
   }
 
-  /// Top Global Navigation Header — clean, uncluttered, high-contrast
-  Widget _buildMinimalNavbar(BuildContext context, bool isDesktop) {
+  /// SECTION 1: Full-Bleed Solid Red Love Animated Hero Banner
+  /// Phase 1: Giant edge-to-edge "Aviaj" wordmark animates in (staggered letters).
+  /// Phase 2: 3D angled perspective profile cards fan out over the center ("Av" [cards] "aj").
+  /// Phase 3: Continuous & interactive 3D profiles slider morphs cards right-to-left.
+  Widget _buildSpaciousHeroSection(BuildContext context, bool isDesktop) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final profiles = widget.state.allProfiles;
+    final stageHeight = isDesktop ? 610.0 : 460.0;
+    final cardScale = isDesktop ? 1.0 : 0.64;
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 56 : 20),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: Color(0xFFEDE8E0), width: 1.2),
-        ),
-      ),
+      width: double.infinity,
+      color: AviajTheme.loveRed,
       child: SafeArea(
         bottom: false,
-        child: Row(
+        child: Column(
           children: [
-            // Brand Wordmark
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    color: AviajTheme.loveRed,
-                    borderRadius: BorderRadius.circular(11),
+            // Top Integrated Navigation Bar (Wordmark Left • Floating White Pill Center • Pill Right)
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                isDesktop ? 48 : 20,
+                isDesktop ? 22 : 14,
+                isDesktop ? 48 : 20,
+                8,
+              ),
+              child: Row(
+                children: [
+                  // Brand Wordmark on Left
+                  InkWell(
+                    onTap: _replayBannerAnimation,
+                    borderRadius: BorderRadius.circular(12),
+                    child: const Text(
+                      'Aviaj',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 36,
+                        letterSpacing: -1.4,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.favorite_rounded,
-                    color: Colors.white,
-                    size: 20,
+                  const Spacer(),
+                  // Center Floating White Stadium Pill Navigation Bar
+                  if (isDesktop)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _NavbarLink(
+                            label: 'Romance',
+                            onTap: () => _scrollToSection(_modesKey),
+                          ),
+                          _NavbarLink(
+                            label: 'Co-Pilot',
+                            onTap: () => _scrollToSection(_modesKey),
+                          ),
+                          _NavbarLink(
+                            label: 'Stories',
+                            onTap: () => _scrollToSection(_storiesKey),
+                          ),
+                          _NavbarLink(
+                            label: 'Safety',
+                            onTap: () => _scrollToSection(_radarKey),
+                          ),
+                          _NavbarLink(
+                            label: 'Support',
+                            onTap: () => _scrollToSection(_pricingKey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  const Spacer(),
+                  // Right Floating White Stadium Pills
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isDesktop) ...[
+                        InkWell(
+                          onTap: widget.onOpenFullMobilePreview,
+                          borderRadius: BorderRadius.circular(40),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                              vertical: 11,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: const Text(
+                              'App Demo',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+                      InkWell(
+                        onTap: () => showMobileAppDownloadModal(context),
+                        borderRadius: BorderRadius.circular(40),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 11,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.language_rounded,
+                                color: AviajTheme.midnightNavy,
+                                size: 20,
+                              ),
+                              SizedBox(width: 6),
+                              Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: AviajTheme.midnightNavy,
+                                size: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 10),
-                const Text(
-                  'aviaj',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 27,
-                    letterSpacing: -0.9,
-                    color: AviajTheme.loveRed,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const Spacer(),
-            if (isDesktop) ...[
-              _NavbarLink(
-                label: 'Romance',
-                onTap: () => _scrollToSection(_modesKey),
-              ),
-              _NavbarLink(
-                label: 'Co-Pilot',
-                onTap: () => _scrollToSection(_modesKey),
-              ),
-              _NavbarLink(
-                label: 'Group Crew',
-                onTap: () => _scrollToSection(_modesKey),
-              ),
-              _NavbarLink(
-                label: 'Destination Radar',
-                onTap: () => _scrollToSection(_radarKey),
-              ),
-              _NavbarLink(
-                label: 'The Horizon',
-                onTap: () => _scrollToSection(_storiesKey),
-              ),
-              _NavbarLink(
-                label: 'First Class',
-                onTap: () => _scrollToSection(_pricingKey),
-              ),
-              const SizedBox(width: 12),
-              OutlinedButton(
-                onPressed: widget.onOpenFullMobilePreview,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AviajTheme.midnightNavy,
-                  side: const BorderSide(
-                    color: AviajTheme.midnightNavy,
-                    width: 1.5,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 13,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text(
-                  'App Demo',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 13.5,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-            ],
-            FilledButton(
-              onPressed: () => showMobileAppDownloadModal(context),
-              style: FilledButton.styleFrom(
-                backgroundColor: AviajTheme.loveRed,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 22,
-                  vertical: 14,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-              child: const Text(
-                'Download',
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 13.5,
+
+            // Main Animated Stage: Giant "Aviaj" Name + 3D Angled Profiles Slider
+            ClipRect(
+              child: SizedBox(
+                width: double.infinity,
+                height: stageHeight,
+                child: AnimatedBuilder(
+                  animation: Listenable.merge([
+                    _bannerIntroController,
+                    _profileSliderController,
+                  ]),
+                  builder: (context, _) {
+                    final giantFontSize = isDesktop
+                        ? (screenWidth * 0.255).clamp(215.0, 365.0)
+                        : (screenWidth * 0.27).clamp(96.0, 150.0);
+                    const brandLetters = ['A', 'v', 'i', 'a', 'j'];
+
+                    return Stack(
+                      alignment: Alignment.center,
+                      clipBehavior: Clip.hardEdge,
+                      children: [
+                        // STEP 1: GIANT EDGE-TO-EDGE "Aviaj" WORDMARK ANIMATION
+                        Positioned(
+                          left: isDesktop ? 34 : 12,
+                          right: isDesktop ? 34 : 12,
+                          bottom: isDesktop ? 62 : 70,
+                          child: IgnorePointer(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: List.generate(
+                                brandLetters.length,
+                                (index) {
+                                  final start = (index * 0.065).clamp(0.0, 0.4);
+                                  final end =
+                                      (0.48 + index * 0.065).clamp(0.0, 1.0);
+                                  final rawT = ((_bannerIntroController.value -
+                                              start) /
+                                          (end - start))
+                                      .clamp(0.0, 1.0);
+                                  final curvedT =
+                                      Curves.easeOutBack.transform(rawT);
+                                  final opacityT =
+                                      Curves.easeOut.transform(rawT);
+
+                                  return Transform.translate(
+                                    offset: Offset(0, (1.0 - curvedT) * 145.0),
+                                    child: Transform.scale(
+                                      scale: 0.78 + (0.22 * curvedT),
+                                      child: Opacity(
+                                        opacity: opacityT,
+                                        child: Text(
+                                          brandLetters[index],
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: giantFontSize,
+                                            fontWeight: FontWeight.w900,
+                                            height: 0.88,
+                                            letterSpacing: -8,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // STEP 2 & 3: 3D ANGLED PERSPECTIVE PROFILES SLIDER
+                        // Render back-to-front (Slot 3 -> Slot 2 -> Slot 1 -> Slot 0 -> Outgoing)
+                        for (final slotIndex in [3, 2, 1, 0])
+                          _buildAnimatedPerspectiveProfileCard(
+                            context: context,
+                            profiles: profiles,
+                            slotIndex: slotIndex,
+                            cardScale: cardScale,
+                            stageWidth: screenWidth,
+                            stageHeight: stageHeight,
+                          ),
+
+                        // Subtle Bottom-Right Interactive Slider Controls
+                        Positioned(
+                          right: isDesktop ? 44 : 16,
+                          bottom: 18,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 7,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.92),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                InkWell(
+                                  onTap: _replayBannerAnimation,
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    child: Icon(
+                                      Icons.replay_rounded,
+                                      size: 16,
+                                      color: AviajTheme.midnightNavy,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                GestureDetector(
+                                  onTap: _triggerNextProfileSlide,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        '${profiles[_selectedHeroIndex % profiles.length].name.split(' ').first}, ${profiles[_selectedHeroIndex % profiles.length].age}',
+                                        style: const TextStyle(
+                                          color: AviajTheme.midnightNavy,
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 12.5,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: const BoxDecoration(
+                                          color: AviajTheme.loveRed,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.arrow_forward_rounded,
+                                          size: 13,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
@@ -277,18 +513,190 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
     );
   }
 
-  /// SECTION 1: Spacious Above-the-Fold Hero — Only 3 clean text elements on the left
-  /// and a high-impact lifestyle travel card on the right.
-  Widget _buildSpaciousHeroSection(BuildContext context, bool isDesktop) {
-    final profiles = widget.state.allProfiles;
-    final activeProfile = profiles[_selectedHeroIndex % profiles.length];
+  /// Builds a single 3D perspective angled profile slab at [slotIndex] (0=Front, 1=Middle, 2=Back, 3=Incoming)
+  /// and interpolates smoothly toward `slotIndex - 1` as `_profileSliderController` runs from 0 -> 1.
+  Widget _buildAnimatedPerspectiveProfileCard({
+    required BuildContext context,
+    required List<TravellerProfile> profiles,
+    required int slotIndex,
+    required double cardScale,
+    required double stageWidth,
+    required double stageHeight,
+  }) {
+    final profile =
+        profiles[(_selectedHeroIndex + slotIndex) % profiles.length];
+    final firstName = profile.name.split(' ').first;
 
+    // Entrance animation for Phase 2 ("THEN ANIMATE PROFILES SLIDER" after "Aviaj" name)
+    final introStart = (0.42 + slotIndex * 0.08).clamp(0.0, 0.85);
+    final introEnd = (0.86 + slotIndex * 0.045).clamp(0.0, 1.0);
+    final rawIntro =
+        ((_bannerIntroController.value - introStart) / (introEnd - introStart))
+            .clamp(0.0, 1.0);
+    final introCurve = Curves.easeOutCubic.transform(rawIntro);
+
+    // Continuous slider transition t (0.0 -> 1.0 moves slotIndex -> slotIndex - 1)
+    final slideT =
+        Curves.easeInOutCubic.transform(_profileSliderController.value);
+
+    // Define the 5 perspective slots: [-1: Outgoing, 0: Front, 1: Middle, 2: Back, 3: Incoming]
+    ({
+      double dx,
+      double top,
+      double width,
+      double height,
+      double slant,
+      double opacity,
+      double fontSize,
+    }) metricsForSlot(int s) {
+      switch (s) {
+        case -1:
+          return (
+            dx: -360.0 * cardScale,
+            top: 0.0 * cardScale,
+            width: 315.0 * cardScale,
+            height: 605.0 * cardScale,
+            slant: 44.0 * cardScale,
+            opacity: 0.0,
+            fontSize: 22.0 * cardScale,
+          );
+        case 0:
+          return (
+            dx: -118.0 * cardScale,
+            top: 12.0 * cardScale,
+            width: 300.0 * cardScale,
+            height: 598.0 * cardScale,
+            slant: 42.0 * cardScale,
+            opacity: 1.0,
+            fontSize: 21.0 * cardScale,
+          );
+        case 1:
+          return (
+            dx: 76.0 * cardScale,
+            top: 84.0 * cardScale,
+            width: 192.0 * cardScale,
+            height: 440.0 * cardScale,
+            slant: 30.0 * cardScale,
+            opacity: 1.0,
+            fontSize: 15.5 * cardScale,
+          );
+        case 2:
+          return (
+            dx: 222.0 * cardScale,
+            top: 150.0 * cardScale,
+            width: 146.0 * cardScale,
+            height: 320.0 * cardScale,
+            slant: 22.0 * cardScale,
+            opacity: 1.0,
+            fontSize: 13.0 * cardScale,
+          );
+        default: // case 3 (Incoming from right)
+          return (
+            dx: 335.0 * cardScale,
+            top: 205.0 * cardScale,
+            width: 108.0 * cardScale,
+            height: 225.0 * cardScale,
+            slant: 16.0 * cardScale,
+            opacity: 0.0,
+            fontSize: 11.0 * cardScale,
+          );
+      }
+    }
+
+    final from = metricsForSlot(slotIndex);
+    final to = metricsForSlot(slotIndex - 1);
+
+    final targetDx = lerpDouble(from.dx, to.dx, slideT)!;
+    final targetTop = lerpDouble(from.top, to.top, slideT)!;
+    final width = lerpDouble(from.width, to.width, slideT)!;
+    final height = lerpDouble(from.height, to.height, slideT)!;
+    final slant = lerpDouble(from.slant, to.slant, slideT)!;
+    final baseOpacity = lerpDouble(from.opacity, to.opacity, slideT)!;
+    final fontSize = lerpDouble(from.fontSize, to.fontSize, slideT)!;
+
+    // Fan-out from center during Phase 2 intro
+    final currentDx = lerpDouble(0.0, targetDx, introCurve)!;
+    final currentTop = targetTop + (1.0 - introCurve) * 110.0;
+    final effectiveOpacity = (baseOpacity * introCurve).clamp(0.0, 1.0);
+
+    if (effectiveOpacity <= 0.01) {
+      return const SizedBox.shrink();
+    }
+
+    final centerLeft = (stageWidth / 2) + currentDx - (width / 2);
+
+    return Positioned(
+      left: centerLeft,
+      top: currentTop,
+      width: width,
+      height: height,
+      child: Opacity(
+        opacity: effectiveOpacity,
+        child: GestureDetector(
+          onTap: _triggerNextProfileSlide,
+          onHorizontalDragEnd: (_) => _triggerNextProfileSlide(),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: ClipPath(
+              clipper: _PerspectiveSlabClipper(
+                slant: slant,
+                radius: 22.0 * cardScale,
+              ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  AviajNetworkImage(
+                    imageUrl: profile.imageUrl,
+                    width: width,
+                    height: height,
+                    fallbackLabel: profile.name,
+                  ),
+                  // Subtle solid bottom contrast veil so angled white text pops cleanly
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    height: height * 0.28,
+                    child: ColoredBox(
+                      color: Colors.black.withValues(alpha: 0.18),
+                    ),
+                  ),
+                  // Angled "Name, Age" caption aligned to the 3D bottom perspective edge
+                  Positioned(
+                    left: 12,
+                    right: 12,
+                    bottom: slant * 0.62 + 16,
+                    child: Transform.rotate(
+                      angle: 0.19,
+                      child: Text(
+                        '$firstName, ${profile.age}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontSize: fontSize.clamp(11.0, 22.0),
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// SECTION 1B: Concise Editorial Headline & App Store / Google Play Strip directly below the animated banner
+  Widget _buildBelowBannerIntroStrip(BuildContext context, bool isDesktop) {
     return Container(
       width: double.infinity,
-      color: AviajTheme.horizonTeal,
+      color: Colors.white,
       padding: EdgeInsets.symmetric(
         horizontal: isDesktop ? 72 : 24,
-        vertical: isDesktop ? 84 : 48,
+        vertical: isDesktop ? 64 : 44,
       ),
       child: Center(
         child: ConstrainedBox(
@@ -299,16 +707,136 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
                   children: [
                     Expanded(
                       flex: 6,
-                      child: _buildMinimalHeroCopy(context),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AviajTheme.loveRed,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: const Text(
+                                  'aviaj',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              const Text(
+                                'THE TRAVEL DATING & CO-PILOT APP',
+                                style: TextStyle(
+                                  color: AviajTheme.loveRed,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 12,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 18),
+                          const Text(
+                            'Meet your next co-pilot.\nTravel better, together.',
+                            style: TextStyle(
+                              color: AviajTheme.midnightNavy,
+                              fontSize: 52,
+                              fontWeight: FontWeight.w900,
+                              height: 1.06,
+                              letterSpacing: -1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          const Text(
+                            'Find vacation romance, a lifelong relationship partner, or a solo travel buddy before you board.',
+                            style: TextStyle(
+                              color: Color(0xFF5C4B51),
+                              fontSize: 19,
+                              fontWeight: FontWeight.w500,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(width: 56),
+                    const SizedBox(width: 48),
                     Expanded(
                       flex: 5,
-                      child: Center(
-                        child: _buildCleanHeroVisualCard(
-                          context,
-                          activeProfile,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const AppStoreDownloadBadges(lightOnDark: false),
+                          const SizedBox(height: 16),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            alignment: WrapAlignment.end,
+                            children: [
+                              OutlinedButton.icon(
+                                onPressed: () =>
+                                    showMobileAppDownloadModal(context),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: AviajTheme.midnightNavy,
+                                  side: const BorderSide(
+                                    color: AviajTheme.midnightNavy,
+                                    width: 1.5,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 18,
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.qr_code_2_rounded,
+                                  size: 19,
+                                ),
+                                label: const Text(
+                                  'Scan QR for iOS & Android',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                              FilledButton.icon(
+                                onPressed: widget.onOpenFullMobilePreview,
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: AviajTheme.loveRed,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.smartphone_rounded,
+                                  size: 18,
+                                ),
+                                label: const Text(
+                                  'Open Interactive App',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -316,217 +844,40 @@ class _AviajLandingPageState extends State<AviajLandingPage> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildMinimalHeroCopy(context),
-                    const SizedBox(height: 44),
-                    Center(
-                      child: _buildCleanHeroVisualCard(
-                        context,
-                        activeProfile,
+                    const Text(
+                      'aviaj',
+                      style: TextStyle(
+                        color: AviajTheme.loveRed,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 18,
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Meet your next co-pilot.\nTravel better, together.',
+                      style: TextStyle(
+                        color: AviajTheme.midnightNavy,
+                        fontSize: 38,
+                        fontWeight: FontWeight.w900,
+                        height: 1.08,
+                        letterSpacing: -1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    const Text(
+                      'Find vacation romance, a lifelong relationship partner, or a solo travel buddy before you board.',
+                      style: TextStyle(
+                        color: Color(0xFF5C4B51),
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const AppStoreDownloadBadges(lightOnDark: false),
                   ],
                 ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildMinimalHeroCopy(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-          decoration: BoxDecoration(
-            color: AviajTheme.compassAmber,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: const Text(
-            'THE TRAVEL DATING & CO-PILOT APP',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w900,
-              fontSize: 11.5,
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-        const SizedBox(height: 24),
-        const Text(
-          'Meet your next co-pilot.\nTravel better, together.',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 58,
-            fontWeight: FontWeight.w900,
-            height: 1.05,
-            letterSpacing: -1.6,
-          ),
-        ),
-        const SizedBox(height: 20),
-        const Text(
-          'Find vacation romance, a lifelong relationship partner, or a solo travel buddy before you board.',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            height: 1.4,
-          ),
-        ),
-        const SizedBox(height: 36),
-        const AppStoreDownloadBadges(lightOnDark: true),
-        const SizedBox(height: 18),
-        InkWell(
-          onTap: () => showMobileAppDownloadModal(context),
-          borderRadius: BorderRadius.circular(30),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.qr_code_2_rounded, color: Colors.white, size: 20),
-                SizedBox(width: 8),
-                Flexible(
-                  child: Text(
-                    'Scan QR code for iOS & Android',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 13,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCleanHeroVisualCard(
-    BuildContext context,
-    TravellerProfile profile,
-  ) {
-    return Container(
-      width: 390,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(40),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: Stack(
-              children: [
-                AviajNetworkImage(
-                  imageUrl: profile.imageUrl,
-                  height: 410,
-                  width: double.infinity,
-                  fallbackLabel: profile.name,
-                ),
-                Positioned(
-                  top: 16,
-                  left: 16,
-                  child: IntentBadge(
-                    intent: profile.primaryIntent,
-                    solid: true,
-                  ),
-                ),
-                Positioned(
-                  bottom: 16,
-                  left: 16,
-                  right: 16,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AviajTheme.midnightNavy.withValues(alpha: 0.92),
-                      borderRadius: BorderRadius.circular(22),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '${profile.name}, ${profile.age} ${profile.countryFlag}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 19,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            const Icon(
-                              Icons.verified_rounded,
-                              color: AviajTheme.skyAzure,
-                              size: 18,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '✈️ ${profile.nextDestination} • ${profile.nextTripWindow}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 12.5,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              IconButton.filledTonal(
-                onPressed: () {
-                  setState(() {
-                    _selectedHeroIndex++;
-                  });
-                },
-                icon: const Icon(Icons.refresh_rounded, size: 18),
-                tooltip: 'Next Traveller',
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: widget.onOpenFullMobilePreview,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AviajTheme.sunsetTerracotta,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                  ),
-                  icon: const Icon(Icons.smartphone_rounded, size: 17),
-                  label: const Text(
-                    'Open Interactive App',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -1441,5 +1792,64 @@ class _FooterColumn extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Custom 3D perspective trapezoid clipper with smooth rounded corners.
+/// Top edge slopes UP from left `(0, slant)` to right `(width, 0)`.
+/// Bottom edge slopes DOWN from left `(0, height - slant)` to right `(width, height)`.
+class _PerspectiveSlabClipper extends CustomClipper<Path> {
+  final double slant;
+  final double radius;
+
+  const _PerspectiveSlabClipper({
+    required this.slant,
+    required this.radius,
+  });
+
+  @override
+  Path getClip(Size size) {
+    final w = size.width;
+    final h = size.height;
+    final s = slant.clamp(0.0, h * 0.28);
+    final r = math.min(radius, math.min(w, h) * 0.16);
+
+    final points = <Offset>[
+      Offset(0, s), // Top-left
+      Offset(w, 0), // Top-right
+      Offset(w, h), // Bottom-right
+      Offset(0, h - s), // Bottom-left
+    ];
+
+    final path = Path();
+    for (int i = 0; i < points.length; i++) {
+      final prev = points[(i - 1 + points.length) % points.length];
+      final curr = points[i];
+      final next = points[(i + 1) % points.length];
+
+      final vIn = prev - curr;
+      final vOut = next - curr;
+      final lenIn = vIn.distance;
+      final lenOut = vOut.distance;
+
+      if (lenIn == 0 || lenOut == 0) continue;
+
+      final pStart = curr + (vIn / lenIn) * r;
+      final pEnd = curr + (vOut / lenOut) * r;
+
+      if (i == 0) {
+        path.moveTo(pStart.dx, pStart.dy);
+      } else {
+        path.lineTo(pStart.dx, pStart.dy);
+      }
+      path.quadraticBezierTo(curr.dx, curr.dy, pEnd.dx, pEnd.dy);
+    }
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant _PerspectiveSlabClipper oldClipper) {
+    return oldClipper.slant != slant || oldClipper.radius != radius;
   }
 }
