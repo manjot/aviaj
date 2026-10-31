@@ -32,11 +32,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _modesKey = GlobalKey();
+  final GlobalKey _dateSectionKey = GlobalKey();
   final GlobalKey _affKey = GlobalKey();
   final GlobalKey _radarKey = GlobalKey();
   final GlobalKey _storiesKey = GlobalKey();
   final GlobalKey _pricingKey = GlobalKey();
   int _selectedHeroIndex = 0;
+  bool _showDateMegaMenu = false;
   bool _showAffMegaMenu = false;
   bool _showStoriesMegaMenu = false;
   bool _showPrivacyBanner = true;
@@ -257,6 +259,12 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       child: _buildThreeModesPillarSection(context, isDesktop),
                     ),
 
+                    // SECTION 4A: DEDICATED "EXPLORE DATE" SECTION (HERO + "DATE THE WAY YOU WANT TO" 6-CARD GRID + "ALL THE DATING NEWS THAT'S FIT TO PRINT")
+                    Container(
+                      key: _dateSectionKey,
+                      child: _buildExploreDateFullSection(context, isDesktop),
+                    ),
+
                     // SECTION 4B: DEDICATED FULL-BLEED "AFF — AVIAJ FRIENDS FOREVER" HERO SECTION
                     Container(
                       key: _affKey,
@@ -356,12 +364,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         children: [
                           _NavbarLink(
                             label: 'Date',
+                            isHighlighted: _showDateMegaMenu,
                             onTap: () {
                               setState(() {
+                                _showDateMegaMenu = !_showDateMegaMenu;
                                 _showAffMegaMenu = false;
                                 _showStoriesMegaMenu = false;
                               });
-                              _scrollToSection(_modesKey);
                             },
                           ),
                           _NavbarLink(
@@ -370,6 +379,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             onTap: () {
                               setState(() {
                                 _showAffMegaMenu = !_showAffMegaMenu;
+                                _showDateMegaMenu = false;
                                 _showStoriesMegaMenu = false;
                               });
                             },
@@ -380,6 +390,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             onTap: () {
                               setState(() {
                                 _showStoriesMegaMenu = !_showStoriesMegaMenu;
+                                _showDateMegaMenu = false;
                                 _showAffMegaMenu = false;
                               });
                             },
@@ -388,6 +399,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             label: 'Safety',
                             onTap: () {
                               setState(() {
+                                _showDateMegaMenu = false;
                                 _showAffMegaMenu = false;
                                 _showStoriesMegaMenu = false;
                               });
@@ -398,6 +410,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             label: 'Support',
                             onTap: () {
                               setState(() {
+                                _showDateMegaMenu = false;
                                 _showAffMegaMenu = false;
                                 _showStoriesMegaMenu = false;
                               });
@@ -446,6 +459,18 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                 ],
               ),
             ),
+
+            // Interactive "Explore Date ›" Mega-Menu Dropdown Card
+            if (_showDateMegaMenu)
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  isDesktop ? 48 : 16,
+                  8,
+                  isDesktop ? 48 : 16,
+                  12,
+                ),
+                child: _buildExploreDateMegaMenuCard(context, isDesktop),
+              ),
 
             // Interactive "Explore AFF (Aviaj Friends Forever) ›" Mega-Menu Dropdown Card
             if (_showAffMegaMenu)
@@ -2056,6 +2081,999 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     fontSize: 8,
                   ),
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Interactive "Explore Date ›" Mega-Menu Card (`Compliments ›`, `Incognito Mode ›`, `Video Calls ›`, `Travel mode ›`, `Snooze mode ›`, `SuperSwipe ›`)
+  Widget _buildExploreDateMegaMenuCard(BuildContext context, bool isDesktop) {
+    Widget buildFeatureItem(String title, String subtitle) {
+      return InkWell(
+        onTap: () {
+          setState(() => _showDateMegaMenu = false);
+          _scrollToSection(_dateSectionKey);
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$title ›',
+                style: const TextStyle(
+                  color: AviajTheme.midnightNavy,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                subtitle,
+                style: const TextStyle(
+                  color: Color(0xFF4A3B40),
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w500,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      constraints: const BoxConstraints(maxWidth: 1220),
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 44 : 24,
+        vertical: isDesktop ? 36 : 24,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.14),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: 0,
+            top: 0,
+            child: IconButton(
+              onPressed: () => setState(() => _showDateMegaMenu = false),
+              icon: const Icon(
+                Icons.close_rounded,
+                color: AviajTheme.midnightNavy,
+                size: 24,
+              ),
+              tooltip: 'Close Date menu',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 36),
+            child: isDesktop
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() => _showDateMegaMenu = false);
+                            _scrollToSection(_dateSectionKey);
+                          },
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Explore Date ›',
+                                style: TextStyle(
+                                  color: AviajTheme.midnightNavy,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.8,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Features designed to create space for real, respectful, and meaningful connections.',
+                                style: TextStyle(
+                                  color: Color(0xFF3E3034),
+                                  fontSize: 15.5,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.45,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildFeatureItem(
+                              'Compliments',
+                              'Throw some Compliments their way so you stand out.',
+                            ),
+                            const SizedBox(height: 14),
+                            buildFeatureItem(
+                              'Video Calls',
+                              'Get as close to IRL without leaving your house.',
+                            ),
+                            const SizedBox(height: 14),
+                            buildFeatureItem(
+                              'Snooze mode',
+                              'Put dating on hold with Snooze Mode.',
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 32),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildFeatureItem(
+                              'Incognito Mode',
+                              'Hide your profile from your boss, relatives, or exes.',
+                            ),
+                            const SizedBox(height: 14),
+                            buildFeatureItem(
+                              'Travel mode',
+                              'Find your duty-free snack and match anywhere.',
+                            ),
+                            const SizedBox(height: 14),
+                            buildFeatureItem(
+                              'SuperSwipe',
+                              'Seen someone you like? Let them know.',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() => _showDateMegaMenu = false);
+                          _scrollToSection(_dateSectionKey);
+                        },
+                        child: const Text(
+                          'Explore Date ›',
+                          style: TextStyle(
+                            color: AviajTheme.midnightNavy,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Features designed to create space for real, respectful, and meaningful connections.',
+                        style: TextStyle(
+                          color: Color(0xFF3E3034),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// SECTION 4A: Complete "Explore Date" Showcase:
+  /// 1. Full-Bleed Couple Hero ("FEATURES DESIGNED TO MAKE ONLINE DATING ACTUALLY, YOU KNOW, ENJOYABLE")
+  /// 2. "DATE THE WAY YOU WANT TO" 6-Card Illustrated Grid (Go undercover, Make them blush, Sound it out, Take a break, Get their attention, Take us away)
+  /// 3. "ALL THE DATING NEWS THAT’S FIT TO PRINT" 3-Card Editorial News Grid
+  Widget _buildExploreDateFullSection(BuildContext context, bool isDesktop) {
+    final pack = widget.state.regionalPack;
+    return Column(
+      children: [
+        // 1. Full-Bleed Atmospheric Couple Hero Banner
+        SizedBox(
+          width: double.infinity,
+          height: isDesktop ? 560 : 440,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              AviajNetworkImage(
+                imageUrl: pack.storyCoupleImageUrl,
+                width: double.infinity,
+                height: double.infinity,
+                fallbackLabel: 'Aviaj Date Hero',
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.35),
+                      Colors.black.withValues(alpha: 0.55),
+                      Colors.black.withValues(alpha: 0.68),
+                    ],
+                  ),
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1080),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'FEATURES DESIGNED TO MAKE ONLINE\nDATING ACTUALLY, YOU KNOW, ENJOYABLE',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: const Color(0xFFFF4B5C),
+                            fontSize: isDesktop ? 62 : 34,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -1.8,
+                            height: 1.04,
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        const Text(
+                          'It’s better on the app.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 22),
+                        ElevatedButton(
+                          onPressed: () => showMobileAppDownloadModal(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: AviajTheme.midnightNavy,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                              vertical: 16,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Text(
+                            'Download now',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // 2. "DATE THE WAY YOU WANT TO" 6-Card Illustrated Grid + "ALL THE DATING NEWS THAT’S FIT TO PRINT"
+        Container(
+          width: double.infinity,
+          color: AviajTheme.loveRed,
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 56 : 20,
+            vertical: isDesktop ? 76 : 48,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1240),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'DATE THE WAY YOU WANT TO',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: isDesktop ? 54 : 34,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1.6,
+                      height: 1.05,
+                    ),
+                  ),
+                  const SizedBox(height: 36),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final cols = constraints.maxWidth >= 960
+                          ? 3
+                          : (constraints.maxWidth >= 620 ? 2 : 1);
+                      final spacing = 24.0;
+                      final cardWidth =
+                          (constraints.maxWidth - spacing * (cols - 1)) / cols;
+
+                      final features = <({
+                        String title,
+                        bool underlined,
+                        String preText,
+                        String boldFeature,
+                        String postText,
+                        String illustrationType,
+                      })>[
+                        (
+                          title: 'Go undercover',
+                          underlined: false,
+                          preText: 'Use ',
+                          boldFeature: 'Incognito Mode',
+                          postText:
+                              ' to hide your profile from your boss, relatives, or exes.',
+                          illustrationType: 'incognito',
+                        ),
+                        (
+                          title: 'Make them blush',
+                          underlined: false,
+                          preText: 'Throw some ',
+                          boldFeature: 'Compliments',
+                          postText:
+                              ' their way so you stand out from the crowd.',
+                          illustrationType: 'compliments',
+                        ),
+                        (
+                          title: 'Sound it out',
+                          underlined: true,
+                          preText: 'Use ',
+                          boldFeature: 'video calls and audio chats',
+                          postText:
+                              ' to get as close to IRL without leaving your house.',
+                          illustrationType: 'videocall',
+                        ),
+                        (
+                          title: 'Take a break',
+                          underlined: false,
+                          preText: 'Put dating on hold with ',
+                          boldFeature: 'Snooze Mode',
+                          postText:
+                              '. When you’re ready to date again, you know where we are.',
+                          illustrationType: 'snooze',
+                        ),
+                        (
+                          title: 'Get their attention',
+                          underlined: false,
+                          preText:
+                              'Profile passed the vibe check? Let them know with a ',
+                          boldFeature: 'SuperSwipe',
+                          postText: '.',
+                          illustrationType: 'superswipe',
+                        ),
+                        (
+                          title: 'Take us away',
+                          underlined: true,
+                          preText:
+                              'Find your duty-free snack and match anywhere in the world with ',
+                          boldFeature: 'Travel Mode',
+                          postText: '.',
+                          illustrationType: 'travelmode',
+                        ),
+                      ];
+
+                      return Wrap(
+                        spacing: spacing,
+                        runSpacing: 38,
+                        children: features.map((f) {
+                          return SizedBox(
+                            width: cardWidth,
+                            child: InkWell(
+                              onTap: widget.onOpenFullMobilePreview,
+                              borderRadius: BorderRadius.circular(24),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 224,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    child: Center(
+                                      child: _buildDateFeatureIllustration(
+                                        f.illustrationType,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 18),
+                                  Text(
+                                    f.title,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: -0.6,
+                                      decoration: f.underlined
+                                          ? TextDecoration.underline
+                                          : TextDecoration.none,
+                                      decorationColor: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        color:
+                                            Colors.white.withValues(alpha: 0.92),
+                                        fontSize: 15,
+                                        height: 1.45,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      children: [
+                                        TextSpan(text: f.preText),
+                                        TextSpan(
+                                          text: f.boldFeature,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        TextSpan(text: f.postText),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 86),
+
+                  // 3. "ALL THE DATING NEWS THAT’S FIT TO PRINT" 3-Card Editorial News Grid
+                  Text(
+                    'ALL THE DATING NEWS\nTHAT’S FIT TO PRINT',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: isDesktop ? 54 : 34,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1.6,
+                      height: 1.04,
+                    ),
+                  ),
+                  const SizedBox(height: 36),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final cols = constraints.maxWidth >= 960
+                          ? 3
+                          : (constraints.maxWidth >= 620 ? 2 : 1);
+                      final spacing = 24.0;
+                      final cardWidth =
+                          (constraints.maxWidth - spacing * (cols - 1)) / cols;
+
+                      return Wrap(
+                        spacing: spacing,
+                        runSpacing: 24,
+                        children: [
+                          // Editorial News Card 1
+                          SizedBox(
+                            width: cardWidth,
+                            child: _buildEditorialNewsCard(
+                              context: context,
+                              topWidget: AviajNetworkImage(
+                                imageUrl: pack.storyCoupleImageUrl,
+                                width: double.infinity,
+                                height: 240,
+                                fallbackLabel: 'Emotional Intimacy',
+                              ),
+                              title:
+                                  'How to increase your emotional intimacy in your relationship',
+                              subtitle: 'Aviaj Editorial • Relationship Guide',
+                              underlined: false,
+                            ),
+                          ),
+                          // Editorial News Card 2: Deception Detector™
+                          SizedBox(
+                            width: cardWidth,
+                            child: _buildEditorialNewsCard(
+                              context: context,
+                              topWidget: Container(
+                                height: 240,
+                                width: double.infinity,
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFFFFD54F),
+                                      Color(0xFFFFB300),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 18,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFFFF8E1),
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                          border: Border.all(
+                                            color: const Color(0xFF1E1E1E),
+                                            width: 1.8,
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Deception\nDetector™',
+                                          style: TextStyle(
+                                            color: Color(0xFF1E1E1E),
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w800,
+                                            height: 1.1,
+                                            letterSpacing: -0.6,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: -16,
+                                        left: -18,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 5,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFFFE082),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                              color: const Color(0xFF1E1E1E),
+                                              width: 1.4,
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'Introducing...',
+                                            style: TextStyle(
+                                              color: Color(0xFF1E1E1E),
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: -14,
+                                        right: -12,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFFFF8E1),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: const Color(0xFF1E1E1E),
+                                              width: 1.4,
+                                            ),
+                                          ),
+                                          child: const Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                '👀',
+                                                style: TextStyle(fontSize: 13),
+                                              ),
+                                              SizedBox(width: 4),
+                                              Icon(
+                                                Icons.search_rounded,
+                                                size: 16,
+                                                color: Color(0xFF1E1E1E),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              title: 'Deception Detector™',
+                              subtitle: 'February 5, 2024',
+                              underlined: false,
+                            ),
+                          ),
+                          // Editorial News Card 3
+                          SizedBox(
+                            width: cardWidth,
+                            child: _buildEditorialNewsCard(
+                              context: context,
+                              topWidget: AviajNetworkImage(
+                                imageUrl: pack.romancePhoneImageUrl,
+                                width: double.infinity,
+                                height: 240,
+                                fallbackLabel: 'First-Time Aviaj Guide',
+                              ),
+                              title:
+                                  'How to use Aviaj when you have never used a dating app before',
+                              subtitle: 'Aviaj Editorial • First-Timer Guide',
+                              underlined: true,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDateFeatureIllustration(String type) {
+    switch (type) {
+      case 'incognito':
+        // Stylized dark incognito mask with eye cutouts
+        return Container(
+          width: 170,
+          height: 112,
+          decoration: BoxDecoration(
+            color: const Color(0xFF2B2B2B),
+            borderRadius: BorderRadius.circular(64),
+            border: Border.all(color: const Color(0xFF1E1E1E), width: 3),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: 36,
+                height: 22,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                alignment: Alignment.center,
+                child: Container(
+                  width: 9,
+                  height: 9,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF2B2B2B),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              Container(
+                width: 36,
+                height: 22,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                alignment: Alignment.center,
+                child: Container(
+                  width: 9,
+                  height: 9,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF2B2B2B),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      case 'compliments':
+        // Stylized golden-amber envelope with heart seal + note card
+        return Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            Transform.rotate(
+              angle: 0.08,
+              child: Container(
+                width: 110,
+                height: 120,
+                margin: const EdgeInsets.only(left: 54),
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: const Color(0xFF2B2B2B),
+                    width: 2.2,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 3,
+                      width: 60,
+                      color: const Color(0xFF2B2B2B),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 3,
+                      width: 72,
+                      color: const Color(0xFF2B2B2B),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 3,
+                      width: 48,
+                      color: const Color(0xFF2B2B2B),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Transform.rotate(
+              angle: -0.1,
+              child: Container(
+                width: 132,
+                height: 92,
+                margin: const EdgeInsets.only(right: 32, top: 14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFC13B),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: const Color(0xFF2B2B2B),
+                    width: 2.2,
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.favorite_rounded,
+                  color: Color(0xFF2B2B2B),
+                  size: 28,
+                ),
+              ),
+            ),
+          ],
+        );
+      case 'videocall':
+        // Smartphone frame with golden video screen
+        return Container(
+          width: 86,
+          height: 152,
+          padding: const EdgeInsets.fromLTRB(6, 8, 6, 22),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2B2B2B),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFC13B),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            alignment: Alignment.center,
+            child: const Icon(
+              Icons.videocam_rounded,
+              color: Color(0xFF2B2B2B),
+              size: 34,
+            ),
+          ),
+        );
+      case 'snooze':
+        // Wall toggle switch in warm amber square
+        return Container(
+          width: 138,
+          height: 138,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFCC5C),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          alignment: Alignment.center,
+          child: Container(
+            width: 58,
+            height: 92,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: const Color(0xFF2B2B2B), width: 2.5),
+            ),
+            alignment: Alignment.center,
+            child: Container(
+              width: 22,
+              height: 38,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F5F5),
+                border: Border.all(color: const Color(0xFF2B2B2B), width: 2.2),
+              ),
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 16,
+                width: double.infinity,
+                color: const Color(0xFF2B2B2B),
+              ),
+            ),
+          ),
+        );
+      case 'superswipe':
+        // Golden SuperSwipe star + slingshot frame
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.star_rounded,
+              size: 72,
+              color: Color(0xFFFFB81C),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF8E1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFF2B2B2B), width: 2.4),
+              ),
+              child: const Text(
+                'SUPER\nSWIPE ★',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF2B2B2B),
+                  fontWeight: FontWeight.w900,
+                  fontSize: 13,
+                  height: 1.15,
+                ),
+              ),
+            ),
+          ],
+        );
+      case 'travelmode':
+      default:
+        // Vintage travel suitcase with golden luggage tag
+        return Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: 138,
+              height: 102,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFF2B2B2B), width: 3),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(width: 3, height: 102, color: const Color(0xFF2B2B2B)),
+                  const Icon(
+                    Icons.flight_takeoff_rounded,
+                    color: Color(0xFF2B2B2B),
+                    size: 34,
+                  ),
+                  Container(width: 3, height: 102, color: const Color(0xFF2B2B2B)),
+                ],
+              ),
+            ),
+            Positioned(
+              top: -14,
+              child: Container(
+                width: 44,
+                height: 16,
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF2B2B2B), width: 3),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: -18,
+              top: 14,
+              child: Transform.rotate(
+                angle: -0.25,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFB81C),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: const Color(0xFF2B2B2B),
+                      width: 2,
+                    ),
+                  ),
+                  child: const Text(
+                    'AVIAJ ✈',
+                    style: TextStyle(
+                      color: Color(0xFF2B2B2B),
+                      fontWeight: FontWeight.w900,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+    }
+  }
+
+  Widget _buildEditorialNewsCard({
+    required BuildContext context,
+    required Widget topWidget,
+    required String title,
+    required String subtitle,
+    required bool underlined,
+  }) {
+    return InkWell(
+      onTap: () => showMobileAppDownloadModal(context),
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 455),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 240,
+              width: double.infinity,
+              child: topWidget,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(26, 26, 26, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: const Color(0xFF1E1E1E),
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: -0.6,
+                      height: 1.22,
+                      decoration: underlined
+                          ? TextDecoration.underline
+                          : TextDecoration.none,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: Color(0xFF5C4B51),
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
