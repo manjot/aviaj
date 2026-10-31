@@ -607,7 +607,7 @@ class GlobalIntentFilterBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1C1C22) : Colors.white,
         border: Border(
@@ -616,135 +616,129 @@ class GlobalIntentFilterBar extends StatelessWidget {
           ),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  onChanged: state.setSearchQuery,
-                  decoration: InputDecoration(
-                    hintText: searchHint,
-                    prefixIcon: const Icon(
-                      Icons.flight_takeoff_rounded,
-                      color: AviajTheme.loveCrimson,
-                    ),
-                    suffixIcon: state.searchQuery.isNotEmpty
-                        ? IconButton(
-                            onPressed: () => state.setSearchQuery(''),
-                            icon: const Icon(Icons.close_rounded, size: 18),
-                          )
-                        : null,
+          // Compact Search Input
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 260),
+            child: SizedBox(
+              height: 38,
+              child: TextField(
+                onChanged: state.setSearchQuery,
+                style: const TextStyle(fontSize: 13),
+                decoration: InputDecoration(
+                  hintText: 'Search city or name...',
+                  hintStyle: const TextStyle(fontSize: 12.5),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                  prefixIcon: const Icon(
+                    Icons.search_rounded,
+                    color: AviajTheme.loveCrimson,
+                    size: 18,
                   ),
+                  suffixIcon: state.searchQuery.isNotEmpty
+                      ? IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () => state.setSearchQuery(''),
+                          icon: const Icon(Icons.close_rounded, size: 15),
+                        )
+                      : null,
                 ),
               ),
-              const SizedBox(width: 10),
-              // Tinder-style Passport™ Location Switcher
-              PopupMenuButton<String>(
-                tooltip: 'Teleport Passport™ Location',
-                onSelected: (city) {
-                  if (city == 'All Destinations') {
-                    state.setSearchQuery('');
-                  } else {
-                    state.setSearchQuery(city);
-                  }
-                },
-                itemBuilder: (ctx) => _passportCities
-                    .map(
-                      (c) => PopupMenuItem<String>(
-                        value: c,
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.place_rounded,
-                              size: 18,
-                              color: AviajTheme.loveCrimson,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              c,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                    .toList(),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 13,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AviajTheme.obsidian,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.public_rounded,
-                        color: AviajTheme.bumbleHoney,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        state.searchQuery.isEmpty
-                            ? 'Passport™ Mode'
-                            : state.searchQuery,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 12.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              if (state.selectedIntentFilter != null ||
-                  state.selectedStyleFilter != null ||
-                  state.searchQuery.isNotEmpty) ...[
-                const SizedBox(width: 8),
-                TextButton.icon(
-                  onPressed: state.clearFilters,
-                  icon: const Icon(Icons.restart_alt_rounded, size: 18),
-                  label: const Text('Reset'),
-                ),
-              ],
-            ],
+            ),
           ),
-          const SizedBox(height: 12),
-          // Bumble-style Mode Switcher Pills (Solid Colors)
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _FilterChipItem(
-                  label: 'All Single Love & Travel Modes',
-                  icon: Icons.favorite_rounded,
-                  isSelected: state.selectedIntentFilter == null,
-                  activeColor: AviajTheme.loveCrimson,
-                  onTap: () => state.setIntentFilter(null),
-                ),
-                const SizedBox(width: 8),
-                ...ConnectionIntent.values.map(
-                  (intent) => Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: _FilterChipItem(
-                      label: intent.label,
-                      icon: intent.icon,
-                      isSelected: state.selectedIntentFilter == intent,
-                      activeColor: intent.color,
-                      onTap: () => state.setIntentFilter(
-                        state.selectedIntentFilter == intent ? null : intent,
+          const SizedBox(width: 12),
+          // Inline Single-Row Intent Pills
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _FilterChipItem(
+                    label: 'All Modes',
+                    icon: Icons.favorite_rounded,
+                    isSelected: state.selectedIntentFilter == null,
+                    activeColor: AviajTheme.loveCrimson,
+                    onTap: () => state.setIntentFilter(null),
+                  ),
+                  const SizedBox(width: 6),
+                  ...ConnectionIntent.values.map(
+                    (intent) => Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: _FilterChipItem(
+                        label: intent.label,
+                        icon: intent.icon,
+                        isSelected: state.selectedIntentFilter == intent,
+                        activeColor: intent.color,
+                        onTap: () => state.setIntentFilter(
+                          state.selectedIntentFilter == intent ? null : intent,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          // Compact Passport™ City Switcher
+          PopupMenuButton<String>(
+            tooltip: 'Teleport Passport™ Location',
+            onSelected: (city) {
+              if (city == 'All Destinations') {
+                state.setSearchQuery('');
+              } else {
+                state.setSearchQuery(city);
+              }
+            },
+            itemBuilder: (ctx) => _passportCities
+                .map(
+                  (c) => PopupMenuItem<String>(
+                    value: c,
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.place_rounded,
+                          size: 17,
+                          color: AviajTheme.loveCrimson,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          c,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: AviajTheme.obsidian,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.public_rounded,
+                    color: AviajTheme.bumbleHoney,
+                    size: 15,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    state.searchQuery.isEmpty
+                        ? 'Passport™'
+                        : state.searchQuery,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

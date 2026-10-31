@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../services/ad_service.dart';
+import '../services/stripe_service.dart';
 import '../state/aviaj_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -16,7 +17,6 @@ class DiscoverScreen extends StatefulWidget {
 
 class _DiscoverScreenState extends State<DiscoverScreen> {
   bool _isGridMode = false;
-  bool _showHeroBanner = true;
   double _dragOffset = 0;
 
   @override
@@ -24,6 +24,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     final state = widget.state;
     final screenWidth = MediaQuery.of(context).size.width;
     final isWide = screenWidth >= 900;
+    final hasRightSidebar = screenWidth >= 1120 && !_isGridMode;
 
     return Column(
       children: [
@@ -31,29 +32,57 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         Expanded(
           child: ListView(
             padding: EdgeInsets.symmetric(
-              horizontal: isWide ? 32 : 16,
-              vertical: 20,
+              horizontal: isWide ? 28 : 14,
+              vertical: 14,
             ),
             children: [
-              if (_showHeroBanner) ...[
-                _SolidBrandHeroBanner(
-                  state: state,
-                  onDismiss: () => setState(() => _showHeroBanner = false),
-                  onExploreTrips: () => state.setActiveTab(1),
-                  onOpenMatchmaker: () => state.setActiveTab(2),
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1280),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildCompactToolbar(context, state),
+                      const SizedBox(height: 12),
+                      if (_isGridMode) ...[
+                        _buildExplorerGrid(context, state, screenWidth),
+                        const SizedBox(height: 18),
+                        _CleanBrandSideCard(state: state, horizontal: true),
+                      ] else if (hasRightSidebar)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 8,
+                              child: _buildInteractiveSwipeDeck(
+                                context,
+                                state,
+                                isWide: true,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            SizedBox(
+                              width: 310,
+                              child: _CleanBrandSideCard(
+                                state: state,
+                                horizontal: false,
+                              ),
+                            ),
+                          ],
+                        )
+                      else ...[
+                        _buildInteractiveSwipeDeck(
+                          context,
+                          state,
+                          isWide: isWide,
+                        ),
+                        const SizedBox(height: 16),
+                        _CleanBrandSideCard(state: state, horizontal: isWide),
+                      ],
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 22),
-              ],
-              const AviajAdBannerWidget(placementLabel: 'Discover Feed'),
-              const SizedBox(height: 18),
-              _buildModeToolbar(context, state),
-              const SizedBox(height: 16),
-              if (_isGridMode)
-                _buildExplorerGrid(context, state, screenWidth)
-              else
-                _buildInteractiveSwipeDeck(context, state, isWide),
-              const SizedBox(height: 28),
-              _MobileAppStoreFooterBanner(state: state),
+              ),
             ],
           ),
         ),
@@ -61,89 +90,65 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     );
   }
 
-  Widget _buildModeToolbar(BuildContext context, AviajState state) {
-    return Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 12,
-      runSpacing: 12,
+  Widget _buildCompactToolbar(BuildContext context, AviajState state) {
+    return Row(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: const BoxDecoration(
-                    color: AviajTheme.loveCrimson,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.local_fire_department_rounded,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Text(
-                    _isGridMode
-                        ? 'Single Love & Travel Directory (${state.filteredProfiles.length} active)'
-                        : 'Swipe & First-Move Deck (${state.unswipedProfiles.length} singles nearby)',
-                    style: const TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Tinder Swipe® speed + Bumble Opening Moves™ for single solo & group travellers.',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
-              ),
-            ),
-          ],
+        Container(
+          padding: const EdgeInsets.all(5),
+          decoration: const BoxDecoration(
+            color: AviajTheme.loveCrimson,
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.local_fire_department_rounded,
+            color: Colors.white,
+            size: 14,
+          ),
         ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (!_isGridMode && state.canUndoSwipe)
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: OutlinedButton.icon(
-                  onPressed: state.undoLastSwipe,
-                  icon: const Icon(Icons.replay_rounded, size: 17),
-                  label: const Text('Rewind'),
-                ),
-              ),
-            SegmentedButton<bool>(
-              segments: const [
-                ButtonSegment<bool>(
-                  value: false,
-                  icon: Icon(Icons.local_fire_department_rounded, size: 18),
-                  label: Text('Swipe Deck'),
-                ),
-                ButtonSegment<bool>(
-                  value: true,
-                  icon: Icon(Icons.grid_view_rounded, size: 18),
-                  label: Text('Bumble Grid'),
-                ),
-              ],
-              selected: {_isGridMode},
-              onSelectionChanged: (selection) {
-                setState(() {
-                  _isGridMode = selection.first;
-                });
-              },
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            _isGridMode
+                ? 'Single Love & Travel Directory (${state.filteredProfiles.length})'
+                : 'Swipe & First-Move Deck (${state.unswipedProfiles.length} singles nearby)',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w900,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (!_isGridMode && state.canUndoSwipe)
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: TextButton.icon(
+              onPressed: state.undoLastSwipe,
+              icon: const Icon(Icons.replay_rounded, size: 16),
+              label: const Text('Rewind'),
+            ),
+          ),
+        SegmentedButton<bool>(
+          style: const ButtonStyle(
+            visualDensity: VisualDensity.compact,
+          ),
+          segments: const [
+            ButtonSegment<bool>(
+              value: false,
+              icon: Icon(Icons.style_rounded, size: 16),
+              label: Text('Swipe', style: TextStyle(fontSize: 12.5)),
+            ),
+            ButtonSegment<bool>(
+              value: true,
+              icon: Icon(Icons.grid_view_rounded, size: 16),
+              label: Text('Grid', style: TextStyle(fontSize: 12.5)),
             ),
           ],
+          selected: {_isGridMode},
+          onSelectionChanged: (selection) {
+            setState(() {
+              _isGridMode = selection.first;
+            });
+          },
         ),
       ],
     );
@@ -151,41 +156,35 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   Widget _buildInteractiveSwipeDeck(
     BuildContext context,
-    AviajState state,
-    bool isWide,
-  ) {
+    AviajState state, {
+    required bool isWide,
+  }) {
     final queue = state.unswipedProfiles;
     if (queue.isEmpty) {
       return Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 40),
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: AviajTheme.softBlush,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.favorite_rounded,
-                  size: 44,
+                  size: 38,
                   color: AviajTheme.loveCrimson,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               const Text(
                 'You’ve Swiped Everyone in This Passport™ City!',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Rewind your deck, switch to Bumble Grid view, or teleport your Passport™ filter to discover more singles.',
-                style: TextStyle(color: Colors.grey.shade600),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
@@ -202,7 +201,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   OutlinedButton.icon(
                     onPressed: () => setState(() => _isGridMode = true),
                     icon: const Icon(Icons.grid_view_rounded),
-                    label: const Text('Open Bumble Grid'),
+                    label: const Text('Open Grid'),
                   ),
                 ],
               ),
@@ -215,72 +214,67 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     final profile = queue.first;
     final compatibility = state.calculateCompatibility(profile);
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1080),
-        child: GestureDetector(
-          onHorizontalDragUpdate: (details) {
-            setState(() {
-              _dragOffset += details.delta.dx;
-            });
-          },
-          onHorizontalDragEnd: (details) {
-            if (_dragOffset > 110) {
-              _handleLike(context, state, profile, isSuper: false);
-            } else if (_dragOffset < -110) {
-              state.passProfile(profile.id);
-            }
-            setState(() {
-              _dragOffset = 0;
-            });
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 140),
-            transform: Matrix4.translationValues(_dragOffset * 0.35, 0, 0),
-            child: isWide
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: _buildTinderSwipeCard(
-                          context,
-                          state,
-                          profile,
-                          compatibility,
-                        ),
-                      ),
-                      const SizedBox(width: 24),
-                      Expanded(
-                        flex: 6,
-                        child: _buildBumbleStoryPanel(
-                          context,
-                          state,
-                          profile,
-                          compatibility,
-                        ),
-                      ),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      _buildTinderSwipeCard(
-                        context,
-                        state,
-                        profile,
-                        compatibility,
-                      ),
-                      const SizedBox(height: 16),
-                      _buildBumbleStoryPanel(
-                        context,
-                        state,
-                        profile,
-                        compatibility,
-                      ),
-                    ],
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        setState(() {
+          _dragOffset += details.delta.dx;
+        });
+      },
+      onHorizontalDragEnd: (details) {
+        if (_dragOffset > 100) {
+          _handleLike(context, state, profile, isSuper: false);
+        } else if (_dragOffset < -100) {
+          state.passProfile(profile.id);
+        }
+        setState(() {
+          _dragOffset = 0;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 140),
+        transform: Matrix4.translationValues(_dragOffset * 0.35, 0, 0),
+        child: isWide
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: _buildTinderSwipeCard(
+                      context,
+                      state,
+                      profile,
+                      compatibility,
+                    ),
                   ),
-          ),
-        ),
+                  const SizedBox(width: 18),
+                  Expanded(
+                    flex: 6,
+                    child: _buildBumbleStoryPanel(
+                      context,
+                      state,
+                      profile,
+                      compatibility,
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  _buildTinderSwipeCard(
+                    context,
+                    state,
+                    profile,
+                    compatibility,
+                  ),
+                  const SizedBox(height: 14),
+                  _buildBumbleStoryPanel(
+                    context,
+                    state,
+                    profile,
+                    compatibility,
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -299,36 +293,35 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             children: [
               AviajNetworkImage(
                 imageUrl: profile.imageUrl,
-                height: 470,
+                height: 395,
                 width: double.infinity,
                 fallbackLabel: profile.name,
               ),
-              // Top Badges: Primary Intent + Compatibility
               Positioned(
-                top: 16,
-                left: 16,
-                right: 16,
+                top: 12,
+                left: 12,
+                right: 12,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IntentBadge(intent: profile.primaryIntent, solid: true),
+                    IntentBadge(
+                      intent: profile.primaryIntent,
+                      compact: true,
+                      solid: true,
+                    ),
                     CompatibilityPill(score: compatibility),
                   ],
                 ),
               ),
-              // Solid bottom info card overlay (no gradient, crisp solid contrast)
               Positioned(
-                bottom: 14,
-                left: 14,
-                right: 14,
+                bottom: 12,
+                left: 12,
+                right: 12,
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: AviajTheme.obsidian.withValues(alpha: 0.92),
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.14),
-                    ),
+                    borderRadius: BorderRadius.circular(18),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,60 +333,56 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                               '${profile.name}, ${profile.age} ${profile.countryFlag}',
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 24,
+                                fontSize: 21,
                                 fontWeight: FontWeight.w900,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           if (profile.isVerified) ...[
-                            const SizedBox(width: 8),
-                            const Tooltip(
-                              message: 'Photo & Passport Verified Single',
-                              child: Icon(
-                                Icons.verified_rounded,
-                                color: AviajTheme.passportBlue,
-                                size: 22,
-                              ),
+                            const SizedBox(width: 6),
+                            const Icon(
+                              Icons.verified_rounded,
+                              color: AviajTheme.passportBlue,
+                              size: 19,
                             ),
                           ],
                         ],
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 2),
                       Text(
                         '${profile.occupation} • ${profile.homeCity}',
                         style: const TextStyle(
                           color: Colors.white70,
-                          fontSize: 13.5,
+                          fontSize: 12.5,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      // Solid Bumble Honey Destination Bar
+                      const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
+                          horizontal: 10,
+                          vertical: 6,
                         ),
                         decoration: BoxDecoration(
                           color: AviajTheme.bumbleHoney,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
                           children: [
                             const Icon(
                               Icons.flight_takeoff_rounded,
                               color: AviajTheme.obsidian,
-                              size: 17,
+                              size: 15,
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 6),
                             Expanded(
                               child: Text(
-                                'Flying to: ${profile.nextDestination} (${profile.nextTripWindow})',
+                                '${profile.nextDestination} (${profile.nextTripWindow})',
                                 style: const TextStyle(
                                   color: AviajTheme.obsidian,
                                   fontWeight: FontWeight.w900,
-                                  fontSize: 12.5,
+                                  fontSize: 12,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -407,44 +396,35 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               ),
             ],
           ),
-          // Tinder-style 5 Circular Action Bar
+          // Tinder 5-Button Action Bar
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _TinderRoundButton(
                   icon: Icons.replay_rounded,
-                  tooltip: 'Rewind Last Swipe',
-                  size: 46,
-                  iconSize: 22,
+                  tooltip: 'Rewind',
+                  size: 42,
+                  iconSize: 20,
                   bgColor: const Color(0xFFFFF3D1),
                   fgColor: const Color(0xFFD97706),
-                  onTap: state.canUndoSwipe
-                      ? state.undoLastSwipe
-                      : () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Swipe a profile first to Rewind!'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                        },
+                  onTap: state.canUndoSwipe ? state.undoLastSwipe : () {},
                 ),
                 _TinderRoundButton(
                   icon: Icons.close_rounded,
-                  tooltip: 'Nope / Pass',
-                  size: 58,
-                  iconSize: 30,
+                  tooltip: 'Pass',
+                  size: 52,
+                  iconSize: 26,
                   bgColor: const Color(0xFFF3F4F6),
                   fgColor: AviajTheme.obsidian,
                   onTap: () => state.passProfile(profile.id),
                 ),
                 _TinderRoundButton(
                   icon: Icons.star_rounded,
-                  tooltip: 'Super Like • Golden Boarding Pass',
-                  size: 50,
-                  iconSize: 25,
+                  tooltip: 'Super Like Boarding Pass',
+                  size: 46,
+                  iconSize: 22,
                   bgColor: AviajTheme.passportBlue,
                   fgColor: Colors.white,
                   onTap: () => _handleLike(
@@ -456,9 +436,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 ),
                 _TinderRoundButton(
                   icon: Icons.favorite_rounded,
-                  tooltip: 'Swipe Right • Love Match',
-                  size: 62,
-                  iconSize: 32,
+                  tooltip: 'Swipe Right • Match',
+                  size: 56,
+                  iconSize: 28,
                   bgColor: AviajTheme.loveCrimson,
                   fgColor: Colors.white,
                   onTap: () => _handleLike(
@@ -470,21 +450,12 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 ),
                 _TinderRoundButton(
                   icon: Icons.bolt_rounded,
-                  tooltip: 'Bumble Spotlight / Passport™ Boost',
-                  size: 46,
-                  iconSize: 22,
+                  tooltip: 'Watch Rewarded Ad for +3 Super Likes & Boost',
+                  size: 42,
+                  iconSize: 20,
                   bgColor: AviajTheme.bumbleHoney,
                   fgColor: AviajTheme.obsidian,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: AviajTheme.obsidian,
-                        content: Text(
-                          '⚡ Spotlight Active! Your profile is priority #1 in ${profile.nextDestination} for 30 mins.',
-                        ),
-                      ),
-                    );
-                  },
+                  onTap: () => AviajAdService.instance.showRewardedAd(context),
                 ),
               ],
             ),
@@ -503,96 +474,68 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Bumble-style 24h First Move Banner
+            // Bumble Opening Move Header
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: AviajTheme.bumbleHoney,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
                   const Icon(
                     Icons.bolt_rounded,
                     color: AviajTheme.obsidian,
-                    size: 20,
+                    size: 18,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      'BUMBLE OPENING MOVE™ • Reply to ${profile.name.split(' ').first} to unlock instant chat!',
+                      'BUMBLE OPENING MOVE™ • Reply to ${profile.name.split(' ').first} to unlock chat!',
                       style: const TextStyle(
                         color: AviajTheme.obsidian,
                         fontWeight: FontWeight.w900,
-                        fontSize: 12,
+                        fontSize: 11.5,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 18),
-            const Text(
-              'RELATIONSHIP & TRAVEL GOALS',
-              style: TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.1,
-                color: AviajTheme.loveCrimson,
-              ),
-            ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 14),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: 6,
+              runSpacing: 6,
               children: profile.intents
                   .map((i) => IntentBadge(
                         intent: i,
+                        compact: true,
                         solid: i == profile.primaryIntent,
                       ))
                   .toList(),
             ),
-            const SizedBox(height: 8),
-            Text(
-              profile.primaryIntent.shortTagline,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
-              ),
-            ),
-            const Divider(height: 28),
-            const Text(
-              'ABOUT ME & SINGLE LOVE BIO',
-              style: TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.1,
-              ),
-            ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               profile.bio,
               style: const TextStyle(
-                fontSize: 15,
-                height: 1.5,
+                fontSize: 14,
+                height: 1.45,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 16),
-            // Bumble-style Basic Info Badges
+            const SizedBox(height: 12),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: 6,
+              runSpacing: 6,
               children: [
                 _BasicPill(
                   icon: Icons.favorite_border_rounded,
-                  label: 'Single • Ready to Date',
+                  label: 'Single',
                 ),
                 _BasicPill(
                   icon: Icons.public_rounded,
@@ -600,96 +543,63 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 ),
                 _BasicPill(
                   icon: Icons.payments_outlined,
-                  label: 'Budget: ${profile.budgetTier}',
-                ),
-                _BasicPill(
-                  icon: Icons.schedule_rounded,
-                  label: profile.sleepSchedule,
+                  label: profile.budgetTier,
                 ),
                 _BasicPill(
                   icon: Icons.translate_rounded,
-                  label: profile.languages.join(', '),
+                  label: profile.languages.take(2).join(', '),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            // Bumble Opening Move Prompts (interactive tap to reply!)
-            ...profile.prompts.map(
-              (prompt) => Container(
+            const SizedBox(height: 14),
+            if (profile.prompts.isNotEmpty)
+              Container(
                 width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xFF25252E)
-                      : AviajTheme.warmCream,
-                  borderRadius: BorderRadius.circular(18),
+                  color:
+                      isDark ? const Color(0xFF25252E) : AviajTheme.warmCream,
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AviajTheme.softBlush, width: 1.5),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AviajTheme.loveCrimson,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Text(
-                            'OPENING MOVE',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9.5,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            prompt.question,
-                            style: const TextStyle(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w800,
-                              color: AviajTheme.loveCrimson,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
                     Text(
-                      '“${prompt.answer}”',
+                      profile.prompts.first.question,
                       style: const TextStyle(
-                        fontSize: 14.5,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: AviajTheme.loveCrimson,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '“${profile.prompts.first.answer}”',
+                      style: const TextStyle(
+                        fontSize: 13.5,
                         fontWeight: FontWeight.w700,
-                        height: 1.4,
+                        height: 1.35,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton.icon(
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
                         onPressed: () => _handleLike(
                           context,
                           state,
                           profile,
                           isSuper: false,
                         ),
-                        icon: const Icon(
-                          Icons.reply_rounded,
-                          size: 16,
-                          color: AviajTheme.loveCrimson,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AviajTheme.loveCrimson,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                         ),
+                        icon: const Icon(Icons.reply_rounded, size: 16),
                         label: Text(
                           'Send First Move to ${profile.name.split(' ').first}',
                           style: const TextStyle(
-                            color: AviajTheme.loveCrimson,
                             fontWeight: FontWeight.w800,
                             fontSize: 12.5,
                           ),
@@ -699,32 +609,23 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   ],
                 ),
               ),
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              'COUPLE & SOLO BUCKET LIST',
-              style: TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.1,
-              ),
-            ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: 6,
+              runSpacing: 6,
               children: profile.bucketList
                   .map(
                     (item) => Chip(
+                      visualDensity: VisualDensity.compact,
                       avatar: const Icon(
                         Icons.place_rounded,
-                        size: 16,
+                        size: 14,
                         color: AviajTheme.loveCrimson,
                       ),
                       label: Text(
                         item,
                         style: const TextStyle(
-                          fontSize: 12.5,
+                          fontSize: 11.5,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -754,9 +655,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     }
 
     int crossAxisCount = 1;
-    if (screenWidth >= 1200) {
+    if (screenWidth >= 1150) {
       crossAxisCount = 3;
-    } else if (screenWidth >= 760) {
+    } else if (screenWidth >= 720) {
       crossAxisCount = 2;
     }
 
@@ -766,9 +667,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       itemCount: profiles.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 20,
-        mainAxisExtent: 500,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        mainAxisExtent: 460,
       ),
       itemBuilder: (context, index) {
         final profile = profiles[index];
@@ -784,13 +685,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 children: [
                   AviajNetworkImage(
                     imageUrl: profile.imageUrl,
-                    height: 235,
+                    height: 215,
                     width: double.infinity,
                     fallbackLabel: profile.name,
                   ),
                   Positioned(
-                    top: 12,
-                    left: 12,
+                    top: 10,
+                    left: 10,
                     child: IntentBadge(
                       intent: profile.primaryIntent,
                       compact: true,
@@ -798,15 +699,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     ),
                   ),
                   Positioned(
-                    top: 12,
-                    right: 12,
+                    top: 10,
+                    right: 10,
                     child: CompatibilityPill(score: compatibility),
                   ),
                 ],
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(14),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -816,7 +717,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                             child: Text(
                               '${profile.name}, ${profile.age} ${profile.countryFlag}',
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 17,
                                 fontWeight: FontWeight.w900,
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -826,43 +727,33 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                             const Icon(
                               Icons.verified_rounded,
                               color: AviajTheme.passportBlue,
-                              size: 18,
+                              size: 17,
                             ),
                         ],
                       ),
-                      Text(
-                        '${profile.occupation} • ${profile.homeCity}',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          color: Colors.grey.shade600,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
+                          horizontal: 8,
+                          vertical: 5,
                         ),
                         decoration: BoxDecoration(
                           color: AviajTheme.bumbleHoney,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           children: [
                             const Icon(
                               Icons.flight_takeoff_rounded,
-                              size: 15,
+                              size: 14,
                               color: AviajTheme.obsidian,
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: 5),
                             Expanded(
                               child: Text(
                                 '${profile.nextDestination} (${profile.nextTripWindow})',
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 11.5,
                                   fontWeight: FontWeight.w900,
                                   color: AviajTheme.obsidian,
                                 ),
@@ -877,17 +768,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         profile.bio,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 13, height: 1.4),
+                        style: const TextStyle(fontSize: 12.5, height: 1.35),
                       ),
                       const Spacer(),
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 6,
-                        children: profile.intents
-                            .map((i) => IntentBadge(intent: i, compact: true))
-                            .toList(),
-                      ),
-                      const SizedBox(height: 12),
                       Row(
                         children: [
                           Expanded(
@@ -907,12 +790,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                 isLiked
                                     ? Icons.chat_bubble_rounded
                                     : Icons.favorite_rounded,
-                                size: 16,
+                                size: 15,
                               ),
                               label: Text(
-                                isLiked
-                                    ? 'Matched • First Move'
-                                    : 'Swipe Right • Match',
+                                isLiked ? 'Chat' : 'Swipe Right',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w800,
                                 ),
@@ -921,7 +802,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           ),
                           const SizedBox(width: 8),
                           IconButton.filled(
-                            tooltip: 'Send Super Like Boarding Pass',
                             style: IconButton.styleFrom(
                               backgroundColor: AviajTheme.passportBlue,
                               foregroundColor: Colors.white,
@@ -932,7 +812,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                               profile,
                               isSuper: true,
                             ),
-                            icon: const Icon(Icons.star_rounded),
+                            icon: const Icon(Icons.star_rounded, size: 18),
                           ),
                         ],
                       ),
@@ -963,220 +843,178 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
 }
 
-/// Solid-Color Single-Love Relationship Travel Brand Hero (Tinder + Bumble combination)
-/// with App Store & Google Play Store Download CTAs.
-class _SolidBrandHeroBanner extends StatelessWidget {
+/// Compact, clean sidebar card containing the Solid-Color Single-Love Brand,
+/// App Store & Google Play Store badges, Stripe Gold upgrade, and AdMob/Unity Rewarded Ad trigger.
+class _CleanBrandSideCard extends StatelessWidget {
   final AviajState state;
-  final VoidCallback onDismiss;
-  final VoidCallback onExploreTrips;
-  final VoidCallback onOpenMatchmaker;
+  final bool horizontal;
 
-  const _SolidBrandHeroBanner({
+  const _CleanBrandSideCard({
     required this.state,
-    required this.onDismiss,
-    required this.onExploreTrips,
-    required this.onOpenMatchmaker,
+    required this.horizontal,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        // Strictly SOLID Love Crimson brand color — no gradients!
-        color: AviajTheme.loveCrimson,
-        borderRadius: BorderRadius.circular(32),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Flexible(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                  decoration: BoxDecoration(
-                    color: AviajTheme.bumbleHoney,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.favorite_rounded,
+    final adService = AviajAdService.instance;
+    return ListenableBuilder(
+      listenable: adService,
+      builder: (context, _) {
+        return Column(
+          children: [
+            // Solid Crimson Brand + Mobile App Store Card
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AviajTheme.loveCrimson,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AviajTheme.bumbleHoney,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      'AVIAJ • SINGLE LOVE & TRAVEL',
+                      style: TextStyle(
                         color: AviajTheme.obsidian,
-                        size: 15,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 10,
+                        letterSpacing: 0.5,
                       ),
-                      SizedBox(width: 6),
-                      Flexible(
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Never Travel Single Unless You Want To.',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Tinder Passport™ + Bumble 24h First Move for single travellers.',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.5,
+                      height: 1.35,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  const AppStoreDownloadBadges(
+                    lightOnDark: true,
+                    compact: true,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Compact Stripe Gold + AdMob/Unity Reward Card
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AviajTheme.obsidian,
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.workspace_premium_rounded,
+                        color: AviajTheme.bumbleHoney,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
                         child: Text(
-                          'AVIAJ • SINGLE LOVE & TRAVEL APP',
-                          style: TextStyle(
-                            color: AviajTheme.obsidian,
+                          '${adService.superBoardingPassCredits} Super Passes • ${adService.spotlightBoostMinutes}m Boost',
+                          style: const TextStyle(
+                            color: Colors.white,
                             fontWeight: FontWeight.w900,
-                            fontSize: 11,
-                            letterSpacing: 0.7,
+                            fontSize: 12.5,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                onPressed: onDismiss,
-                icon: const Icon(Icons.close_rounded, color: Colors.white),
-                tooltip: 'Hide banner',
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          const Text(
-            'Never Travel Single Unless You Want To.\nSwipe Right® on Your Next Destination. Make the First Move Abroad.',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 27,
-              fontWeight: FontWeight.w900,
-              height: 1.2,
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'The #1 single-love relationship & travel app combining Tinder’s global Passport™ matching with Bumble’s 24-hour First Move. Meet verified singles for short-term vacation sparks, long-term life partners, or solo group villa trips.',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14.5,
-              fontWeight: FontWeight.w500,
-              height: 1.45,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Wrap(
-            spacing: 16,
-            runSpacing: 14,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              const AppStoreDownloadBadges(lightOnDark: true),
-              FilledButton.icon(
-                onPressed: onExploreTrips,
-                style: FilledButton.styleFrom(
-                  backgroundColor: AviajTheme.bumbleHoney,
-                  foregroundColor: AviajTheme.obsidian,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                icon: const Icon(Icons.luggage_rounded, size: 19),
-                label: const Text(
-                  'Explore Singles & Group Trips',
-                  style: TextStyle(fontWeight: FontWeight.w900),
-                ),
-              ),
-              OutlinedButton.icon(
-                onPressed: onOpenMatchmaker,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.white, width: 1.8),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                icon: const Icon(Icons.compass_calibration_rounded, size: 18),
-                label: const Text(
-                  'Love Compatibility Quiz',
-                  style: TextStyle(fontWeight: FontWeight.w800),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Bottom solid Bumble-Honey + Obsidian App Store & Google Play Store showcase section.
-class _MobileAppStoreFooterBanner extends StatelessWidget {
-  final AviajState state;
-
-  const _MobileAppStoreFooterBanner({required this.state});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: AviajTheme.obsidian,
-        borderRadius: BorderRadius.circular(32),
-      ),
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: 24,
-        runSpacing: 20,
-        children: [
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AviajTheme.bumbleHoney,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'DOWNLOAD THE AVIAJ MOBILE APP • 4.9 ★ ON APP STORE & GOOGLE PLAY',
-                    style: TextStyle(
-                      color: AviajTheme.obsidian,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 11,
-                      letterSpacing: 0.6,
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () => showStripeStorefrontModal(context),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xFF635BFF),
+                        foregroundColor: Colors.white,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      icon: const Icon(Icons.credit_card_rounded, size: 15),
+                      label: const Text(
+                        'Aviaj Gold™ • Stripe (\$14.99)',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Take Single Love & Travel Matching Everywhere You Fly.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 23,
-                    fontWeight: FontWeight.w900,
-                    height: 1.2,
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => adService.showRewardedAd(context),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AviajTheme.bumbleHoney,
+                            side: const BorderSide(
+                              color: AviajTheme.bumbleHoney,
+                            ),
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          icon: const Icon(
+                            Icons.play_circle_fill_rounded,
+                            size: 14,
+                          ),
+                          label: const Text(
+                            'Watch Ad (+3)',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 11.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      IconButton(
+                        tooltip: 'AdMob & Unity Ads Setup',
+                        onPressed: () => showAdMobUnityConsoleModal(context),
+                        icon: const Icon(
+                          Icons.tune_rounded,
+                          color: Colors.white70,
+                          size: 18,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  'Get instant boarding-gate match alerts, offline itinerary chat, Passport™ teleportation, and Bumble-style 24h First Move notifications on iOS and Android.',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 13.5,
-                    height: 1.45,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const AppStoreDownloadBadges(lightOnDark: false),
-        ],
-      ),
+          ],
+        );
+      },
     );
   }
 }
@@ -1236,7 +1074,7 @@ class _BasicPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF25252E) : const Color(0xFFF6F1F2),
         borderRadius: BorderRadius.circular(20),
@@ -1244,12 +1082,12 @@ class _BasicPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 15, color: AviajTheme.loveCrimson),
-          const SizedBox(width: 6),
+          Icon(icon, size: 13, color: AviajTheme.loveCrimson),
+          const SizedBox(width: 5),
           Text(
             label,
             style: const TextStyle(
-              fontSize: 12.5,
+              fontSize: 11.5,
               fontWeight: FontWeight.w700,
             ),
           ),
