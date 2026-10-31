@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
+import '../services/ad_service.dart';
 import '../state/aviaj_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -29,6 +30,8 @@ class TripsScreen extends StatelessWidget {
               vertical: 20,
             ),
             children: [
+              const AviajAdBannerWidget(placementLabel: 'Trips Board'),
+              const SizedBox(height: 18),
               Wrap(
                 alignment: WrapAlignment.spaceBetween,
                 crossAxisAlignment: WrapCrossAlignment.center,

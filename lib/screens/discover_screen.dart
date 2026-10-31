@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
+import '../services/ad_service.dart';
 import '../state/aviaj_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -43,6 +44,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 ),
                 const SizedBox(height: 22),
               ],
+              const AviajAdBannerWidget(placementLabel: 'Discover Feed'),
+              const SizedBox(height: 18),
               _buildModeToolbar(context, state),
               const SizedBox(height: 16),
               if (_isGridMode)

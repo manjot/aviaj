@@ -4,12 +4,14 @@ import 'screens/matchmaker_screen.dart';
 import 'screens/messages_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/trips_screen.dart';
+import 'services/ad_service.dart';
 import 'state/aviaj_state.dart';
 import 'theme/app_theme.dart';
 import 'widgets/common_widgets.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  AviajAdService.instance.initializeAll();
   runApp(const AviajApp());
 }
 
@@ -221,6 +223,31 @@ class AviajHomeShell extends StatelessWidget {
                     }),
                   ),
                 const Spacer(),
+                if (screenWidth >= 840) ...[
+                  FilledButton.icon(
+                    onPressed: () => showAdMobUnityConsoleModal(context),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AviajTheme.bumbleHoney,
+                      foregroundColor: AviajTheme.obsidian,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    icon: const Icon(Icons.monetization_on_rounded, size: 16),
+                    label: const Text(
+                      'AdMob & Unity',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
                 if (screenWidth >= 680) ...[
                   FilledButton.icon(
                     onPressed: () => showMobileAppDownloadModal(context),
