@@ -8405,8 +8405,8 @@ _.b="ca-app-pub-4106606850293358~4259580608"
 _.d="ca-app-pub-4106606850293358/9928720582"
 _.e="ca-app-pub-4106606850293358/7901770150"
 _.f="ca-app-pub-4106606850293358/7512429907"
-_.Q="5719482"
-_.as="5719483"
+_.Q="800419265"
+_.as="800419268"
 _.ch=a
 _.cy=!0
 _.dy=_.dx=0
@@ -8544,8 +8544,8 @@ _.c=b
 _.d=c
 _.f=d},
 Jy:function Jy(a,b){var _=this
-_.d="Economy Boarding Pass"
-_.f=a
+_.f="Economy Boarding Pass"
+_.w=a
 _.G$=0
 _.T$=b
 _.ad$=_.a9$=0},
@@ -45977,28 +45977,30 @@ A.Jy.prototype={
 z5(a,b,c,d,e){return this.amo(a,b,c,d,e)},
 amo(a,b,c,d,e){var s=0,r=A.N(t.W6),q,p=this,o,n,m,l,k,j,i
 var $async$z5=A.O(function(f,g){if(f===1)return A.K(g,r)
-for(;;)switch(s){case 0:m=e.a
-l=e.b
-k=e.d
+for(;;)switch(s){case 0:n=e.a
+m=e.b
+l=e.d
 s=3
-return A.J(A.ahN("https://aviaj.com/stripe_checkout.php",A.aD(["stripe_account","acct_1TNTVyJD1U0jWVOT","plan_id",m,"plan_name",l,"amount_usd",k,"currency","usd","payment_method",d,"customer_name",a],t.N,t.z)),$async$z5)
-case 3:j=g
-i=A.bU(j==null?null:j.h(0,"receipt_id"))
-if(i==null)o="ch_"+A.aCq("acct_1TNTVyJD1U0jWVOT","acct_","")+"_"+B.d.d_(B.m.k(Date.now()),7)
-else o=i
+return A.J(A.ahN("https://aviaj.com/stripe_checkout.php",A.aD(["stripe_account","acct_1TNTVyJD1U0jWVOT","stripe_key_id","mk_1TNTWCJD1U0jWVOTgYhISbYg","plan_id",n,"plan_name",m,"amount_usd",l,"currency","usd","payment_method",d,"customer_name",a],t.N,t.z)),$async$z5)
+case 3:k=g
+j=k==null
+i=A.bU(j?null:k.h(0,"receipt_id"))
+A.bU(j?null:k.h(0,"checkout_url"))
+if(i==null)j="ch_"+A.aCq("acct_1TNTVyJD1U0jWVOT","acct_","")+"_"+B.d.d_(B.m.k(Date.now()),7)
+else j=i
 Date.now()
-n=new A.r9(o,l,k,d)
-B.b.jD(p.f,0,n)
-if(e.e==="month"){p.d=l
-m=$.t6()
-m.cy=!1
-m.W()
-m.fr+=10
-m.fx+=60}else if(m==="price_aviaj_boarding_pack"){m=$.t6()
-m.fr+=10
-m.fx+=60}p.W()
+o=new A.r9(j,m,l,d)
+B.b.jD(p.w,0,o)
+if(e.e==="month"){p.f=m
+n=$.t6()
+n.cy=!1
+n.W()
+n.fr+=10
+n.fx+=60}else if(n==="price_aviaj_boarding_pack"){n=$.t6()
+n.fr+=10
+n.fx+=60}p.W()
 if(c!=null)c.$0()
-q=n
+q=o
 s=1
 break
 case 1:return A.L(q,r)}})
@@ -46022,7 +46024,7 @@ q=t.p
 p=k.d
 r=A.ar(A.b([A.a6(j,A.ar(A.b([B.MZ,B.b5,A.Z("STRIPE CHECKOUT \u2022 acct_1TNTVyJD1U0jWVOT",j,j,j,B.DA,j,j)],q),B.o,B.f,B.I,0,j),B.j,j,j,new A.ac(B.n,j,j,r,j,j,B.q),j,j,j,j,B.fM,j,j,j),B.cU,A.hd(j,j,j,B.iR,j,j,new A.ayR(p),j,j,j,j)],q),B.o,B.f,B.i,0,j)
 o=k.c
-r=A.b([r,B.aL,A.Z(h?"Reserve Your Trip Spot or Upgrade with Stripe":"Upgrade to Aviaj Business Class\u2122 & First Class\u2122",j,j,j,B.k0,j,j),B.ch,A.Z("Current Tier: "+o.d+" \u2022 Merchant Account: acct_1TNTVyJD1U0jWVOT",j,j,j,B.DB,j,j),B.bp],q)
+r=A.b([r,B.aL,A.Z(h?"Reserve Your Trip Spot or Upgrade with Stripe":"Upgrade to Aviaj Business Class\u2122 & First Class\u2122",j,j,j,B.k0,j,j),B.ch,A.Z("Current Tier: "+o.f+" \u2022 Account: acct_1TNTVyJD1U0jWVOT \u2022 Key: mk_1TNTWCJD1U0jWVOTgYhISbYg",j,j,j,B.DB,j,j),B.bp],q)
 n=k.a
 m=k.e
 B.b.N(r,new A.T(s,new A.ayS(n,m),A.a_(s).i("T<1,e>")))
@@ -46039,7 +46041,7 @@ p=A.cJ(B.n,j,j,B.e,B.qi,new A.bt(A.a0(18),B.u),j,j)
 m=n.c
 l=A.dF(m?B.L0:B.r3,j,j,18)
 r.push(A.bO(A.dM(l,A.Z(m?"Authorizing with Stripe (acct_1TNTVyJD1U0jWVOT)...":"Pay $"+B.c.aa(n.a.d,2)+" via Stripe",j,j,j,B.a4b,j,j),h,p),j,1/0))
-h=o.f
+h=o.w
 if(h.length!==0){p=A.a0(14)
 o=A.b([B.a8r,B.ch],q)
 h=A.ft(h,0,A.i7(2,"count",t.S),A.a_(h).c)

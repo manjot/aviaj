@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 $stripeAccountId = 'acct_1TNTVyJD1U0jWVOT';
+$stripeKeyId = 'mk_1TNTWCJD1U0jWVOTgYhISbYg';
 
 // Load live Stripe Restricted API Key from environment, .stripe_env.php, or runtime segments
 $stripeSecretKey = getenv('STRIPE_SECRET_KEY') ?: '';
@@ -62,6 +63,7 @@ if (!empty($stripeSecretKey)) {
         'line_items[0][price_data][unit_amount]' => $amountCents,
         'line_items[0][quantity]' => 1,
         'metadata[stripe_account]' => $stripeAccountId,
+        'metadata[stripe_key_id]' => $stripeKeyId,
         'metadata[plan_id]' => $planId,
         'metadata[customer_name]' => $customerName,
     ]);
@@ -88,6 +90,7 @@ if (!empty($stripeSecretKey)) {
             'environment' => 'production',
             'live_mode' => $sessionData['livemode'] ?? true,
             'stripe_account' => $stripeAccountId,
+            'stripe_key_id' => $stripeKeyId,
             'merchant_name' => $sessionData['branding_settings']['display_name'] ?? 'Ajath Inc.',
             'dashboard_url' => 'https://dashboard.stripe.com/acct_1TNTVyJD1U0jWVOT/dashboard',
             'session_id' => $sessionData['id'],

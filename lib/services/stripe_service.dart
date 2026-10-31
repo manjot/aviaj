@@ -54,13 +54,16 @@ class AviajStripeService extends ChangeNotifier {
   AviajStripeService._();
 
   static const String defaultStripeAccountId = 'acct_1TNTVyJD1U0jWVOT';
+  static const String defaultStripeKeyId = 'mk_1TNTWCJD1U0jWVOTgYhISbYg';
   static const String productionEndpointUrl =
       'https://aviaj.com/stripe_checkout.php';
 
   String stripeAccountId = defaultStripeAccountId;
+  String stripeKeyId = defaultStripeKeyId;
+  String? lastCheckoutUrl;
   String publishableKey = const String.fromEnvironment(
     'STRIPE_PUBLISHABLE_KEY',
-    defaultValue: 'pk_live_51TNTVyJD1U0jWVOT_aviaj_travel_dating_checkout',
+    defaultValue: 'mk_1TNTWCJD1U0jWVOTgYhISbYg',
   );
   String checkoutMode = 'Production • https://aviaj.com/stripe_checkout.php';
   String activeTier = 'Economy Boarding Pass';
@@ -136,6 +139,7 @@ class AviajStripeService extends ChangeNotifier {
       endpointUrl: productionEndpointUrl,
       payload: {
         'stripe_account': stripeAccountId,
+        'stripe_key_id': stripeKeyId,
         'plan_id': plan.id,
         'plan_name': plan.name,
         'amount_usd': plan.amountUsd,
@@ -146,6 +150,10 @@ class AviajStripeService extends ChangeNotifier {
     );
 
     final remoteReceiptId = remoteResponse?['receipt_id'] as String?;
+    final remoteCheckoutUrl = remoteResponse?['checkout_url'] as String?;
+    if (remoteCheckoutUrl != null && remoteCheckoutUrl.isNotEmpty) {
+      lastCheckoutUrl = remoteCheckoutUrl;
+    }
 
     final receipt = StripePaymentReceipt(
       receiptId: remoteReceiptId ??
@@ -272,7 +280,7 @@ Future<void> showStripeStorefrontModal(
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Current Tier: ${stripe.activeTier} • Merchant Account: ${stripe.stripeAccountId}',
+                          'Current Tier: ${stripe.activeTier} • Account: ${stripe.stripeAccountId} • Key: ${stripe.stripeKeyId}',
                           style: const TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w700,

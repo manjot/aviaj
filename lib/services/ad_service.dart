@@ -69,15 +69,17 @@ class AviajAdService extends ChangeNotifier {
   );
 
   // Production Unity Cloud Organization (13469047611046) & Aviaj Project (d8385613-98a1-4ca9-abb2-076401c353b9)
+  // Aviaj Android App UUID: b9022463-f3c2-4989-a1ed-bad5d115d91d -> Game ID: 800419265
+  // Aviaj iOS App UUID:     10cb14c8-4e39-4acb-95ee-e008c22f370e -> Game ID: 800419268
   String unityOrganizationId = '13469047611046';
   String unityProjectId = 'd8385613-98a1-4ca9-abb2-076401c353b9';
   String unityAndroidGameId = const String.fromEnvironment(
     'UNITY_ANDROID_GAME_ID',
-    defaultValue: '5719482',
+    defaultValue: '800419265',
   );
   String unityIosGameId = const String.fromEnvironment(
     'UNITY_IOS_GAME_ID',
-    defaultValue: '5719483',
+    defaultValue: '800419268',
   );
   String unityBannerPlacement = 'Banner_Android';
   String unityInterstitialPlacement = 'Interstitial_Android';
