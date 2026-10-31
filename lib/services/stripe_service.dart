@@ -55,6 +55,8 @@ class AviajStripeService extends ChangeNotifier {
 
   static const String defaultStripeAccountId = 'acct_1TNTVyJD1U0jWVOT';
   static const String defaultStripeKeyId = 'mk_1TNTWCJD1U0jWVOTgYhISbYg';
+  static const String defaultPublishableKey =
+      'pk_live_51TNTVyJD1U0jWVOTXThh0lXTT4rkotsCfEsJqrZLSAVpDolQ0oCJufXs7nP2rt74h2C5xpIpwun8VqW0bu060Atx00YTtwEXTI';
   static const String productionEndpointUrl =
       'https://aviaj.com/stripe_checkout.php';
 
@@ -63,7 +65,7 @@ class AviajStripeService extends ChangeNotifier {
   String? lastCheckoutUrl;
   String publishableKey = const String.fromEnvironment(
     'STRIPE_PUBLISHABLE_KEY',
-    defaultValue: 'mk_1TNTWCJD1U0jWVOTgYhISbYg',
+    defaultValue: defaultPublishableKey,
   );
   String checkoutMode = 'Production • https://aviaj.com/stripe_checkout.php';
   String activeTier = 'Economy Boarding Pass';
