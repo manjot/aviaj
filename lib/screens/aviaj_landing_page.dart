@@ -4285,6 +4285,15 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         ),
 
+        // 5C-ARTICLE: Full Multi-Chapter Editorial Love Story Article ("The 10-Hour Second Date" -> 2-Photo B&W Gallery -> Pull Quote -> "Two Weddings, Two Cultures, One Love" -> "Love, Laughter, and the Long Haul" -> Closing Portrait)
+        _buildInlineFullStoryArticle(
+          context: context,
+          isDesktop: isDesktop,
+          coupleName: activeStory.couple,
+          primaryImageUrl: activeStory.imageUrl,
+          secondaryImageUrl: activeStory.secondImageUrl,
+        ),
+
         // 5D: Full-Bleed Red Love "Share Your Love Story" Banner with 3-Card Stacked B&W Fan
         Container(
           width: double.infinity,
@@ -4323,6 +4332,248 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildInlineFullStoryArticle({
+    required BuildContext context,
+    required bool isDesktop,
+    required String coupleName,
+    required String primaryImageUrl,
+    required String secondaryImageUrl,
+  }) {
+    final parts = coupleName.split('&');
+    final firstPartner = parts.isNotEmpty ? parts.first.trim() : 'Tosin';
+    final secondPartner = parts.length > 1 ? parts.last.trim() : 'Kieron';
+
+    const bodyStyle = TextStyle(
+      color: Color(0xFF2B2B2B),
+      fontSize: 16.5,
+      fontWeight: FontWeight.w400,
+      height: 1.62,
+    );
+
+    const headingStyle = TextStyle(
+      color: Color(0xFF1E1E1E),
+      fontSize: 32,
+      fontWeight: FontWeight.w800,
+      letterSpacing: -0.8,
+      height: 1.2,
+    );
+
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 72 : 24,
+        vertical: isDesktop ? 68 : 44,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 960),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Chapter 1: Opening & "The 10-Hour Second Date"
+              Text(
+                'They say timing is everything — and in October 2020, timing was... complicated. Lockdowns meant dating looked a lot different, but that didn’t stop sparks from flying between $firstPartner and $secondPartner.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                'When they first matched on Aviaj, $firstPartner thought, “Let’s see what happens. It might be a bit of fun.” But as they started chatting, she quickly realized just how funny $secondPartner was.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                'Then life got busy, and their conversation drifted. Three weeks later, $firstPartner opened Aviaj, delighted to see that $secondPartner hadn’t unmatched. She broke the silence with a simple question: “Do you want to go for a walk later?” $secondPartner said yes.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                'What was meant to be a quick meetup turned into hot chocolate at Butler’s Chocolate Café and a three-hour walk. “I was surprised by how well we got on together,” $secondPartner recalls. “It was really easy to just settle into meeting each other for the first time.” Once the date was over, $secondPartner immediately messaged $firstPartner asking for a second one.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 40),
+              const Text(
+                'The 10-Hour Second Date',
+                style: headingStyle,
+              ),
+              const SizedBox(height: 18),
+              Text(
+                'With restaurants and bars still closed due to lockdown, $firstPartner invited $secondPartner to her apartment for their second date. When he arrived, she pulled out The New York Times’ “36 Questions That Lead to Love,” a game designed to accelerate closeness through shared vulnerability.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                '“These were deep questions,” $secondPartner says. “Like, peel back the layers, let’s really do this.”',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              const Text(
+                'What started as curiosity turned into 10 hours of sharing stories and opening up in ways most people don’t in the first few weeks of dating. Thirty-six questions later, there was no denying their connection had shifted into something more.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                '“After that, we just hung out all the time,” $firstPartner says. “He was always over every weekend.” A year later, they made it official and moved in together.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 52),
+
+              // Chapter 2: Side-by-Side 2-Photo Monochrome Portrait Gallery
+              isDesktop
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 6,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: _buildMonochromePanel(
+                              primaryImageUrl,
+                              height: 500,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 24),
+                        Expanded(
+                          flex: 4,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: _buildMonochromePanel(
+                              secondaryImageUrl,
+                              height: 500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(22),
+                          child: _buildMonochromePanel(
+                            primaryImageUrl,
+                            height: 340,
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(22),
+                          child: _buildMonochromePanel(
+                            secondaryImageUrl,
+                            height: 340,
+                          ),
+                        ),
+                      ],
+                    ),
+              const SizedBox(height: 56),
+
+              // Chapter 3: Giant Editorial Pull Quote + "Two Weddings, Two Cultures, One Love"
+              const Text(
+                '""',
+                style: TextStyle(
+                  color: Color(0xFF1E1E1E),
+                  fontSize: 44,
+                  fontWeight: FontWeight.w900,
+                  height: 0.85,
+                  letterSpacing: -2,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'I didn’t like the idea of waiting for somebody to message me. I’m in charge of my love life here, so I just really always felt empowered by Aviaj.',
+                style: TextStyle(
+                  color: const Color(0xFF1E1E1E),
+                  fontSize: isDesktop ? 40 : 28,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -1.1,
+                  height: 1.18,
+                ),
+              ),
+              const SizedBox(height: 18),
+              Text(
+                firstPartner,
+                style: const TextStyle(
+                  color: Color(0xFF4A3B40),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 48),
+              const Text(
+                'Two Weddings, Two Cultures, One Love',
+                style: headingStyle,
+              ),
+              const SizedBox(height: 18),
+              Text(
+                'One year after moving in together, $secondPartner proposed in Venice, and $firstPartner said yes. That “yes” would turn into two unforgettable celebrations — first with a Yoruba traditional Nigerian wedding in Atlanta around Christmas 2022, and then with a white dress and tuxedo ceremony in Portugal in June 2023.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                'The Nigerian celebration was steeped in tradition. $firstPartner and $secondPartner wore custom-made attire. He danced in with her family behind him, knelt to ask her parents for permission to take her into his family, and brought a dowry filled with gifts.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                '“There was so much joy,” $firstPartner says. “Money spraying is a very common thing in Nigerian tradition — you just kind of spray [\$1 bills] on each other. It was amazing.”',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                'Their Portugal ceremony was more intimate — just 45 guests gathered to watch them exchange vows overlooking the coast. “It was fun to have all of our favorite people together in Portugal to celebrate us in a different way as well,” says $firstPartner.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 44),
+
+              // Chapter 4: "Love, Laughter, and the Long Haul" + Closing Monochrome Portrait
+              const Text(
+                'Love, Laughter, and the Long Haul',
+                style: headingStyle,
+              ),
+              const SizedBox(height: 18),
+              Text(
+                'What defines their relationship is a sense of partnership — the certainty that no matter what life brings, they can face it together. “When one of us is having a bad day, the other one’s probably picking up some of the slack. We’re looking after each other because it’s us against everything, as opposed to us against each other,” $firstPartner says.',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                'By the time $secondPartner came along, she finally felt ready for that kind of partnership. “A lot of personal growth coming into 2020 helped me be energetically where I needed to be to meet someone like him,” she says. “I didn’t like the idea of waiting for somebody to message me. I’m in charge of my love life here, so I just really always felt empowered by Aviaj.”',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                'When asked what they admire about the other, $firstPartner speaks to $secondPartner’s patience and kindness, qualities that steady her energy. She also says, “He’s the kindest person you’ll ever meet. He looks after everybody.”',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              Text(
+                '$secondPartner calls $firstPartner the “perfect person,” adding, “If I had to be a better person, I would model myself after my wife. The amount of empathy that she has for people, her ability to read situations, and give advice is unmatched. She’s amazing.”',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 22),
+              const Text(
+                'Who would have thought that during a year of distancing, meeting on Aviaj would be the thing that brought them closer than they ever imagined?',
+                style: bodyStyle,
+              ),
+              const SizedBox(height: 48),
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(26),
+                  child: SizedBox(
+                    width: isDesktop ? 680 : double.infinity,
+                    child: _buildMonochromePanel(
+                      primaryImageUrl,
+                      height: isDesktop ? 420 : 300,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
