@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'screens/bumble_landing_page.dart';
 import 'screens/discover_screen.dart';
 import 'screens/matchmaker_screen.dart';
 import 'screens/messages_screen.dart';
@@ -17,7 +19,10 @@ void main() {
 }
 
 class AviajApp extends StatefulWidget {
-  const AviajApp({super.key});
+  /// Optional override for testing mobile mode vs landing page mode.
+  final bool? forceMobileAppMode;
+
+  const AviajApp({super.key, this.forceMobileAppMode});
 
   @override
   State<AviajApp> createState() => _AviajAppState();
@@ -25,11 +30,15 @@ class AviajApp extends StatefulWidget {
 
 class _AviajAppState extends State<AviajApp> {
   late final AviajState _state;
+  late bool _showMobileAppExperience;
 
   @override
   void initState() {
     super.initState();
     _state = AviajState();
+    // On Web (aviaj.com), default to the Bumble.com-style marketing landing page.
+    // On native iOS & Android (!kIsWeb), boot directly into the full mobile app functionality.
+    _showMobileAppExperience = widget.forceMobileAppMode ?? (!kIsWeb);
   }
 
   @override
@@ -49,38 +58,55 @@ class _AviajAppState extends State<AviajApp> {
           theme: AviajTheme.lightTheme(),
           darkTheme: AviajTheme.darkTheme(),
           themeMode: _state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          home: AviajHomeShell(state: _state),
+          home: _showMobileAppExperience
+              ? AviajMobileAppShell(
+                  state: _state,
+                  onBackToLandingPage: kIsWeb
+                      ? () => setState(() => _showMobileAppExperience = false)
+                      : null,
+                )
+              : BumbleStyleLandingPage(
+                  state: _state,
+                  onOpenFullMobilePreview: () =>
+                      setState(() => _showMobileAppExperience = true),
+                ),
         );
       },
     );
   }
 }
 
-class AviajHomeShell extends StatelessWidget {
+/// Full Mobile App Experience for iOS & Android (and Interactive Mobile Simulator on Web).
+class AviajMobileAppShell extends StatelessWidget {
   final AviajState state;
+  final VoidCallback? onBackToLandingPage;
 
-  const AviajHomeShell({super.key, required this.state});
+  const AviajMobileAppShell({
+    super.key,
+    required this.state,
+    this.onBackToLandingPage,
+  });
 
   static const _navItems = [
     (
       icon: Icons.local_fire_department_outlined,
       activeIcon: Icons.local_fire_department_rounded,
-      label: 'Swipe & Date',
+      label: 'Swipe',
     ),
     (
       icon: Icons.luggage_outlined,
       activeIcon: Icons.luggage_rounded,
-      label: 'Singles Trips',
+      label: 'Trips',
     ),
     (
       icon: Icons.favorite_border_rounded,
       activeIcon: Icons.favorite_rounded,
-      label: 'Love Match',
+      label: 'Match',
     ),
     (
       icon: Icons.chat_bubble_outline_rounded,
       activeIcon: Icons.chat_bubble_rounded,
-      label: 'First Moves',
+      label: 'Chats',
     ),
     (
       icon: Icons.badge_outlined,
@@ -91,8 +117,6 @@ class AviajHomeShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isDesktopWeb = screenWidth >= 900;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final screens = [
@@ -103,11 +127,11 @@ class AviajHomeShell extends StatelessWidget {
       ProfileScreen(state: state),
     ];
 
-    return Scaffold(
+    final mobileScaffold = Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(58),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1C1C22) : Colors.white,
             border: Border(
@@ -122,183 +146,76 @@ class AviajHomeShell extends StatelessWidget {
             bottom: false,
             child: Row(
               children: [
-                // Solid-Color Single-Love Brand Logo
-                Flexible(
-                  child: InkWell(
-                    onTap: () => state.setActiveTab(0),
-                    borderRadius: BorderRadius.circular(14),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 42,
-                          height: 42,
-                          decoration: BoxDecoration(
-                            color: AviajTheme.loveCrimson,
-                            borderRadius: BorderRadius.circular(13),
-                          ),
-                          child: const Icon(
-                            Icons.favorite_rounded,
-                            color: Colors.white,
-                            size: 23,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Flexible(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'aviaj',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 22,
-                                  letterSpacing: -0.5,
-                                  color: AviajTheme.loveCrimson,
-                                  height: 1.0,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                'Single Love • Travel Dating',
-                                style: TextStyle(
-                                  fontSize: 10.5,
-                                  fontWeight: FontWeight.w800,
-                                  color: isDark
-                                      ? Colors.white70
-                                      : AviajTheme.obsidian,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                if (onBackToLandingPage != null) ...[
+                  TextButton.icon(
+                    onPressed: onBackToLandingPage,
+                    style: TextButton.styleFrom(
+                      foregroundColor: AviajTheme.obsidian,
+                      backgroundColor: AviajTheme.bumbleHoney,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                     ),
+                    icon: const Icon(Icons.arrow_back_rounded, size: 16),
+                    label: const Text(
+                      'Web Landing',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
+                Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: AviajTheme.loveCrimson,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.favorite_rounded,
+                    color: Colors.white,
+                    size: 19,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'aviaj',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 21,
+                    letterSpacing: -0.5,
+                    color: AviajTheme.loveCrimson,
                   ),
                 ),
                 const Spacer(),
-                if (isDesktopWeb)
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List.generate(_navItems.length, (idx) {
-                      final item = _navItems[idx];
-                      final isSelected = state.activeTabIndex == idx;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 3),
-                        child: TextButton.icon(
-                          onPressed: () => state.setActiveTab(idx),
-                          style: TextButton.styleFrom(
-                            backgroundColor: isSelected
-                                ? AviajTheme.loveCrimson
-                                : Colors.transparent,
-                            foregroundColor: isSelected
-                                ? Colors.white
-                                : (isDark
-                                    ? Colors.white70
-                                    : AviajTheme.obsidian),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 13,
-                              vertical: 10,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                          icon: Icon(
-                            isSelected ? item.activeIcon : item.icon,
-                            size: 18,
-                          ),
-                          label: Text(
-                            item.label,
-                            style: TextStyle(
-                              fontWeight: isSelected
-                                  ? FontWeight.w900
-                                  : FontWeight.w700,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
+                IconButton(
+                  tooltip: 'Aviaj Gold™ • Stripe Checkout',
+                  onPressed: () => showStripeStorefrontModal(context),
+                  icon: const Icon(
+                    Icons.workspace_premium_rounded,
+                    color: Color(0xFF635BFF),
                   ),
-                const Spacer(),
-                if (screenWidth >= 1040) ...[
-                  FilledButton.icon(
-                    onPressed: () => showStripeStorefrontModal(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: const Color(0xFF635BFF),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    icon: const Icon(Icons.credit_card_rounded, size: 16),
-                    label: const Text(
-                      'Aviaj Gold • Stripe',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12,
-                      ),
-                    ),
+                ),
+                IconButton(
+                  tooltip: 'AdMob & Unity Ads Rewards',
+                  onPressed: () => showAdMobUnityConsoleModal(context),
+                  icon: const Icon(
+                    Icons.monetization_on_rounded,
+                    color: AviajTheme.obsidian,
                   ),
-                  const SizedBox(width: 8),
-                ],
-                if (screenWidth >= 840) ...[
-                  FilledButton.icon(
-                    onPressed: () => showAdMobUnityConsoleModal(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AviajTheme.bumbleHoney,
-                      foregroundColor: AviajTheme.obsidian,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    icon: const Icon(Icons.monetization_on_rounded, size: 16),
-                    label: const Text(
-                      'AdMob & Unity',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12,
-                      ),
-                    ),
+                ),
+                IconButton(
+                  tooltip: 'Download on App Store & Google Play',
+                  onPressed: () => showMobileAppDownloadModal(context),
+                  icon: const Icon(
+                    Icons.phone_iphone_rounded,
+                    color: AviajTheme.loveCrimson,
                   ),
-                  const SizedBox(width: 8),
-                ],
-                if (screenWidth >= 680) ...[
-                  FilledButton.icon(
-                    onPressed: () => showMobileAppDownloadModal(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AviajTheme.obsidian,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    icon: const Icon(Icons.phone_iphone_rounded, size: 16),
-                    label: const Text(
-                      'Get the App',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ],
+                ),
                 IconButton(
                   tooltip: state.isDarkMode ? 'Light Mode' : 'Dark Mode',
                   onPressed: state.toggleDarkMode,
@@ -317,24 +234,24 @@ class AviajHomeShell extends StatelessWidget {
         index: state.activeTabIndex,
         children: screens,
       ),
-      bottomNavigationBar: isDesktopWeb
-          ? null
-          : NavigationBar(
-              selectedIndex: state.activeTabIndex,
-              onDestinationSelected: state.setActiveTab,
-              destinations: _navItems
-                  .map(
-                    (item) => NavigationDestination(
-                      icon: Icon(item.icon),
-                      selectedIcon: Icon(
-                        item.activeIcon,
-                        color: AviajTheme.loveCrimson,
-                      ),
-                      label: item.label,
-                    ),
-                  )
-                  .toList(),
-            ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: state.activeTabIndex,
+        onDestinationSelected: state.setActiveTab,
+        destinations: _navItems
+            .map(
+              (item) => NavigationDestination(
+                icon: Icon(item.icon),
+                selectedIcon: Icon(
+                  item.activeIcon,
+                  color: AviajTheme.loveCrimson,
+                ),
+                label: item.label,
+              ),
+            )
+            .toList(),
+      ),
     );
+
+    return mobileScaffold;
   }
 }
