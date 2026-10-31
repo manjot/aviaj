@@ -5,7 +5,33 @@
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>Aviaj uses personalized travel &amp; dating ads via Google AdMob and Unity Ads to keep core features free.</string>
+	<string>Aviaj uses personalized travel and romance ads via Google AdMob and Unity Ads to keep core features free and reward you with Priority Boarding Passes.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>4dzt52r2t5.skadnetwork</string>
+		</dict>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.aviaj.aviaj</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>aviaj</string>
+			</array>
+		</dict>
+	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

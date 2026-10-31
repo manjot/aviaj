@@ -1,0 +1,61 @@
+{
+  "app_name": "Aviaj — Travel Buddy & Romance Dating",
+  "bundle_id": "com.aviaj.aviaj",
+  "version": "1.0.0",
+  "build_number": 1,
+  "environment": "production",
+  "monetization": {
+    "stripe": {
+      "account_id": "acct_1TNTVyJD1U0jWVOT",
+      "dashboard_url": "https://dashboard.stripe.com/acct_1TNTVyJD1U0jWVOT/dashboard",
+      "endpoint": "https://aviaj.com/stripe_checkout.php",
+      "products": [
+        {
+          "id": "price_aviaj_business_monthly",
+          "name": "Aviaj Business Class™",
+          "price_usd": 14.99,
+          "interval": "month"
+        },
+        {
+          "id": "price_aviaj_first_class_monthly",
+          "name": "Aviaj First Class™ VIP",
+          "price_usd": 29.99,
+          "interval": "month"
+        },
+        {
+          "id": "price_aviaj_boarding_pack",
+          "name": "10x Priority Boarding Passes + 2x Radar Boosts",
+          "price_usd": 9.99,
+          "interval": "one_time"
+        }
+      ]
+    },
+    "google_admob": {
+      "sdk": "google_mobile_ads: ^9.2.0",
+      "android_app_id": "ca-app-pub-3940256099942544~3347511713",
+      "ios_app_id": "ca-app-pub-3940256099942544~1458002511",
+      "formats": ["BannerAd", "InterstitialAd", "RewardedAd"]
+    },
+    "unity_ads": {
+      "sdk": "unity_ads_plugin: ^0.6.0",
+      "android_game_id": "5719482",
+      "ios_game_id": "5719483",
+      "placements": ["Banner_Android", "Interstitial_Android", "Rewarded_Android", "Banner_iOS", "Interstitial_iOS", "Rewarded_iOS"]
+    }
+  },
+  "stores": {
+    "google_play_store": {
+      "package_name": "com.aviaj.aviaj",
+      "track": "production",
+      "aab_artifact": "build/app/outputs/bundle/release/app-release.aab",
+      "apk_artifact": "build/app/outputs/flutter-apk/app-release.apk",
+      "direct_download_url": "https://aviaj.com/downloads/aviaj-release.apk"
+    },
+    "apple_app_store": {
+      "bundle_identifier": "com.aviaj.aviaj",
+      "sku": "AVIAJ-IOS-PROD-001",
+      "export_options": "ios/ExportOptions.plist",
+      "ios_archive_artifact": "build/ios/iphoneos/Runner.app"
+    }
+  }
+}

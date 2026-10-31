@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
-/// Native Android & iOS implementation for Google AdMob + Unity Ads Mediation.
+/// Native Android & iOS implementation for Google AdMob + Unity Ads Mediation in Production.
 class NativeAdBridge {
   static Future<bool> initializeAdMob() async {
     if (!Platform.isAndroid && !Platform.isIOS) return true;
@@ -18,14 +20,14 @@ class NativeAdBridge {
   static Future<bool> initializeUnityAds({
     required String androidGameId,
     required String iosGameId,
-    bool testMode = true,
+    bool testMode = false,
   }) async {
     if (!Platform.isAndroid && !Platform.isIOS) return true;
     final completer = Completer<bool>();
     try {
       await UnityAds.init(
         gameId: Platform.isIOS ? iosGameId : androidGameId,
-        testMode: testMode,
+        testMode: testMode && !kReleaseMode,
         onComplete: () {
           if (!completer.isCompleted) completer.complete(true);
         },
@@ -40,6 +42,34 @@ class NativeAdBridge {
     } catch (_) {
       return false;
     }
+  }
+
+  /// Renders a native AdMob `AdWidget(ad: BannerAd)` or `UnityBannerAd` on iOS & Android.
+  static Widget buildNativeBannerWidget({
+    required String admobAndroidUnitId,
+    required String admobIosUnitId,
+    required String unityAndroidPlacement,
+    required String unityIosPlacement,
+    required bool preferUnity,
+  }) {
+    if (!Platform.isAndroid && !Platform.isIOS) {
+      return const SizedBox.shrink();
+    }
+    if (preferUnity) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: SizedBox(
+          height: 50,
+          child: UnityBannerAd(
+            placementId:
+                Platform.isIOS ? unityIosPlacement : unityAndroidPlacement,
+          ),
+        ),
+      );
+    }
+    return _NativeAdMobBannerSlot(
+      adUnitId: Platform.isIOS ? admobIosUnitId : admobAndroidUnitId,
+    );
   }
 
   static Future<bool> showNativeInterstitial({
@@ -73,7 +103,7 @@ class NativeAdBridge {
     if (preferUnity) {
       final shown = await _showUnityVideo(
         Platform.isIOS ? unityIosPlacement : unityAndroidPlacement,
-        onCompleted: () => onRewardEarned(3, 'Super Boarding Passes'),
+        onCompleted: () => onRewardEarned(3, 'Priority Boarding Passes'),
       );
       if (shown) return true;
     }
@@ -85,7 +115,7 @@ class NativeAdBridge {
 
   static Future<bool> _showUnityVideo(
     String placementId, {
-     void Function()? onCompleted,
+    void Function()? onCompleted,
   }) async {
     final completer = Completer<bool>();
     try {
@@ -185,3 +215,65 @@ class NativeAdBridge {
   }
 }
 
+class _NativeAdMobBannerSlot extends StatefulWidget {
+  final String adUnitId;
+
+  const _NativeAdMobBannerSlot({required this.adUnitId});
+
+  @override
+  State<_NativeAdMobBannerSlot> createState() => _NativeAdMobBannerSlotState();
+}
+
+class _NativeAdMobBannerSlotState extends State<_NativeAdMobBannerSlot> {
+  BannerAd? _bannerAd;
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBanner();
+  }
+
+  void _loadBanner() {
+    final banner = BannerAd(
+      adUnitId: widget.adUnitId,
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          if (mounted) {
+            setState(() {
+              _isLoaded = true;
+            });
+          }
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+        },
+      ),
+    );
+    banner.load();
+    _bannerAd = banner;
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_isLoaded || _bannerAd == null) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: SizedBox(
+        width: _bannerAd!.size.width.toDouble(),
+        height: _bannerAd!.size.height.toDouble(),
+        child: AdWidget(ad: _bannerAd!),
+      ),
+    );
+  }
+}

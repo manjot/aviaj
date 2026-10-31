@@ -1,0 +1,59 @@
+name: Aviaj Production Mobile & Web Release (App Store, Google Play & Stripe)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android-playstore:
+    name: Google Play Store (.aab & .apk) Release Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Install Dependencies
+        run: flutter pub get
+      - name: Run Static Analysis & Widget Tests
+        run: |
+          flutter analyze
+          flutter test
+      - name: Build Signed Google Play App Bundle (.aab) & APK (.apk)
+        run: |
+          flutter build appbundle --release \
+            --dart-define=STRIPE_PUBLISHABLE_KEY=pk_live_51TNTVyJD1U0jWVOT_aviaj_travel_dating_checkout \
+            --dart-define=ADMOB_ANDROID_APP_ID=ca-app-pub-3940256099942544~3347511713 \
+            --dart-define=UNITY_ANDROID_GAME_ID=5719482
+          flutter build apk --release \
+            --dart-define=STRIPE_PUBLISHABLE_KEY=pk_live_51TNTVyJD1U0jWVOT_aviaj_travel_dating_checkout
+      - name: Upload Play Store Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: aviaj-google-play-release
+          path: |
+            build/app/outputs/bundle/release/app-release.aab
+            build/app/outputs/flutter-apk/app-release.apk
+
+  build-ios-appstore:
+    name: Apple App Store (.ipa) Release Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Install Dependencies
+        run: flutter pub get
+      - name: Build iOS App Store Release Archive
+        run: |
+          flutter build ios --release --no-codesign \
+            --dart-define=STRIPE_PUBLISHABLE_KEY=pk_live_51TNTVyJD1U0jWVOT_aviaj_travel_dating_checkout \
+            --dart-define=ADMOB_IOS_APP_ID=ca-app-pub-3940256099942544~1458002511 \
+            --dart-define=UNITY_IOS_GAME_ID=5719483
+      - name: Upload App Store Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aviaj-apple-app-store-release
+          path: build/ios/iphoneos/Runner.app

@@ -1,0 +1,30 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build signed Android App Bundle (.aab) & APK (.apk) with AdMob, Unity Ads & Stripe (acct_1TNTVyJD1U0jWVOT) and publish to Google Play Store Production"
+  lane :release_playstore do
+    sh("flutter build appbundle --release")
+    sh("flutter build apk --release")
+    upload_to_play_store(
+      track: "production",
+      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false
+    )
+  end
+end
+
+platform :ios do
+  desc "Build signed iOS Archive (.ipa) with AdMob, Unity Ads & Stripe (acct_1TNTVyJD1U0jWVOT) and publish to Apple App Store Connect"
+  lane :release_appstore do
+    sh("flutter build ipa --release --export-options-plist=ios/ExportOptions.plist")
+    upload_to_app_store(
+      ipa: "../build/ios/ipa/aviaj.ipa",
+      skip_screenshots: false,
+      skip_metadata: false,
+      submit_for_review: true,
+      automatic_release: true
+    )
+  end
+end

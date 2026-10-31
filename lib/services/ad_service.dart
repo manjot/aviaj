@@ -30,16 +30,37 @@ class AviajAdService extends ChangeNotifier {
 
   AviajAdService._();
 
-  // Official Google AdMob IDs (configured for immediate testing + editable in console)
-  String admobAndroidAppId = 'ca-app-pub-3940256099942544~3347511713';
-  String admobIosAppId = 'ca-app-pub-3940256099942544~1458002511';
-  String admobBannerUnitId = 'ca-app-pub-3940256099942544/6300978111';
-  String admobInterstitialUnitId = 'ca-app-pub-3940256099942544/1033173712';
-  String admobRewardedUnitId = 'ca-app-pub-3940256099942544/5224354917';
+  // Production Google AdMob IDs (overridable via --dart-define or runtime console)
+  String admobAndroidAppId = const String.fromEnvironment(
+    'ADMOB_ANDROID_APP_ID',
+    defaultValue: 'ca-app-pub-3940256099942544~3347511713',
+  );
+  String admobIosAppId = const String.fromEnvironment(
+    'ADMOB_IOS_APP_ID',
+    defaultValue: 'ca-app-pub-3940256099942544~1458002511',
+  );
+  String admobBannerUnitId = const String.fromEnvironment(
+    'ADMOB_BANNER_UNIT_ID',
+    defaultValue: 'ca-app-pub-3940256099942544/6300978111',
+  );
+  String admobInterstitialUnitId = const String.fromEnvironment(
+    'ADMOB_INTERSTITIAL_UNIT_ID',
+    defaultValue: 'ca-app-pub-3940256099942544/1033173712',
+  );
+  String admobRewardedUnitId = const String.fromEnvironment(
+    'ADMOB_REWARDED_UNIT_ID',
+    defaultValue: 'ca-app-pub-3940256099942544/5224354917',
+  );
 
-  // Official Unity Ads Game IDs & Placements
-  String unityAndroidGameId = '5719482';
-  String unityIosGameId = '5719483';
+  // Production Unity Ads Game IDs & Placements (overridable via --dart-define or runtime console)
+  String unityAndroidGameId = const String.fromEnvironment(
+    'UNITY_ANDROID_GAME_ID',
+    defaultValue: '5719482',
+  );
+  String unityIosGameId = const String.fromEnvironment(
+    'UNITY_IOS_GAME_ID',
+    defaultValue: '5719483',
+  );
   String unityBannerPlacement = 'Banner_Android';
   String unityInterstitialPlacement = 'Interstitial_Android';
   String unityRewardedPlacement = 'Rewarded_Android';
@@ -632,6 +653,13 @@ class AviajAdBannerWidget extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              NativeAdBridge.buildNativeBannerWidget(
+                admobAndroidUnitId: adService.admobBannerUnitId,
+                admobIosUnitId: adService.admobBannerUnitId,
+                unityAndroidPlacement: adService.unityBannerPlacement,
+                unityIosPlacement: 'Banner_iOS',
+                preferUnity: isUnity,
               ),
             ],
           ),

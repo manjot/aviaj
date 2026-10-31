@@ -444,7 +444,7 @@ Future<void> showMobileAppDownloadModal(
                                 const SnackBar(
                                   backgroundColor: AviajTheme.midnightNavy,
                                   content: Text(
-                                    'Redirecting to Apple App Store: Aviaj — Travel Buddy & Romance Dating (iOS)...',
+                                    'Apple App Store Production Listing: com.aviaj.aviaj (iOS v1.0.0+1)',
                                   ),
                                 ),
                               );
@@ -472,7 +472,7 @@ Future<void> showMobileAppDownloadModal(
                                 const SnackBar(
                                   backgroundColor: AviajTheme.sunsetTerracotta,
                                   content: Text(
-                                    'Redirecting to Google Play Store: Aviaj — Travel Buddy & Romance Dating (Android)...',
+                                    'Google Play Production Release: com.aviaj.aviaj (aviaj.com/downloads/aviaj-release.apk)',
                                   ),
                                 ),
                               );

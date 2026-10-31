@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// Web / non-IO bridge stub for Google AdMob & Unity Ads SDKs.
 class NativeAdBridge {
   static Future<bool> initializeAdMob() async => true;
@@ -5,9 +7,18 @@ class NativeAdBridge {
   static Future<bool> initializeUnityAds({
     required String androidGameId,
     required String iosGameId,
-    bool testMode = true,
+    bool testMode = false,
   }) async =>
       true;
+
+  static Widget buildNativeBannerWidget({
+    required String admobAndroidUnitId,
+    required String admobIosUnitId,
+    required String unityAndroidPlacement,
+    required String unityIosPlacement,
+    required bool preferUnity,
+  }) =>
+      const SizedBox.shrink();
 
   static Future<bool> showNativeInterstitial({
     required String admobAndroidUnitId,
@@ -28,4 +39,3 @@ class NativeAdBridge {
   }) async =>
       false;
 }
-

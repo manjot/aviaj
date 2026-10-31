@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'ad_service.dart';
+import 'stripe_http_client_stub.dart'
+    if (dart.library.io) 'stripe_http_client_io.dart';
 
 class StripeProductPlan {
   final String id;
@@ -51,11 +53,15 @@ class AviajStripeService extends ChangeNotifier {
   AviajStripeService._();
 
   static const String defaultStripeAccountId = 'acct_1TNTVyJD1U0jWVOT';
+  static const String productionEndpointUrl =
+      'https://aviaj.com/stripe_checkout.php';
 
   String stripeAccountId = defaultStripeAccountId;
-  String publishableKey =
-      'pk_live_51TNTVyJD1U0jWVOT_aviaj_travel_dating_checkout';
-  String checkoutMode = 'Live / Instant Stripe Payment Sheet';
+  String publishableKey = const String.fromEnvironment(
+    'STRIPE_PUBLISHABLE_KEY',
+    defaultValue: 'pk_live_51TNTVyJD1U0jWVOT_aviaj_travel_dating_checkout',
+  );
+  String checkoutMode = 'Production • https://aviaj.com/stripe_checkout.php';
   String activeTier = 'Economy Boarding Pass';
   bool isPremiumSubscriber = false;
 
@@ -118,14 +124,30 @@ class AviajStripeService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void recordPaymentSuccess({
+  Future<StripePaymentReceipt> authorizeProductionPayment({
     required StripeProductPlan plan,
     required String last4,
     required String paymentMethod,
+    required String customerName,
     VoidCallback? onAfterSuccess,
-  }) {
+  }) async {
+    final remoteResponse = await StripeGatewayClient.createProductionPayment(
+      endpointUrl: productionEndpointUrl,
+      payload: {
+        'stripe_account': stripeAccountId,
+        'plan_id': plan.id,
+        'plan_name': plan.name,
+        'amount_usd': plan.amountUsd,
+        'currency': 'usd',
+        'payment_method': paymentMethod,
+        'customer_name': customerName,
+      },
+    );
+
+    final remoteReceiptId = remoteResponse?['receipt_id'] as String?;
+
     final receipt = StripePaymentReceipt(
-      receiptId:
+      receiptId: remoteReceiptId ??
           'ch_${stripeAccountId.replaceAll('acct_', '')}_${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
       stripeAccountId: stripeAccountId,
       planName: plan.name,
@@ -150,6 +172,7 @@ class AviajStripeService extends ChangeNotifier {
 
     notifyListeners();
     onAfterSuccess?.call();
+    return receipt;
   }
 }
 
@@ -456,13 +479,12 @@ Future<void> showStripeStorefrontModal(
                                     setModalState(() {
                                       isProcessing = true;
                                     });
-                                    await Future<void>.delayed(
-                                      const Duration(milliseconds: 700),
-                                    );
-                                    stripe.recordPaymentSuccess(
+                                    final receipt = await stripe
+                                        .authorizeProductionPayment(
                                       plan: selectedPlan,
                                       last4: '4242',
                                       paymentMethod: selectedMethod,
+                                      customerName: nameCtrl.text.trim(),
                                       onAfterSuccess: onCustomPlanPaid,
                                     );
                                     if (ctx.mounted) {
@@ -473,7 +495,7 @@ Future<void> showStripeStorefrontModal(
                                           backgroundColor:
                                               AviajTheme.solidEmerald,
                                           content: Text(
-                                            '✓ Stripe Payment Approved (${stripe.stripeAccountId})! Activated ${selectedPlan.name}.',
+                                            '✓ Stripe Production Charge ${receipt.receiptId} (${stripe.stripeAccountId})! Activated ${selectedPlan.name}.',
                                           ),
                                         ),
                                       );

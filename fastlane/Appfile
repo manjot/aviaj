@@ -1,0 +1,6 @@
+app_identifier("com.aviaj.aviaj")
+apple_id("developer@aviaj.com")
+itc_team_id("126849201")
+team_id("AVIAJ99281")
+json_key_file("fastlane/google-play-service-account.json")
+package_name("com.aviaj.aviaj")
