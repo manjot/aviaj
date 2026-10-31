@@ -39,6 +39,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   int _selectedHeroIndex = 0;
   bool _showAffMegaMenu = false;
   bool _showStoriesMegaMenu = false;
+  bool _showPrivacyBanner = true;
+  bool _optOutMarketingPartners = false;
 
   late final AnimationController _bannerIntroController;
   late final AnimationController _profileSliderController;
@@ -228,56 +230,68 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       builder: (context, _) {
         return Scaffold(
           backgroundColor: Colors.white,
-          body: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                // SECTION 1: FULL-BLEED ANIMATED BANNER (GIANT NAME + 3D PROFILES SLIDER)
-                _buildSpaciousHeroSection(context, isDesktop),
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    // SECTION 1: FULL-BLEED ANIMATED BANNER (GIANT NAME + 3D PROFILES SLIDER)
+                    _buildSpaciousHeroSection(context, isDesktop),
 
-                // SECTION 2: MISSION HEADLINE + 3 STEPPED CARDS WITH VERTICAL PILLS
-                _buildBelowBannerIntroStrip(context, isDesktop),
+                    // SECTION 2: MISSION HEADLINE + 3 STEPPED CARDS WITH VERTICAL PILLS
+                    _buildBelowBannerIntroStrip(context, isDesktop),
 
-                // SECTION 2B: REGIONAL FAMOUS HIKING, TREKKING & BEACH DESTINATIONS SHOWCASE
-                _buildRegionalTreksAndBeachesSection(context, isDesktop),
+                    // SECTION 2B: REGIONAL FAMOUS HIKING, TREKKING & BEACH DESTINATIONS SHOWCASE
+                    _buildRegionalTreksAndBeachesSection(context, isDesktop),
 
-                // SECTION 3: LIFESTYLE PHOTO + CIRCULAR STAMP EMBLEM + "SHARE YOUR NEXT ITINERARY"
-                Container(
-                  key: _radarKey,
-                  child: _buildDepartureCircleSection(context, isDesktop),
+                    // SECTION 3: LIFESTYLE PHOTO + CIRCULAR STAMP EMBLEM + "SHARE YOUR NEXT ITINERARY"
+                    Container(
+                      key: _radarKey,
+                      child: _buildDepartureCircleSection(context, isDesktop),
+                    ),
+
+                    // SECTION 4: TWO SIDE-BY-SIDE SOLID RED LOVE SHOWCASE CARDS (AVIAJ DATE & AFF - AVIAJ FRIENDS FOREVER)
+                    Container(
+                      key: _modesKey,
+                      child: _buildThreeModesPillarSection(context, isDesktop),
+                    ),
+
+                    // SECTION 4B: DEDICATED FULL-BLEED "AFF — AVIAJ FRIENDS FOREVER" HERO SECTION
+                    Container(
+                      key: _affKey,
+                      child: _buildAffFriendsForeverSection(context, isDesktop),
+                    ),
+
+                    // SECTION 5: EDITORIAL QUOTE TESTIMONIAL + MONOCHROME COUPLE PORTRAIT
+                    Container(
+                      key: _storiesKey,
+                      child: _buildStoriesSection(context, isDesktop),
+                    ),
+
+                    // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
+                    _buildGetTheAppQrPhonesBanner(context, isDesktop),
+
+                    // SECTION 7: MINIMAL CABIN CLASS UPGRADES (STRIPE acct_1TNTVyJD1U0jWVOT)
+                    Container(
+                      key: _pricingKey,
+                      child:
+                          _buildMinimalCabinUpgradesSection(context, isDesktop),
+                    ),
+
+                    // SECTION 8: MULTI-COLUMN SITEMAP FOOTER
+                    _buildConversionBannerAndFooter(context, isDesktop),
+                  ],
                 ),
-
-                // SECTION 4: TWO SIDE-BY-SIDE SOLID RED LOVE SHOWCASE CARDS (AVIAJ DATE & AFF - AVIAJ FRIENDS FOREVER)
-                Container(
-                  key: _modesKey,
-                  child: _buildThreeModesPillarSection(context, isDesktop),
+              ),
+              if (_showPrivacyBanner)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: _buildPrivacyAcknowledgmentBanner(context, isDesktop),
                 ),
-
-                // SECTION 4B: DEDICATED FULL-BLEED "AFF — AVIAJ FRIENDS FOREVER" HERO SECTION
-                Container(
-                  key: _affKey,
-                  child: _buildAffFriendsForeverSection(context, isDesktop),
-                ),
-
-                // SECTION 5: EDITORIAL QUOTE TESTIMONIAL + MONOCHROME COUPLE PORTRAIT
-                Container(
-                  key: _storiesKey,
-                  child: _buildStoriesSection(context, isDesktop),
-                ),
-
-                // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
-                _buildGetTheAppQrPhonesBanner(context, isDesktop),
-
-                // SECTION 7: MINIMAL CABIN CLASS UPGRADES (STRIPE acct_1TNTVyJD1U0jWVOT)
-                Container(
-                  key: _pricingKey,
-                  child: _buildMinimalCabinUpgradesSection(context, isDesktop),
-                ),
-
-                // SECTION 8: MULTI-COLUMN SITEMAP FOOTER
-                _buildConversionBannerAndFooter(context, isDesktop),
-              ],
-            ),
+            ],
           ),
         );
       },
@@ -4222,16 +4236,17 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             _FooterColumn(
                               title: 'LEGAL & PRIVACY',
                               items: const [
+                                'Do not sell or share my personal information',
+                                'Manage cookies',
                                 'Consumer Health Data Privacy Policy',
                                 'Terms',
                                 'Cookie Policy',
                                 'Intellectual Property',
                                 'Community Guidelines',
                                 'Safety Policy Information',
-                                'Community Information',
                                 'Accessibility Statement',
                               ],
-                              onTap: () => showMobileAppDownloadModal(context),
+                              onTap: () => _showPrivacyChoicesModal(context),
                             ),
                             _FooterColumn(
                               title: 'DESTINATIONS',
@@ -4417,6 +4432,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           items: const [
             'Guidelines',
             'Manage cookies',
+            'Do not sell or share my personal information',
             'Privacy policy',
             'Terms and conditions',
             'Accessibility at Aviaj',
@@ -4425,7 +4441,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             'Consumer Health Privacy Policy',
           ],
           boldItems: false,
-          onTap: () => showMobileAppDownloadModal(context),
+          onTap: () => _showPrivacyChoicesModal(context),
         ),
       ],
     );
@@ -4448,6 +4464,392 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           color: AviajTheme.midnightNavy,
         ),
       ),
+    );
+  }
+
+  /// Bottom-docked Privacy Acknowledgment Banner ("Your privacy choices")
+  /// matching the editorial privacy consent design (`=Aviaj | Your privacy choices ... [Continue]`).
+  Widget _buildPrivacyAcknowledgmentBanner(
+    BuildContext context,
+    bool isDesktop,
+  ) {
+    return Material(
+      color: Colors.white,
+      elevation: 18,
+      shadowColor: Colors.black.withValues(alpha: 0.22),
+      child: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Color(0xFFE6E2E4), width: 1),
+          ),
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: isDesktop ? 48 : 20,
+          vertical: isDesktop ? 28 : 20,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1020),
+            child: isDesktop
+                ? IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Left Column: Compact "=Aviaj" Mark
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, right: 24),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 11,
+                                    height: 2.2,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF2B2B2B),
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2.2),
+                                  Container(
+                                    width: 14,
+                                    height: 2.2,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF2B2B2B),
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2.2),
+                                  Container(
+                                    width: 11,
+                                    height: 2.2,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF2B2B2B),
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 6),
+                              const Text(
+                                'Aviaj',
+                                style: TextStyle(
+                                  color: Color(0xFF2B2B2B),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 15.5,
+                                  letterSpacing: -0.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Vertical Divider Line
+                        Container(
+                          width: 1,
+                          color: const Color(0xFFE2DEE0),
+                          margin: const EdgeInsets.only(right: 28),
+                        ),
+                        // Right Column: Privacy Copy & "Continue" Pill Button
+                        Expanded(
+                          child: _buildPrivacyBannerTextAndAction(context),
+                        ),
+                      ],
+                    ),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.shield_outlined,
+                            size: 18,
+                            color: Color(0xFF2B2B2B),
+                          ),
+                          const SizedBox(width: 6),
+                          const Text(
+                            'Aviaj',
+                            style: TextStyle(
+                              color: Color(0xFF2B2B2B),
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15,
+                            ),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () =>
+                                setState(() => _showPrivacyBanner = false),
+                            icon: const Icon(
+                              Icons.close_rounded,
+                              size: 20,
+                              color: Color(0xFF2B2B2B),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            tooltip: 'Dismiss privacy notice',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      _buildPrivacyBannerTextAndAction(context),
+                    ],
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPrivacyBannerTextAndAction(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          'Your privacy choices',
+          style: TextStyle(
+            color: Color(0xFF2B2B2B),
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            letterSpacing: -0.3,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            const Text(
+              'We use services that help improve marketing campaigns. (Learn more in our ',
+              style: TextStyle(
+                color: Color(0xFF3B3B3B),
+                fontSize: 13.5,
+                fontWeight: FontWeight.w400,
+                height: 1.45,
+              ),
+            ),
+            InkWell(
+              onTap: () => _showPrivacyChoicesModal(context),
+              child: const Text(
+                'Privacy Policy',
+                style: TextStyle(
+                  color: Color(0xFF1E1E1E),
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.underline,
+                  height: 1.45,
+                ),
+              ),
+            ),
+            const Text(
+              ').',
+              style: TextStyle(
+                color: Color(0xFF3B3B3B),
+                fontSize: 13.5,
+                fontWeight: FontWeight.w400,
+                height: 1.45,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          'Under certain privacy laws, this may be considered selling or sharing your personal information with our marketing partners.',
+          style: TextStyle(
+            color: Color(0xFF3B3B3B),
+            fontSize: 13.5,
+            fontWeight: FontWeight.w400,
+            height: 1.45,
+          ),
+        ),
+        const SizedBox(height: 12),
+        InkWell(
+          onTap: () => _showPrivacyChoicesModal(context),
+          child: const Text(
+            'You can view these partners and opt out by clicking “Do not sell or share my personal information” at the bottom of the homepage.',
+            style: TextStyle(
+              color: Color(0xFF3B3B3B),
+              fontSize: 13.5,
+              fontWeight: FontWeight.w400,
+              height: 1.45,
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _showPrivacyBanner = false;
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF2B2B2B),
+            foregroundColor: Colors.white,
+            elevation: 0,
+            minimumSize: const Size(188, 46),
+            padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(999),
+            ),
+          ),
+          child: const Text(
+            'Continue',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 14.5,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showPrivacyChoicesModal(BuildContext context) {
+    bool localOptOut = _optOutMarketingPartners;
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 580),
+                child: Padding(
+                  padding: const EdgeInsets.all(28),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            'Your Privacy Choices & Policy',
+                            style: TextStyle(
+                              color: AviajTheme.midnightNavy,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () => Navigator.of(dialogContext).pop(),
+                            icon: const Icon(Icons.close_rounded),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Aviaj uses essential cookies to keep your account secure and optional analytics & marketing services (including Google AdMob, Unity LevelPlay, and Stripe Checkout) to personalize travel campaigns.',
+                        style: TextStyle(
+                          color: Color(0xFF4A3B40),
+                          fontSize: 14,
+                          height: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFDF8F7),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: const Color(0xFFEAE2E4)),
+                        ),
+                        child: SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          activeThumbColor: AviajTheme.loveRed,
+                          title: const Text(
+                            'Do not sell or share my personal information',
+                            style: TextStyle(
+                              color: AviajTheme.midnightNavy,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 14.5,
+                            ),
+                          ),
+                          subtitle: const Text(
+                            'Opt out of sharing personal identifiers with third-party marketing and attribution partners under CPRA/GDPR.',
+                            style: TextStyle(
+                              color: Color(0xFF5C4B51),
+                              fontSize: 12.5,
+                            ),
+                          ),
+                          value: localOptOut,
+                          onChanged: (val) {
+                            setModalState(() => localOptOut = val);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 22),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _showPrivacyBanner = true;
+                              });
+                              Navigator.of(dialogContext).pop();
+                            },
+                            child: const Text(
+                              'Show Banner Again',
+                              style: TextStyle(
+                                color: Color(0xFF5C4B51),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _optOutMarketingPartners = localOptOut;
+                                _showPrivacyBanner = false;
+                              });
+                              Navigator.of(dialogContext).pop();
+                              ScaffoldMessenger.of(this.context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    localOptOut
+                                        ? 'Your opt-out preference ("Do not sell or share my personal information") has been saved.'
+                                        : 'Your privacy choices have been saved.',
+                                  ),
+                                  backgroundColor: const Color(0xFF2B2B2B),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF2B2B2B),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 28,
+                                vertical: 14,
+                              ),
+                            ),
+                            child: const Text(
+                              'Save & Continue',
+                              style: TextStyle(fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
