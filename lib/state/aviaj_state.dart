@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/mock_data.dart';
+import '../data/regional_data.dart';
 import '../models/models.dart';
 
 class AviajState extends ChangeNotifier {
@@ -13,9 +14,11 @@ class AviajState extends ChangeNotifier {
   static const String _userProfileKey = 'aviaj_user_profile';
   static const String _customMessagesKey = 'aviaj_custom_messages';
 
+  AviajRegion _activeRegion = AviajRegionalCatalog.detectVisitorRegion();
   TravellerProfile _currentUser = AviajMockData.initialCurrentUser;
-  final List<TravellerProfile> _allProfiles =
-      List<TravellerProfile>.from(AviajMockData.profiles);
+  late final List<TravellerProfile> _allProfiles = List<TravellerProfile>.from(
+    AviajRegionalCatalog.packFor(_activeRegion).profiles,
+  );
   final List<GroupTrip> _trips = List<GroupTrip>.from(AviajMockData.trips);
   final List<MatchConversation> _conversations =
       AviajMockData.initialConversations();
@@ -37,6 +40,9 @@ class AviajState extends ChangeNotifier {
     _loadPersistedState();
   }
 
+  AviajRegion get activeRegion => _activeRegion;
+  AviajRegionalContentPack get regionalPack =>
+      AviajRegionalCatalog.packFor(_activeRegion);
   TravellerProfile get currentUser => _currentUser;
   List<TravellerProfile> get allProfiles => List.unmodifiable(_allProfiles);
   List<GroupTrip> get trips => List.unmodifiable(_trips);
@@ -187,6 +193,15 @@ class AviajState extends ChangeNotifier {
 
   void setActiveTab(int index) {
     _activeTabIndex = index;
+    notifyListeners();
+  }
+
+  void setRegion(AviajRegion region) {
+    if (_activeRegion == region) return;
+    _activeRegion = region;
+    _allProfiles
+      ..clear()
+      ..addAll(AviajRegionalCatalog.packFor(region).profiles);
     notifyListeners();
   }
 

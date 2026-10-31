@@ -12,7 +12,8 @@ void main() {
     await tester.pumpAndSettle();
 
     // Brand header and original travel-dating hero headline should be visible
-    expect(find.text('aviaj'), findsWidgets);
+    expect(find.text('Aviaj'), findsWidgets);
+    expect(find.text('AVIAJ'), findsOneWidget);
     expect(
       find.textContaining('Meet your next co-pilot'),
       findsOneWidget,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
+import '../data/regional_data.dart';
 import '../models/models.dart';
 import '../services/ad_service.dart';
 import '../services/stripe_service.dart';
@@ -85,6 +86,99 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   void _replayBannerAnimation() {
     _profileSliderController.reset();
     _bannerIntroController.forward(from: 0);
+  }
+
+  void _selectRegion(AviajRegion region) {
+    setState(() {
+      _selectedHeroIndex = 0;
+    });
+    widget.state.setRegion(region);
+    _replayBannerAnimation();
+  }
+
+  Widget _buildRegionSelectorPill({
+    required bool isDarkPill,
+    required bool showFullLanguageLabel,
+  }) {
+    final activeRegion = widget.state.activeRegion;
+    return PopupMenuButton<AviajRegion>(
+      tooltip: 'Switch Location / Region Imagery',
+      onSelected: _selectRegion,
+      offset: const Offset(0, 48),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      color: Colors.white,
+      itemBuilder: (context) => AviajRegion.values.map((region) {
+        final isSelected = region == activeRegion;
+        return PopupMenuItem<AviajRegion>(
+          value: region,
+          child: Row(
+            children: [
+              Text(
+                region.flag,
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  '${region.label} (${region.code})',
+                  style: TextStyle(
+                    color: AviajTheme.midnightNavy,
+                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              if (isSelected)
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: AviajTheme.loveRed,
+                  size: 18,
+                ),
+            ],
+          ),
+        );
+      }).toList(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 10,
+        ),
+        decoration: BoxDecoration(
+          color: isDarkPill ? const Color(0xFF220207) : Colors.white,
+          borderRadius: BorderRadius.circular(40),
+          border: isDarkPill
+              ? Border.all(color: Colors.white24, width: 1)
+              : Border.all(color: AviajTheme.midnightNavy.withValues(alpha: 0.22), width: 1.2),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.language_rounded,
+              color: isDarkPill ? Colors.white : AviajTheme.midnightNavy,
+              size: 18,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              '${activeRegion.flag} ${showFullLanguageLabel ? activeRegion.languageLabel : activeRegion.label}',
+              style: TextStyle(
+                color: isDarkPill ? Colors.white : AviajTheme.midnightNavy,
+                fontWeight: FontWeight.w800,
+                fontSize: 13,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: isDarkPill ? Colors.white : AviajTheme.midnightNavy,
+              size: 19,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -268,35 +362,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         ),
                         const SizedBox(width: 10),
                       ],
-                      InkWell(
-                        onTap: () => showMobileAppDownloadModal(context),
-                        borderRadius: BorderRadius.circular(40),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 11,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.language_rounded,
-                                color: AviajTheme.midnightNavy,
-                                size: 20,
-                              ),
-                              SizedBox(width: 6),
-                              Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: AviajTheme.midnightNavy,
-                                size: 20,
-                              ),
-                            ],
-                          ),
-                        ),
+                      _buildRegionSelectorPill(
+                        isDarkPill: false,
+                        showFullLanguageLabel: false,
                       ),
                     ],
                   ),
@@ -716,6 +784,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       ],
     );
 
+    final pack = widget.state.regionalPack;
     final steppedCardsPane = SizedBox(
       width: isDesktop ? 550 : 350,
       height: isDesktop ? 450 : 340,
@@ -729,9 +798,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             width: isDesktop ? 195 : 130,
             height: isDesktop ? 295 : 210,
             child: _buildVerticalPillSteppedCard(
-              imageUrl:
-                  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
-              verticalTag: 'Island hopper',
+              imageUrl: pack.steppedCards[2].imageUrl,
+              verticalTag: pack.steppedCards[2].tag,
               tagFontSize: isDesktop ? 14 : 11,
             ),
           ),
@@ -742,9 +810,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             width: isDesktop ? 235 : 155,
             height: isDesktop ? 365 : 260,
             child: _buildVerticalPillSteppedCard(
-              imageUrl:
-                  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
-              verticalTag: 'Roadtrips',
+              imageUrl: pack.steppedCards[1].imageUrl,
+              verticalTag: pack.steppedCards[1].tag,
               tagFontSize: isDesktop ? 17 : 13,
             ),
           ),
@@ -755,9 +822,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             width: isDesktop ? 305 : 205,
             height: isDesktop ? 440 : 320,
             child: _buildVerticalPillSteppedCard(
-              imageUrl:
-                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80',
-              verticalTag: 'Outdoors',
+              imageUrl: pack.steppedCards[0].imageUrl,
+              verticalTag: pack.steppedCards[0].tag,
               tagFontSize: isDesktop ? 22 : 16,
             ),
           ),
@@ -849,6 +915,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
   /// SECTION 3 (Screenshot 3): Large Rounded Photo + Circular Stamp Badge at Bottom-Left + "Share your next itinerary"
   Widget _buildDepartureCircleSection(BuildContext context, bool isDesktop) {
+    final pack = widget.state.regionalPack;
     final photoWithStamp = ClipRRect(
       borderRadius: BorderRadius.circular(28),
       child: SizedBox(
@@ -857,9 +924,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         child: Stack(
           fit: StackFit.expand,
           children: [
-            const AviajNetworkImage(
-              imageUrl:
-                  'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1100&q=80',
+            AviajNetworkImage(
+              imageUrl: pack.departureCirclePhotoUrl,
               width: double.infinity,
               height: double.infinity,
               fallbackLabel: 'Departure Lounge Circle',
@@ -967,9 +1033,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Members get early access to Destination Radar™ matches, sneak peeks at curated 6-person villa crews in Amalfi, Kyoto, and Bali, and Boarding Date Invites.',
-          style: TextStyle(
+        Text(
+          'Members get early access to Destination Radar™ matches, sneak peeks at curated 6-person villa crews in ${pack.region.sampleDestinations}, and Boarding Date Invites.',
+          style: const TextStyle(
             color: Color(0xFF3E3035),
             fontSize: 17.5,
             fontWeight: FontWeight.w500,
@@ -1036,6 +1102,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   /// SECTION 4 (Screenshot 4): Two Side-by-Side Solid Red Love Showcase Cards (`Aviaj Romance` & `Aviaj Co-Pilot`)
   /// with White Inner Stage & Phone Mockups
   Widget _buildThreeModesPillarSection(BuildContext context, bool isDesktop) {
+    final pack = widget.state.regionalPack;
     final romanceCard = Container(
       padding: const EdgeInsets.all(26),
       decoration: BoxDecoration(
@@ -1067,17 +1134,17 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _buildMiniVerifiedPortrait(
-                        'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
+                        pack.romanceVerifiedPortraitUrls[0],
                       ),
                       _buildMiniVerifiedPortrait(
-                        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+                        pack.romanceVerifiedPortraitUrls[1],
                       ),
                       const SizedBox(width: 140),
                       _buildMiniVerifiedPortrait(
-                        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+                        pack.romanceVerifiedPortraitUrls[2],
                       ),
                       _buildMiniVerifiedPortrait(
-                        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=400&q=80',
+                        pack.romanceVerifiedPortraitUrls[3],
                       ),
                     ],
                   ),
@@ -1126,12 +1193,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             child: Stack(
                               fit: StackFit.expand,
                               children: [
-                                const AviajNetworkImage(
-                                  imageUrl:
-                                      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=700&q=80',
+                                AviajNetworkImage(
+                                  imageUrl: pack.romancePhoneImageUrl,
                                   width: double.infinity,
                                   height: double.infinity,
-                                  fallbackLabel: 'Elena, 27',
+                                  fallbackLabel: pack.romancePhoneLabel,
                                 ),
                                 Positioned(
                                   left: 10,
@@ -1140,9 +1206,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        'Elena, 27',
-                                        style: TextStyle(
+                                      Text(
+                                        pack.romancePhoneLabel,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w900,
                                           fontSize: 14,
@@ -1250,9 +1316,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     angle: -0.05,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(18),
-                      child: const AviajNetworkImage(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=700&q=80',
+                      child: AviajNetworkImage(
+                        imageUrl: pack.coPilotCrewImageUrl,
                         width: 175,
                         height: 225,
                         fallbackLabel: 'Island Crew',
@@ -1260,7 +1325,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     ),
                   ),
                 ),
-                // Floating Pill Tags ("Island crew", "Chat", "Events")
+                // Floating Pill Tags ("Villa crew", "Route chat", "Departures")
                 Positioned(
                   left: 16,
                   top: 118,
@@ -1362,9 +1427,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     ),
                     child: Column(
                       children: [
-                        const Text(
-                          'Amalfi Coast, IT ⌄',
-                          style: TextStyle(
+                        Text(
+                          pack.region.coPilotLocationHeader,
+                          style: const TextStyle(
                             color: AviajTheme.midnightNavy,
                             fontWeight: FontWeight.w800,
                             fontSize: 10,
@@ -1379,19 +1444,18 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             child: Stack(
                               fit: StackFit.expand,
                               children: [
-                                const AviajNetworkImage(
-                                  imageUrl:
-                                      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80',
+                                AviajNetworkImage(
+                                  imageUrl: pack.coPilotPhoneImageUrl,
                                   width: double.infinity,
                                   height: double.infinity,
-                                  fallbackLabel: 'Maya, 26',
+                                  fallbackLabel: pack.coPilotPhoneLabel,
                                 ),
-                                const Positioned(
+                                Positioned(
                                   left: 10,
                                   top: 12,
                                   child: Text(
-                                    'Maya, 26',
-                                    style: TextStyle(
+                                    pack.coPilotPhoneLabel,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w900,
                                       fontSize: 13,
@@ -1537,6 +1601,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
   /// SECTION 5 (Screenshot 5): Editorial Quotation Testimonial on Left + Monochrome Couple Portrait on Right
   Widget _buildStoriesSection(BuildContext context, bool isDesktop) {
+    final pack = widget.state.regionalPack;
     final quoteColumn = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1551,9 +1616,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         ),
         const SizedBox(height: 18),
-        const Text(
-          'We are both naturally spontaneous solo travellers, but when our Kyoto itineraries matched on Aviaj, it felt like there was no horizon we couldn’t explore.',
-          style: TextStyle(
+        Text(
+          pack.storyQuote,
+          style: const TextStyle(
             color: AviajTheme.midnightNavy,
             fontSize: 42,
             fontWeight: FontWeight.w900,
@@ -1562,9 +1627,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         ),
         const SizedBox(height: 22),
-        const Text(
-          'Elena & Aarav, engaged in Positano 2026',
-          style: TextStyle(
+        Text(
+          pack.storyAttribution,
+          style: const TextStyle(
             color: Color(0xFF4A3B40),
             fontSize: 16.5,
             fontWeight: FontWeight.w500,
@@ -1605,11 +1670,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           0, 0, 0, 1, 0, //
         ]),
         child: AviajNetworkImage(
-          imageUrl:
-              'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1000&q=80',
+          imageUrl: pack.storyCoupleImageUrl,
           height: isDesktop ? 490 : 350,
           width: double.infinity,
-          fallbackLabel: 'Elena & Aarav',
+          fallbackLabel: pack.storyAttribution,
         ),
       ),
     );
@@ -1711,6 +1775,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       ],
     );
 
+    final pack = widget.state.regionalPack;
     final rightFannedPhones = SizedBox(
       width: isDesktop ? 560 : 340,
       height: isDesktop ? 420 : 320,
@@ -1727,8 +1792,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             child: Transform.rotate(
               angle: -0.09,
               child: _buildMockupPhoneFrame(
-                imageUrl:
-                    'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80',
+                imageUrl: pack.fannedPhoneImageUrls[0],
                 headerTitle: '9:41',
                 showBrandHeader: false,
               ),
@@ -1743,8 +1807,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             child: Transform.rotate(
               angle: 0.09,
               child: _buildMockupPhoneFrame(
-                imageUrl:
-                    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
+                imageUrl: pack.fannedPhoneImageUrls[2],
                 headerTitle: '9:41',
                 showBrandHeader: false,
               ),
@@ -1756,8 +1819,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             width: isDesktop ? 255 : 185,
             height: isDesktop ? 405 : 295,
             child: _buildMockupPhoneFrame(
-              imageUrl:
-                  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
+              imageUrl: pack.fannedPhoneImageUrls[1],
               headerTitle: 'Aviaj',
               showBrandHeader: true,
             ),
@@ -2095,70 +2157,23 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     );
   }
 
-  /// SECTION 8: Full-Width Sunset Terracotta Conversion Banner + Multi-Column Sitemap Footer
+  /// SECTION 8: Two-Tier Editorial Footer:
+  ///   1) Upper White Footer (`Aviaj` wordmark + rounded solid Red Love QR card on left, 3 link columns + social icons + region selector pill on right)
+  ///   2) Lower Deep Dark Crimson (`#3B040C`) Footer (Multi-column links + region pill + Colossal Full-Bleed Bright Red `AVIAJ` wordmark spanning 100% width)
   Widget _buildConversionBannerAndFooter(
     BuildContext context,
     bool isDesktop,
   ) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        // Full-Width Conversion Banner
+        // TIER 1: UPPER WHITE EDITORIAL FOOTER (Reference Screenshot 1: Giant Wordmark + QR Box Left, 3 Link Columns + Social + Region Pill Right)
         Container(
           width: double.infinity,
-          color: AviajTheme.sunsetTerracotta,
+          color: Colors.white,
           padding: EdgeInsets.symmetric(
             horizontal: isDesktop ? 72 : 24,
-            vertical: 84,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1220),
-              child: Wrap(
-                spacing: 40,
-                runSpacing: 28,
-                alignment: WrapAlignment.spaceBetween,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 640),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Your next horizon is boarding now.',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 48,
-                            fontWeight: FontWeight.w900,
-                            height: 1.08,
-                            letterSpacing: -1.3,
-                          ),
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          'Download the Aviaj mobile app on iOS and Android.',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const AppStoreDownloadBadges(lightOnDark: true),
-                ],
-              ),
-            ),
-          ),
-        ),
-        // Editorial Multi-Column Sitemap Footer
-        Container(
-          width: double.infinity,
-          color: AviajTheme.midnightNavy,
-          padding: EdgeInsets.symmetric(
-            horizontal: isDesktop ? 72 : 24,
-            vertical: 64,
+            vertical: isDesktop ? 76 : 48,
           ),
           child: Center(
             child: ConstrainedBox(
@@ -2166,85 +2181,60 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Wrap(
-                    spacing: 64,
-                    runSpacing: 32,
-                    children: [
-                      const SizedBox(
-                        width: 260,
-                        child: Column(
+                  isDesktop
+                      ? Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'aviaj',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 34,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -1.0,
-                              ),
+                            // Left Column: Giant "Aviaj" Wordmark + Solid Red Love QR Code Box
+                            Expanded(
+                              flex: 5,
+                              child: _buildUpperFooterLeftBrandQr(context),
                             ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Travel Romance, Solo Co-Pilots & Curated Group Departures.',
-                              style: TextStyle(
-                                color: Colors.white60,
-                                fontSize: 13.5,
-                                height: 1.4,
-                              ),
+                            const SizedBox(width: 48),
+                            // Right Column: 3 Sitemap Link Columns ("Our apps", "Company", "Legal")
+                            Expanded(
+                              flex: 7,
+                              child: _buildUpperFooterRightLinks(context),
                             ),
                           ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildUpperFooterLeftBrandQr(context),
+                            const SizedBox(height: 40),
+                            _buildUpperFooterRightLinks(context),
+                          ],
                         ),
-                      ),
-                      _FooterColumn(
-                        title: 'TRAVEL MODES',
-                        items: const [
-                          'Aviaj Romance',
-                          'Aviaj Co-Pilot',
-                          'Aviaj Crew Villas',
-                          'Destination Radar',
-                        ],
-                        onTap: () => _scrollToSection(_modesKey),
-                      ),
-                      _FooterColumn(
-                        title: 'TOP HORIZONS',
-                        items: const [
-                          'Kyoto & Tokyo',
-                          'Amalfi & Capri',
-                          'Uluwatu, Bali',
-                          'Patagonia & Andes',
-                        ],
-                        onTap: widget.onOpenFullMobilePreview,
-                      ),
-                      _FooterColumn(
-                        title: 'TRUST & CABIN',
-                        items: const [
-                          'Passport Verification',
-                          'Business Class™',
-                          'First Class™ VIP',
-                          'Mobile App Demo',
-                        ],
-                        onTap: () => _scrollToSection(_pricingKey),
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 48, color: Colors.white12),
+                  const SizedBox(height: 36),
+                  // Bottom Row of Upper White Footer: Social Media Icons + Region Selector Pill
                   Wrap(
-                    spacing: 20,
-                    runSpacing: 10,
+                    spacing: 24,
+                    runSpacing: 16,
                     alignment: WrapAlignment.spaceBetween,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      const Text(
-                        '© 2026 Aviaj Inc. All rights reserved.',
-                        style: TextStyle(color: Colors.white54, fontSize: 12.5),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildSocialIconCircle(Icons.camera_alt_outlined),
+                          const SizedBox(width: 12),
+                          _buildSocialIconCircle(Icons.facebook_rounded),
+                          const SizedBox(width: 12),
+                          _buildSocialIconCircle(Icons.close_rounded),
+                          const SizedBox(width: 12),
+                          _buildSocialIconCircle(Icons.business_center_rounded),
+                          const SizedBox(width: 12),
+                          _buildSocialIconCircle(Icons.push_pin_outlined),
+                          const SizedBox(width: 12),
+                          _buildSocialIconCircle(Icons.play_circle_fill_rounded),
+                          const SizedBox(width: 12),
+                          _buildSocialIconCircle(Icons.music_note_rounded),
+                        ],
                       ),
-                      Text(
-                        'Stripe (${AviajStripeService.defaultStripeAccountId}) • Google AdMob • Unity Ads',
-                        style: const TextStyle(
-                          color: AviajTheme.compassAmber,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 12.5,
-                        ),
+                      _buildRegionSelectorPill(
+                        isDarkPill: false,
+                        showFullLanguageLabel: false,
                       ),
                     ],
                   ),
@@ -2253,7 +2243,283 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             ),
           ),
         ),
+
+        // TIER 2: LOWER DEEP DARK CRIMSON FOOTER + COLOSSAL FULL-BLEED BRIGHT RED "AVIAJ" WORDMARK (Reference Screenshot 2)
+        Container(
+          width: double.infinity,
+          color: const Color(0xFF3B040C),
+          padding: EdgeInsets.only(
+            top: isDesktop ? 64 : 44,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isDesktop ? 72 : 24,
+                ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1220),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Wrap(
+                          spacing: 48,
+                          runSpacing: 36,
+                          children: [
+                            // Left Editorial Description + Dark Region Selector Pill
+                            SizedBox(
+                              width: isDesktop ? 300 : double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Aviaj is where travel connections actually start, whether you’re looking for a lifelong relationship partner, a spontaneous vacation romance, or a verified travel co-pilot. Available in 190 countries with Destination Radar™, Departure Prompts™, and Crew Villas built for every kind of connection. Download free on iOS and Android.',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 22),
+                                  _buildRegionSelectorPill(
+                                    isDarkPill: true,
+                                    showFullLanguageLabel: true,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            _FooterColumn(
+                              title: 'LEGAL & PRIVACY',
+                              items: const [
+                                'Consumer Health Data Privacy Policy',
+                                'Terms',
+                                'Cookie Policy',
+                                'Intellectual Property',
+                                'Community Guidelines',
+                                'Safety Policy Information',
+                                'Community Information',
+                                'Accessibility Statement',
+                              ],
+                              onTap: () => showMobileAppDownloadModal(context),
+                            ),
+                            _FooterColumn(
+                              title: 'DESTINATIONS',
+                              items: const [
+                                'Destinations',
+                                'Departure Stories',
+                                'Press Room',
+                                'Contact',
+                                'Promo Code',
+                                'Support',
+                                'Gift Cards',
+                              ],
+                              onTap: () => _scrollToSection(_storiesKey),
+                            ),
+                            _FooterColumn(
+                              title: 'CAREERS',
+                              items: const [
+                                'Careers Portal',
+                                'Tech Blog',
+                                'Stripe (${AviajStripeService.defaultStripeAccountId})',
+                                'AdMob & Unity Ads',
+                              ],
+                              onTap: () => _scrollToSection(_pricingKey),
+                            ),
+                            _FooterColumn(
+                              title: 'GET THE APP',
+                              items: const [
+                                'App Store (iOS)',
+                                'Google Play Store',
+                                'Instagram',
+                                'TikTok',
+                                'YouTube',
+                                'X',
+                              ],
+                              onTap: () => showMobileAppDownloadModal(context),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 36),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK SPANNING 100% WIDTH AT THE VERY BOTTOM
+              SizedBox(
+                width: screenWidth,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      'AVIAJ',
+                      style: TextStyle(
+                        color: AviajTheme.loveRed,
+                        fontSize: 320,
+                        fontWeight: FontWeight.w900,
+                        height: 0.84,
+                        letterSpacing: -12,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _buildUpperFooterLeftBrandQr(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Aviaj',
+          style: TextStyle(
+            color: AviajTheme.midnightNavy,
+            fontSize: 64,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -2.2,
+            height: 1.0,
+          ),
+        ),
+        const SizedBox(height: 64),
+        InkWell(
+          onTap: () => showMobileAppDownloadModal(context),
+          borderRadius: BorderRadius.circular(22),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 335),
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: AviajTheme.loveRed,
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 118,
+                  height: 118,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Icon(
+                        Icons.qr_code_2_rounded,
+                        size: 100,
+                        color: AviajTheme.midnightNavy,
+                      ),
+                      Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Icon(
+                          Icons.favorite_rounded,
+                          color: AviajTheme.loveRed,
+                          size: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 18),
+                const Expanded(
+                  child: Text(
+                    'Scan the QR\ncode to get the\nAviaj app',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 16.5,
+                      height: 1.28,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUpperFooterRightLinks(BuildContext context) {
+    return Wrap(
+      spacing: 56,
+      runSpacing: 32,
+      children: [
+        _LightFooterColumn(
+          title: 'Our apps',
+          items: const [
+            'Aviaj Romance',
+            'Aviaj Co-Pilot',
+            'Aviaj Crew ↗',
+          ],
+          boldItems: true,
+          onTap: () => _scrollToSection(_modesKey),
+        ),
+        _LightFooterColumn(
+          title: 'Company',
+          items: const [
+            'About',
+            'Contact us',
+            'Careers ↗',
+            'Investors ↗',
+            'The Lounge ↗',
+            'Departure Stories ↗',
+            'Support',
+          ],
+          boldItems: true,
+          onTap: widget.onOpenFullMobilePreview,
+        ),
+        _LightFooterColumn(
+          title: 'Legal',
+          items: const [
+            'Guidelines',
+            'Manage cookies',
+            'Privacy policy',
+            'Terms and conditions',
+            'Accessibility at Aviaj',
+            'Notice at collection',
+            'Modern Safety Act',
+            'Consumer Health Privacy Policy',
+          ],
+          boldItems: false,
+          onTap: () => showMobileAppDownloadModal(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSocialIconCircle(IconData icon) {
+    return InkWell(
+      onTap: widget.onOpenFullMobilePreview,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          color: AviajTheme.midnightNavy.withValues(alpha: 0.08),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          size: 17,
+          color: AviajTheme.midnightNavy,
+        ),
+      ),
     );
   }
 }
@@ -2278,6 +2544,58 @@ class _NavbarLink extends StatelessWidget {
             fontSize: 14,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _LightFooterColumn extends StatelessWidget {
+  final String title;
+  final List<String> items;
+  final bool boldItems;
+  final VoidCallback onTap;
+
+  const _LightFooterColumn({
+    required this.title,
+    required this.items,
+    required this.boldItems,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: boldItems ? 160 : 210,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: Color(0xFF5C4B51),
+              fontWeight: FontWeight.w500,
+              fontSize: 13.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ...items.map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: InkWell(
+                onTap: onTap,
+                child: Text(
+                  item,
+                  style: TextStyle(
+                    color: AviajTheme.midnightNavy,
+                    fontWeight: boldItems ? FontWeight.w800 : FontWeight.w600,
+                    fontSize: boldItems ? 18 : 13.5,
+                    height: 1.25,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
