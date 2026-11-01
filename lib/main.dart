@@ -198,10 +198,11 @@ class AviajMobileAppShell extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  tooltip: 'AdMob & Unity Ads Rewards',
-                  onPressed: () => showAdMobUnityConsoleModal(context),
+                  tooltip: 'Earn Free Priority Boarding Passes',
+                  onPressed: () =>
+                      AviajAdService.instance.showRewardedAd(context),
                   icon: const Icon(
-                    Icons.monetization_on_rounded,
+                    Icons.card_giftcard_rounded,
                     color: AviajTheme.compassAmber,
                   ),
                 ),

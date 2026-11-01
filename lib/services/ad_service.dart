@@ -653,25 +653,6 @@ class AviajAdBannerWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  OutlinedButton.icon(
-                    onPressed: () => showAdMobUnityConsoleModal(context),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AviajTheme.compassAmber,
-                      side: const BorderSide(color: AviajTheme.compassAmber),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                    ),
-                    icon: const Icon(Icons.tune_rounded, size: 15),
-                    label: const Text(
-                      'Ad SDK Setup',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
                 ],
               ),
               NativeAdBridge.buildNativeBannerWidget(

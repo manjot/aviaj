@@ -1003,16 +1003,6 @@ class _CleanBrandSideCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 6),
-                      IconButton(
-                        tooltip: 'AdMob & Unity Ads Setup',
-                        onPressed: () => showAdMobUnityConsoleModal(context),
-                        icon: const Icon(
-                          Icons.tune_rounded,
-                          color: Colors.white70,
-                          size: 18,
-                        ),
-                      ),
                     ],
                   ),
                 ],
