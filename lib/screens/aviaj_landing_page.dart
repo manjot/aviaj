@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../data/regional_data.dart';
 import '../models/models.dart';
 import '../services/ad_service.dart';
+import '../services/seo_service.dart';
 import '../services/stripe_service.dart';
 import '../state/aviaj_state.dart';
 import '../theme/app_theme.dart';
@@ -46,6 +47,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   int _selectedHeroIndex = 0;
   int _selectedStoryIndex = 0;
   String _supportSearchQuery = '';
+  AviajSeoPage _activeSeoPage = AviajSeoPage.home;
   bool _showDateMegaMenu = false;
   bool _showAffMegaMenu = false;
   bool _showStoriesMegaMenu = false;
@@ -59,6 +61,22 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   @override
   void initState() {
     super.initState();
+    _activeSeoPage = SeoService.detectInitialPage();
+    SeoService.applyPageSeo(_activeSeoPage, pushHistory: false);
+    SeoService.listenPopState((page) {
+      if (!mounted) return;
+      setState(() {
+        _activeSeoPage = page;
+        _showDateMegaMenu = false;
+        _showAffMegaMenu = false;
+        _showStoriesMegaMenu = false;
+      });
+      SeoService.applyPageSeo(page, pushHistory: false);
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(0);
+      }
+    });
+
     // Phase 1 (0.0 -> 0.55): Giant "Aviaj" display letters animate in.
     // Phase 2 (0.42 -> 1.00): 3D angled profile cards fan out over the center.
     _bannerIntroController = AnimationController(
@@ -294,7 +312,63 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     super.dispose();
   }
 
+  void _navigateToSeoPage(
+    AviajSeoPage page, {
+    bool pushHistory = true,
+    bool closeMegaMenus = true,
+  }) {
+    setState(() {
+      _activeSeoPage = page;
+      if (closeMegaMenus) {
+        _showDateMegaMenu = false;
+        _showAffMegaMenu = false;
+        _showStoriesMegaMenu = false;
+      }
+    });
+    SeoService.applyPageSeo(page, pushHistory: pushHistory);
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
+  }
+
   void _scrollToSection(GlobalKey key) {
+    if (key == _modesKey) {
+      _navigateToSeoPage(AviajSeoPage.home);
+      return;
+    }
+    if (key == _dateSectionKey) {
+      _navigateToSeoPage(AviajSeoPage.date);
+      return;
+    }
+    if (key == _affKey) {
+      _navigateToSeoPage(AviajSeoPage.aff);
+      return;
+    }
+    if (key == _storiesKey) {
+      _navigateToSeoPage(AviajSeoPage.stories);
+      return;
+    }
+    if (key == _friendshipHubKey) {
+      _navigateToSeoPage(AviajSeoPage.friendshipHub);
+      return;
+    }
+    if (key == _seasonalGuidesKey) {
+      _navigateToSeoPage(AviajSeoPage.seasonalGuides);
+      return;
+    }
+    if (key == _safetyCenterKey) {
+      _navigateToSeoPage(AviajSeoPage.safety);
+      return;
+    }
+    if (key == _supportCenterKey) {
+      _navigateToSeoPage(AviajSeoPage.support);
+      return;
+    }
+    if (key == _appOnlyKey) {
+      _navigateToSeoPage(AviajSeoPage.appOnly);
+      return;
+    }
+
     final ctx = key.currentContext;
     if (ctx != null) {
       Scrollable.ensureVisible(
@@ -303,6 +377,1095 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         curve: Curves.easeInOutCubic,
       );
     }
+  }
+
+  List<Widget> _buildActiveSeoPageSections(
+    BuildContext context,
+    bool isDesktop,
+  ) {
+    switch (_activeSeoPage) {
+      case AviajSeoPage.home:
+        return [
+          _buildSpaciousHeroSection(context, isDesktop),
+          _buildBelowBannerIntroStrip(context, isDesktop),
+          _buildRegionalTreksAndBeachesSection(context, isDesktop),
+          Container(
+            key: _radarKey,
+            child: _buildDepartureCircleSection(context, isDesktop),
+          ),
+          Container(
+            key: _modesKey,
+            child: _buildThreeModesPillarSection(context, isDesktop),
+          ),
+          _buildGetTheAppQrPhonesBanner(context, isDesktop),
+          Container(
+            key: _pricingKey,
+            child: _buildMinimalCabinUpgradesSection(context, isDesktop),
+          ),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.date:
+        return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
+          Container(
+            key: _dateSectionKey,
+            child: _buildExploreDateFullSection(context, isDesktop),
+          ),
+          _buildGetTheAppQrPhonesBanner(context, isDesktop),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.dateCompliments:
+      case AviajSeoPage.dateIncognito:
+      case AviajSeoPage.dateVideoCalls:
+      case AviajSeoPage.dateTravelMode:
+      case AviajSeoPage.dateSnoozeMode:
+      case AviajSeoPage.dateSuperSwipe:
+        return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
+          _buildDedicatedDateFeatureSeoSection(
+            context,
+            isDesktop,
+            _activeSeoPage,
+          ),
+          _buildExploreDateFullSection(context, isDesktop),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.aff:
+        return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
+          Container(
+            key: _affKey,
+            child: _buildAffFriendsForeverSection(context, isDesktop),
+          ),
+          _buildDepartureCircleSection(context, isDesktop),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.affDeparturePlans:
+      case AviajSeoPage.affCommunityLeaders:
+        return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
+          _buildDedicatedAffFeatureSeoSection(
+            context,
+            isDesktop,
+            _activeSeoPage,
+          ),
+          _buildAffFriendsForeverSection(context, isDesktop),
+          _buildDepartureCircleSection(context, isDesktop),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.stories:
+        return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
+          Container(
+            key: _storiesKey,
+            child: _buildStoriesSection(context, isDesktop),
+          ),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.friendshipHub:
+        return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
+          Container(
+            key: _friendshipHubKey,
+            child: _buildFriendshipHubSection(context, isDesktop),
+          ),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.seasonalGuides:
+        return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
+          Container(
+            key: _seasonalGuidesKey,
+            child: _buildSeasonalDatingGuidesSection(context, isDesktop),
+          ),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.safety:
+        return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
+          Container(
+            key: _safetyCenterKey,
+            child: _buildSafetyCenterSection(context, isDesktop),
+          ),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.support:
+        return [
+          Container(
+            key: _supportCenterKey,
+            child: _buildSupportCenterSection(context, isDesktop),
+          ),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+
+      case AviajSeoPage.appOnly:
+        return [
+          Container(
+            key: _appOnlyKey,
+            child: _buildAppOnlySwitchSection(context, isDesktop),
+          ),
+          _buildConversionBannerAndFooter(context, isDesktop),
+        ];
+    }
+  }
+
+  Widget _buildStandalonePageHeaderBar(BuildContext context, bool isDesktop) {
+    final isRedHeader = _activeSeoPage.navGroup == 'Date' ||
+        _activeSeoPage.navGroup == 'AFF';
+    final bgColor = isRedHeader ? AviajTheme.loveRed : Colors.white;
+    final wordmarkColor = isRedHeader ? Colors.white : const Color(0xFF1E1E1E);
+
+    final subNavItems = <({String label, AviajSeoPage page})>[
+      if (_activeSeoPage.navGroup == 'Date') ...[
+        (label: 'Explore Date', page: AviajSeoPage.date),
+        (label: 'Compliments', page: AviajSeoPage.dateCompliments),
+        (label: 'Incognito Mode', page: AviajSeoPage.dateIncognito),
+        (label: 'Video Calls', page: AviajSeoPage.dateVideoCalls),
+        (label: 'Travel Mode', page: AviajSeoPage.dateTravelMode),
+        (label: 'Snooze Mode', page: AviajSeoPage.dateSnoozeMode),
+        (label: 'SuperSwipe', page: AviajSeoPage.dateSuperSwipe),
+      ] else if (_activeSeoPage.navGroup == 'AFF') ...[
+        (label: 'Explore AFF', page: AviajSeoPage.aff),
+        (label: 'Departure Plans', page: AviajSeoPage.affDeparturePlans),
+        (label: 'Community Leaders', page: AviajSeoPage.affCommunityLeaders),
+      ] else if (_activeSeoPage.navGroup == 'Stories') ...[
+        (label: 'Love Stories', page: AviajSeoPage.stories),
+        (label: 'The Friendship Hub', page: AviajSeoPage.friendshipHub),
+        (label: 'Seasonal Dating Guides', page: AviajSeoPage.seasonalGuides),
+      ],
+    ];
+
+    return Container(
+      width: double.infinity,
+      color: bgColor,
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              isDesktop ? 48 : 20,
+              isDesktop ? 20 : 14,
+              isDesktop ? 48 : 20,
+              14,
+            ),
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: () => _navigateToSeoPage(AviajSeoPage.home),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Text(
+                    'Aviaj',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 34,
+                      letterSpacing: -1.4,
+                      color: wordmarkColor,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                if (isDesktop)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isRedHeader
+                          ? Colors.white
+                          : const Color(0xFFF5F4F0),
+                      borderRadius: BorderRadius.circular(40),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _NavbarLink(
+                          label: 'Date',
+                          isHighlighted: _activeSeoPage.navGroup == 'Date' ||
+                              _showDateMegaMenu,
+                          onTap: () {
+                            setState(() {
+                              _showDateMegaMenu = !_showDateMegaMenu;
+                              _showAffMegaMenu = false;
+                              _showStoriesMegaMenu = false;
+                            });
+                          },
+                        ),
+                        _NavbarLink(
+                          label: 'AFF',
+                          isHighlighted: _activeSeoPage.navGroup == 'AFF' ||
+                              _showAffMegaMenu,
+                          onTap: () {
+                            setState(() {
+                              _showAffMegaMenu = !_showAffMegaMenu;
+                              _showDateMegaMenu = false;
+                              _showStoriesMegaMenu = false;
+                            });
+                          },
+                        ),
+                        _NavbarLink(
+                          label: 'Stories',
+                          isHighlighted: _activeSeoPage.navGroup == 'Stories' ||
+                              _showStoriesMegaMenu,
+                          onTap: () {
+                            setState(() {
+                              _showStoriesMegaMenu = !_showStoriesMegaMenu;
+                              _showDateMegaMenu = false;
+                              _showAffMegaMenu = false;
+                            });
+                          },
+                        ),
+                        _NavbarLink(
+                          label: 'Safety',
+                          isHighlighted: _activeSeoPage == AviajSeoPage.safety,
+                          onTap: () => _navigateToSeoPage(AviajSeoPage.safety),
+                        ),
+                        _NavbarLink(
+                          label: 'Support',
+                          isHighlighted: _activeSeoPage == AviajSeoPage.support,
+                          onTap: () => _navigateToSeoPage(AviajSeoPage.support),
+                        ),
+                      ],
+                    ),
+                  ),
+                const Spacer(),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (isDesktop) ...[
+                      InkWell(
+                        onTap: () => _navigateToSeoPage(AviajSeoPage.appOnly),
+                        borderRadius: BorderRadius.circular(40),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isRedHeader
+                                ? Colors.white.withValues(alpha: 0.18)
+                                : const Color(0xFF1E1E1E),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: const Text(
+                            'Sign in',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                    _buildRegionSelectorPill(
+                      isDarkPill: false,
+                      showFullLanguageLabel: false,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          if (_showDateMegaMenu)
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                isDesktop ? 48 : 16,
+                4,
+                isDesktop ? 48 : 16,
+                16,
+              ),
+              child: _buildExploreDateMegaMenuCard(context, isDesktop),
+            ),
+          if (_showAffMegaMenu)
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                isDesktop ? 48 : 16,
+                4,
+                isDesktop ? 48 : 16,
+                16,
+              ),
+              child: _buildExploreAffMegaMenuCard(context, isDesktop),
+            ),
+          if (_showStoriesMegaMenu)
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                isDesktop ? 48 : 16,
+                4,
+                isDesktop ? 48 : 16,
+                16,
+              ),
+              child: _buildExploreStoriesMegaMenuCard(context, isDesktop),
+            ),
+          if (subNavItems.isNotEmpty)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                horizontal: isDesktop ? 48 : 16,
+                vertical: 12,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFAF9F5),
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.black.withValues(alpha: 0.06),
+                  ),
+                  bottom: BorderSide(
+                    color: Colors.black.withValues(alpha: 0.08),
+                  ),
+                ),
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1220),
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        'Aviaj › ${_activeSeoPage.navGroup} ›',
+                        style: const TextStyle(
+                          color: Color(0xFF6E6266),
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      for (final item in subNavItems)
+                        InkWell(
+                          onTap: () => _navigateToSeoPage(item.page),
+                          borderRadius: BorderRadius.circular(24),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 7,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _activeSeoPage == item.page
+                                  ? AviajTheme.loveRed
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: _activeSeoPage == item.page
+                                    ? AviajTheme.loveRed
+                                    : const Color(0xFFE0DFD9),
+                              ),
+                            ),
+                            child: Text(
+                              item.label,
+                              style: TextStyle(
+                                color: _activeSeoPage == item.page
+                                    ? Colors.white
+                                    : const Color(0xFF1E1E1E),
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDedicatedDateFeatureSeoSection(
+    BuildContext context,
+    bool isDesktop,
+    AviajSeoPage page,
+  ) {
+    final featureConfig = switch (page) {
+      AviajSeoPage.dateCompliments => (
+          eyebrow: 'AVIAJ DATE • COMPLIMENTS',
+          headline: 'MAKE THEM BLUSH WITH AVIAJ COMPLIMENTS.',
+          lead:
+              'Stand out before you even match. Send a thoughtful Compliment on someone’s photo, bio prompt, or upcoming travel route so your first move feels personal and genuine.',
+          illustrationType: 'compliments',
+          steps: [
+            (
+              num: '01',
+              title: 'Spot a prompt or travel photo you love',
+              body:
+                  'Tap the yellow heart speech-bubble icon on any profile photo, bio prompt, or destination badge.'
+            ),
+            (
+              num: '02',
+              title: 'Write a personal, kind note',
+              body:
+                  'Share why their Manali trek photo, Goa beach prompt, or travel bucket list caught your eye.'
+            ),
+            (
+              num: '03',
+              title: 'Jump straight to the top of their queue',
+              body:
+                  'Your Compliment appears directly in their matches & likes feed so they can reply and start chatting immediately.'
+            ),
+          ],
+          faqs: [
+            (
+              q: 'How do Compliments work on Aviaj Date?',
+              a: 'Compliments let you send a short, personalized message on a specific part of someone’s profile before matching, prioritizing your profile in their feed.'
+            ),
+            (
+              q: 'Can I send a Compliment on a travel itinerary?',
+              a: 'Yes! You can compliment a member’s destination badge, bio prompt, or portrait photo to break the ice effortlessly.'
+            ),
+          ],
+        ),
+      AviajSeoPage.dateIncognito => (
+          eyebrow: 'AVIAJ DATE • INCOGNITO MODE',
+          headline: 'GO UNDERCOVER WITH AVIAJ INCOGNITO MODE.',
+          lead:
+              'Date on your own terms with complete privacy. Hide your profile from your boss, relatives, coworkers, or exes—only the people you swipe right on will ever see your profile.',
+          illustrationType: 'incognito',
+          steps: [
+            (
+              num: '01',
+              title: 'Toggle Incognito Mode in Settings',
+              body:
+                  'Activate Incognito Mode with one tap whenever you want private browsing at home or while travelling.'
+            ),
+            (
+              num: '02',
+              title: 'Browse every profile invisibly',
+              body:
+                  'Your profile remains completely hidden from the public discovery deck and local departure radars.'
+            ),
+            (
+              num: '03',
+              title: 'Reveal yourself only to people you like',
+              body:
+                  'When you swipe right or send a Compliment, your profile becomes visible exclusively to that person.'
+            ),
+          ],
+          faqs: [
+            (
+              q: 'Who can see me when Incognito Mode is turned on?',
+              a: 'Only the members you actively swipe right on (and your existing matches) can see your profile.'
+            ),
+            (
+              q: 'Does Incognito Mode work with Travel Mode?',
+              a: 'Yes. You can privately scout matches in your upcoming destination city without appearing in the public feed.'
+            ),
+          ],
+        ),
+      AviajSeoPage.dateVideoCalls => (
+          eyebrow: 'AVIAJ DATE • VIDEO CALLS & AUDIO CHATS',
+          headline: 'SOUND IT OUT WITH IN-APP VIDEO & VOICE CALLS.',
+          lead:
+              'Get as close to IRL without leaving your house. Verify chemistry, plan a shared trek, or have a virtual coffee date using encrypted HD video calls and audio chats—without ever sharing your phone number.',
+          illustrationType: 'videocall',
+          steps: [
+            (
+              num: '01',
+              title: 'Match and start a conversation',
+              body:
+                  'Once you and your match have exchanged a message, the video and voice call icons unlock at the top of your chat.'
+            ),
+            (
+              num: '02',
+              title: 'Tap Video Call or Audio Chat',
+              body:
+                  'Start a spontaneous voice check-in or schedule a face-to-face HD video date right inside the Aviaj app.'
+            ),
+            (
+              num: '03',
+              title: 'Keep your personal phone number private',
+              body:
+                  'All calls run over Aviaj’s secure in-app network so your personal contact details stay 100% private.'
+            ),
+          ],
+          faqs: [
+            (
+              q: 'Does my match see my phone number during an Aviaj Video Call?',
+              a: 'Never. Aviaj Video Calls and Audio Chats are completely in-app, so your phone number and personal details remain private.'
+            ),
+            (
+              q: 'Can I switch between audio and video during a call?',
+              a: 'Yes, you can toggle your camera or microphone on and off at any moment during the call.'
+            ),
+          ],
+        ),
+      AviajSeoPage.dateTravelMode => (
+          eyebrow: 'AVIAJ DATE • TRAVEL MODE',
+          headline: 'TAKE US AWAY WITH AVIAJ TRAVEL MODE.',
+          lead:
+              'Find your duty-free snack and match anywhere in the world before you even pack your bags. Set your city to Manali, Goa, Andaman, Bali, Paris, Dubai, or New York and line up dates before you land.',
+          illustrationType: 'travelmode',
+          steps: [
+            (
+              num: '01',
+              title: 'Pick your upcoming destination',
+              body:
+                  'Open Travel Mode and select any city, beach coast, or mountain trekking hub worldwide.'
+            ),
+            (
+              num: '02',
+              title: 'Display your Travel Mode badge',
+              body:
+                  'Aplanes-and-passport badge lets locals and fellow travellers know you are visiting soon.'
+            ),
+            (
+              num: '03',
+              title: 'Match and plan IRL meetups before arrival',
+              body:
+                  'Chat with verified locals and solo travellers so your first sunset or trek is already planned when you touch down.'
+            ),
+          ],
+          faqs: [
+            (
+              q: 'How far in advance can I use Aviaj Travel Mode?',
+              a: 'You can switch your location to any destination worldwide for up to 7 days at a time and change cities whenever your itinerary updates.'
+            ),
+            (
+              q: 'Will people know I am using Travel Mode?',
+              a: 'Yes, your profile displays a clear Travel Mode indicator showing the city you are visiting.'
+            ),
+          ],
+        ),
+      AviajSeoPage.dateSnoozeMode => (
+          eyebrow: 'AVIAJ DATE • SNOOZE MODE',
+          headline: 'TAKE A MINDFUL BREAK WITH AVIAJ SNOOZE MODE.',
+          lead:
+              'Put online dating on hold whenever you need offline time. Pause your profile for 24 hours, 72 hours, a week, or indefinitely—without losing a single match or conversation.',
+          illustrationType: 'snooze',
+          steps: [
+            (
+              num: '01',
+              title: 'Choose your Snooze duration',
+              body:
+                  'Select 24 hours, 72 hours, 1 week, or Indefinitely from your Aviaj profile settings.'
+            ),
+            (
+              num: '02',
+              title: 'Set an optional away status',
+              body:
+                  'Let existing matches know you are travelling, focusing on work, or taking a digital detox.'
+            ),
+            (
+              num: '03',
+              title: 'Return whenever you are ready',
+              body:
+                  'Disable Snooze Mode with one tap to pick up every conversation right where you left off.'
+            ),
+          ],
+          faqs: [
+            (
+              q: 'Do I lose my matches when I turn on Snooze Mode?',
+              a: 'No! All of your existing matches and chat threads remain intact while your profile is hidden from new swipes.'
+            ),
+            (
+              q: 'Can I still message my current matches while snoozed?',
+              a: 'Yes, your existing conversations remain accessible whenever you want to check in.'
+            ),
+          ],
+        ),
+      _ => (
+          eyebrow: 'AVIAJ DATE • SUPERSWIPE',
+          headline: 'GET THEIR ATTENTION WITH AVIAJ SUPERSWIPE.',
+          lead:
+              'Seen someone who passed the vibe check 100%? Send a SuperSwipe to place your profile at the front of their queue with a golden star badge so they know you’re genuinely interested.',
+          illustrationType: 'superswipe',
+          steps: [
+            (
+              num: '01',
+              title: 'Tap the golden Star icon on their profile',
+              body:
+                  'When someone’s travel style, values, and photos stand out, tap SuperSwipe instead of a standard swipe.'
+            ),
+            (
+              num: '02',
+              title: 'Priority placement in their feed',
+              body:
+                  'Your profile is boosted to the top of their discovery deck with a highlighted SuperSwipe badge.'
+            ),
+            (
+              num: '03',
+              title: 'Up to 3x higher match probability',
+              body:
+                  'Members who receive a SuperSwipe know you intentionally chose them, sparking faster, more engaged conversations.'
+            ),
+          ],
+          faqs: [
+            (
+              q: 'What does a SuperSwipe do on Aviaj?',
+              a: 'A SuperSwipe notifies the other member that you really stood out to them and places your profile at the top of their match queue.'
+            ),
+            (
+              q: 'How many SuperSwipes do Aviaj Premium members get?',
+              a: 'Business Class and First Class VIP members receive weekly complimentary SuperSwipes that renew automatically.'
+            ),
+          ],
+        ),
+    };
+
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFFFFF7EC),
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 64 : 20,
+        vertical: isDesktop ? 68 : 44,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. 2-Column SEO Feature Hero
+              isDesktop
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 6,
+                          child: _buildDateFeatureSeoLeftCopy(
+                            context,
+                            featureConfig.eyebrow,
+                            featureConfig.headline,
+                            featureConfig.lead,
+                            page,
+                          ),
+                        ),
+                        const SizedBox(width: 48),
+                        Expanded(
+                          flex: 5,
+                          child: Container(
+                            height: 330,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(28),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.08),
+                                  blurRadius: 28,
+                                  offset: const Offset(0, 12),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Transform.scale(
+                                scale: 1.25,
+                                child: _buildDateFeatureIllustration(
+                                  featureConfig.illustrationType,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildDateFeatureSeoLeftCopy(
+                          context,
+                          featureConfig.eyebrow,
+                          featureConfig.headline,
+                          featureConfig.lead,
+                          page,
+                        ),
+                        const SizedBox(height: 28),
+                        Container(
+                          height: 260,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Center(
+                            child: _buildDateFeatureIllustration(
+                              featureConfig.illustrationType,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+              const SizedBox(height: 56),
+
+              // 2. 3-Step "How It Works" SEO Cards
+              Text(
+                'How ${page.breadcrumbLabel} works on Aviaj Date',
+                style: TextStyle(
+                  color: const Color(0xFF1E1E1E),
+                  fontSize: isDesktop ? 36 : 26,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.9,
+                ),
+              ),
+              const SizedBox(height: 24),
+              if (isDesktop)
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (int i = 0; i < featureConfig.steps.length; i++) ...[
+                        if (i > 0) const SizedBox(width: 24),
+                        Expanded(
+                          child: _buildSeoStepCard(
+                            numLabel: featureConfig.steps[i].num,
+                            title: featureConfig.steps[i].title,
+                            body: featureConfig.steps[i].body,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                )
+              else
+                Column(
+                  children: [
+                    for (int i = 0; i < featureConfig.steps.length; i++) ...[
+                      if (i > 0) const SizedBox(height: 16),
+                      _buildSeoStepCard(
+                        numLabel: featureConfig.steps[i].num,
+                        title: featureConfig.steps[i].title,
+                        body: featureConfig.steps[i].body,
+                      ),
+                    ],
+                  ],
+                ),
+
+              const SizedBox(height: 48),
+
+              // 3. SEO FAQ Block
+              Text(
+                'Frequently asked questions about ${page.breadcrumbLabel}',
+                style: TextStyle(
+                  color: const Color(0xFF1E1E1E),
+                  fontSize: isDesktop ? 30 : 22,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.7,
+                ),
+              ),
+              const SizedBox(height: 20),
+              for (final faq in featureConfig.faqs)
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 14),
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xFFE8E4DC)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        faq.q,
+                        style: const TextStyle(
+                          color: Color(0xFF1E1E1E),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        faq.a,
+                        style: const TextStyle(
+                          color: Color(0xFF4A3B40),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          height: 1.45,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateFeatureSeoLeftCopy(
+    BuildContext context,
+    String eyebrow,
+    String headline,
+    String lead,
+    AviajSeoPage page,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
+            color: AviajTheme.loveRed.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            eyebrow,
+            style: const TextStyle(
+              color: AviajTheme.loveRed,
+              fontSize: 12,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.8,
+            ),
+          ),
+        ),
+        const SizedBox(height: 18),
+        Text(
+          headline,
+          style: const TextStyle(
+            color: Color(0xFF1E1E1E),
+            fontSize: 48,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -1.5,
+            height: 1.04,
+          ),
+        ),
+        const SizedBox(height: 18),
+        Text(
+          lead,
+          style: const TextStyle(
+            color: Color(0xFF3E3034),
+            fontSize: 17.5,
+            fontWeight: FontWeight.w500,
+            height: 1.48,
+          ),
+        ),
+        const SizedBox(height: 26),
+        Wrap(
+          spacing: 14,
+          runSpacing: 12,
+          children: [
+            FilledButton(
+              onPressed: () => showMobileAppDownloadModal(context),
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFF1E1E1E),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 28,
+                  vertical: 18,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40),
+                ),
+              ),
+              child: Text(
+                'Try ${page.breadcrumbLabel} on the App',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () => _navigateToSeoPage(AviajSeoPage.date),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFF1E1E1E),
+                side: const BorderSide(color: Color(0xFF1E1E1E), width: 1.6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 18,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40),
+                ),
+              ),
+              child: const Text(
+                'All Aviaj Date Features',
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 14.5,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSeoStepCard({
+    required String numLabel,
+    required String title,
+    required String body,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(26),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFFE8E4DC)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF5CC),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              'STEP $numLabel',
+              style: const TextStyle(
+                color: Color(0xFF1E1E1E),
+                fontSize: 11.5,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.6,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Color(0xFF1E1E1E),
+              fontSize: 21,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.4,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            body,
+            style: const TextStyle(
+              color: Color(0xFF4A3B40),
+              fontSize: 14.5,
+              fontWeight: FontWeight.w500,
+              height: 1.45,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDedicatedAffFeatureSeoSection(
+    BuildContext context,
+    bool isDesktop,
+    AviajSeoPage page,
+  ) {
+    final isPlans = page == AviajSeoPage.affDeparturePlans;
+    final eyebrow = isPlans
+        ? 'AFF (AVIAJ FRIENDS FOREVER) • DEPARTURE PLANS'
+        : 'AFF (AVIAJ FRIENDS FOREVER) • COMMUNITY LEADERS';
+    final headline = isPlans
+        ? 'COORDINATE GROUP TRIPS & LOCAL MEETUPS WITH AFF PLANS.'
+        : 'MEET VERIFIED LOCAL HOSTS WITH AFF COMMUNITY LEADERS.';
+    final lead = isPlans
+        ? 'Organize a group trek in Manali, a sunset beach mixer in Goa, or a weekend city walk anywhere in the world. AFF Departure Plans lets you post your schedule and build a verified crew before you arrive.'
+        : 'Our vetted AFF Community Leaders host welcoming social mixers, hiking groups, and city orientation walks across 190+ destinations so you never feel alone in a new place.';
+
+    final steps = isPlans
+        ? [
+            (
+              num: '01',
+              title: 'Create a Departure Plan or Local Hangout',
+              body:
+                  'Pick your destination, date range, and activity vibe—from Himalayan trekking to café hopping.'
+            ),
+            (
+              num: '02',
+              title: 'Invite verified AFF members nearby',
+              body:
+                  'Travellers and locals matching your dates can request to join your Villa Crew or Route Chat.'
+            ),
+            (
+              num: '03',
+              title: 'Meet up safely in real life',
+              body:
+                  'Chat in a shared group thread, verify everyone with Photo & ID badges, and enjoy the journey together.'
+            ),
+          ]
+        : [
+            (
+              num: '01',
+              title: 'Browse verified Community Leaders in your city',
+              body:
+                  'Discover local ambassadors hosting weekly runs, language exchanges, and weekend treks.'
+            ),
+            (
+              num: '02',
+              title: 'RSVP to an upcoming AFF community event',
+              body:
+                  'See who else is attending, join the event group chat, and break the ice before arriving.'
+            ),
+            (
+              num: '03',
+              title: 'Apply to become an AFF Community Leader',
+              body:
+                  'Love bringing people together? Apply in-app to host official Aviaj Friends Forever events in your city.'
+            ),
+          ];
+
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFFFFF7EC),
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 64 : 20,
+        vertical: isDesktop ? 64 : 40,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildDateFeatureSeoLeftCopy(
+                context,
+                eyebrow,
+                headline,
+                lead,
+                page,
+              ),
+              const SizedBox(height: 44),
+              if (isDesktop)
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (int i = 0; i < steps.length; i++) ...[
+                        if (i > 0) const SizedBox(width: 24),
+                        Expanded(
+                          child: _buildSeoStepCard(
+                            numLabel: steps[i].num,
+                            title: steps[i].title,
+                            body: steps[i].body,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                )
+              else
+                Column(
+                  children: [
+                    for (int i = 0; i < steps.length; i++) ...[
+                      if (i > 0) const SizedBox(height: 16),
+                      _buildSeoStepCard(
+                        numLabel: steps[i].num,
+                        title: steps[i].title,
+                        body: steps[i].body,
+                      ),
+                    ],
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -320,90 +1483,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               SingleChildScrollView(
                 controller: _scrollController,
                 child: Column(
-                  children: [
-                    // SECTION 1: FULL-BLEED ANIMATED BANNER (GIANT NAME + 3D PROFILES SLIDER)
-                    _buildSpaciousHeroSection(context, isDesktop),
-
-                    // SECTION 2: MISSION HEADLINE + 3 STEPPED CARDS WITH VERTICAL PILLS
-                    _buildBelowBannerIntroStrip(context, isDesktop),
-
-                    // SECTION 2B: REGIONAL FAMOUS HIKING, TREKKING & BEACH DESTINATIONS SHOWCASE
-                    _buildRegionalTreksAndBeachesSection(context, isDesktop),
-
-                    // SECTION 3: LIFESTYLE PHOTO + CIRCULAR STAMP EMBLEM + "SHARE YOUR NEXT ITINERARY"
-                    Container(
-                      key: _radarKey,
-                      child: _buildDepartureCircleSection(context, isDesktop),
-                    ),
-
-                    // SECTION 4: TWO SIDE-BY-SIDE SOLID RED LOVE SHOWCASE CARDS (AVIAJ DATE & AFF - AVIAJ FRIENDS FOREVER)
-                    Container(
-                      key: _modesKey,
-                      child: _buildThreeModesPillarSection(context, isDesktop),
-                    ),
-
-                    // SECTION 4A: DEDICATED "EXPLORE DATE" SECTION (HERO + "DATE THE WAY YOU WANT TO" 6-CARD GRID + "ALL THE DATING NEWS THAT'S FIT TO PRINT")
-                    Container(
-                      key: _dateSectionKey,
-                      child: _buildExploreDateFullSection(context, isDesktop),
-                    ),
-
-                    // SECTION 4B: DEDICATED FULL-BLEED "AFF — AVIAJ FRIENDS FOREVER" HERO SECTION
-                    Container(
-                      key: _affKey,
-                      child: _buildAffFriendsForeverSection(context, isDesktop),
-                    ),
-
-                    // SECTION 5: EDITORIAL QUOTE TESTIMONIAL + MONOCHROME COUPLE PORTRAIT
-                    Container(
-                      key: _storiesKey,
-                      child: _buildStoriesSection(context, isDesktop),
-                    ),
-
-                    // SECTION 5G: "THE FRIENDSHIP HUB" (SUB-NAVBAR + WAVY CLOUD BANNER + 4 FRIENDSHIP GUIDES + DARK SLATE FOOTER)
-                    Container(
-                      key: _friendshipHubKey,
-                      child: _buildFriendshipHubSection(context, isDesktop),
-                    ),
-
-                    // SECTION 5H: "SEASONAL DATING GUIDES" (FOREST HIKING HERO + INTRO + WINTER / SPRING / SUMMER 4-CARD GRIDS)
-                    Container(
-                      key: _seasonalGuidesKey,
-                      child:
-                          _buildSeasonalDatingGuidesSection(context, isDesktop),
-                    ),
-
-                    // SECTION 5I: "AVIAJ SAFETY CENTER" ("YOUR SAFETY COMES FIRST, ALWAYS" HERO + 8 ILLUSTRATED SAFETY FEATURE CARDS)
-                    Container(
-                      key: _safetyCenterKey,
-                      child: _buildSafetyCenterSection(context, isDesktop),
-                    ),
-
-                    // SECTION 5J: "AVIAJ SUPPORT / HELP CENTER" ("HOW CAN WE HELP?" HERO + 3 CATEGORY CARDS + "POPULAR TOPICS" + "SAFETY CENTER" / "SUPPORT AND RESOURCES")
-                    Container(
-                      key: _supportCenterKey,
-                      child: _buildSupportCenterSection(context, isDesktop),
-                    ),
-
-                    // SECTION 5K: "AVIAJ IS NOW APP-ONLY." ("GET THE APP" 2-PHONE STAGE + "WHY SWITCH TO THE AVIAJ APP?" 3 ILLUSTRATED CARDS)
-                    Container(
-                      key: _appOnlyKey,
-                      child: _buildAppOnlySwitchSection(context, isDesktop),
-                    ),
-
-                    // SECTION 6: "GET THE APP" QR CODE + 3 FANNED IPHONE MOCKUPS BANNER
-                    _buildGetTheAppQrPhonesBanner(context, isDesktop),
-
-                    // SECTION 7: MINIMAL CABIN CLASS UPGRADES (STRIPE acct_1TNTVyJD1U0jWVOT)
-                    Container(
-                      key: _pricingKey,
-                      child:
-                          _buildMinimalCabinUpgradesSection(context, isDesktop),
-                    ),
-
-                    // SECTION 8: MULTI-COLUMN SITEMAP FOOTER
-                    _buildConversionBannerAndFooter(context, isDesktop),
-                  ],
+                  children: _buildActiveSeoPageSections(context, isDesktop),
                 ),
               ),
               if (_showPrivacyBanner)
@@ -2205,12 +3285,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
   /// Interactive "Explore Date ›" Mega-Menu Card (`Compliments ›`, `Incognito Mode ›`, `Video Calls ›`, `Travel mode ›`, `Snooze mode ›`, `SuperSwipe ›`)
   Widget _buildExploreDateMegaMenuCard(BuildContext context, bool isDesktop) {
-    Widget buildFeatureItem(String title, String subtitle) {
+    Widget buildFeatureItem(
+      String title,
+      String subtitle,
+      AviajSeoPage targetPage,
+    ) {
       return InkWell(
-        onTap: () {
-          setState(() => _showDateMegaMenu = false);
-          _scrollToSection(_dateSectionKey);
-        },
+        onTap: () => _navigateToSeoPage(targetPage),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -2283,10 +3364,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       Expanded(
                         flex: 5,
                         child: InkWell(
-                          onTap: () {
-                            setState(() => _showDateMegaMenu = false);
-                            _scrollToSection(_dateSectionKey);
-                          },
+                          onTap: () => _navigateToSeoPage(AviajSeoPage.date),
                           child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -2322,16 +3400,19 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             buildFeatureItem(
                               'Compliments',
                               'Throw some Compliments their way so you stand out.',
+                              AviajSeoPage.dateCompliments,
                             ),
                             const SizedBox(height: 14),
                             buildFeatureItem(
                               'Video Calls',
                               'Get as close to IRL without leaving your house.',
+                              AviajSeoPage.dateVideoCalls,
                             ),
                             const SizedBox(height: 14),
                             buildFeatureItem(
                               'Snooze mode',
                               'Put dating on hold with Snooze Mode.',
+                              AviajSeoPage.dateSnoozeMode,
                             ),
                           ],
                         ),
@@ -2345,16 +3426,19 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             buildFeatureItem(
                               'Incognito Mode',
                               'Hide your profile from your boss, relatives, or exes.',
+                              AviajSeoPage.dateIncognito,
                             ),
                             const SizedBox(height: 14),
                             buildFeatureItem(
                               'Travel mode',
                               'Find your duty-free snack and match anywhere.',
+                              AviajSeoPage.dateTravelMode,
                             ),
                             const SizedBox(height: 14),
                             buildFeatureItem(
                               'SuperSwipe',
                               'Seen someone you like? Let them know.',
+                              AviajSeoPage.dateSuperSwipe,
                             ),
                           ],
                         ),
@@ -2365,10 +3449,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
-                        onTap: () {
-                          setState(() => _showDateMegaMenu = false);
-                          _scrollToSection(_dateSectionKey);
-                        },
+                        onTap: () => _navigateToSeoPage(AviajSeoPage.date),
                         child: const Text(
                           'Explore Date ›',
                           style: TextStyle(
@@ -2531,6 +3612,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         String boldFeature,
                         String postText,
                         String illustrationType,
+                        AviajSeoPage seoPage,
                       })>[
                         (
                           title: 'Go undercover',
@@ -2540,6 +3622,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           postText:
                               ' to hide your profile from your boss, relatives, or exes.',
                           illustrationType: 'incognito',
+                          seoPage: AviajSeoPage.dateIncognito,
                         ),
                         (
                           title: 'Make them blush',
@@ -2549,6 +3632,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           postText:
                               ' their way so you stand out from the crowd.',
                           illustrationType: 'compliments',
+                          seoPage: AviajSeoPage.dateCompliments,
                         ),
                         (
                           title: 'Sound it out',
@@ -2558,6 +3642,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           postText:
                               ' to get as close to IRL without leaving your house.',
                           illustrationType: 'videocall',
+                          seoPage: AviajSeoPage.dateVideoCalls,
                         ),
                         (
                           title: 'Take a break',
@@ -2567,6 +3652,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           postText:
                               '. When you’re ready to date again, you know where we are.',
                           illustrationType: 'snooze',
+                          seoPage: AviajSeoPage.dateSnoozeMode,
                         ),
                         (
                           title: 'Get their attention',
@@ -2576,6 +3662,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           boldFeature: 'SuperSwipe',
                           postText: '.',
                           illustrationType: 'superswipe',
+                          seoPage: AviajSeoPage.dateSuperSwipe,
                         ),
                         (
                           title: 'Take us away',
@@ -2585,6 +3672,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           boldFeature: 'Travel Mode',
                           postText: '.',
                           illustrationType: 'travelmode',
+                          seoPage: AviajSeoPage.dateTravelMode,
                         ),
                       ];
 
@@ -2595,7 +3683,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           return SizedBox(
                             width: cardWidth,
                             child: InkWell(
-                              onTap: widget.onOpenFullMobilePreview,
+                              onTap: () => _navigateToSeoPage(f.seoPage),
                               borderRadius: BorderRadius.circular(24),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -3240,10 +4328,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       Expanded(
                         flex: 5,
                         child: InkWell(
-                          onTap: () {
-                            setState(() => _showAffMegaMenu = false);
-                            _scrollToSection(_affKey);
-                          },
+                          onTap: () => _navigateToSeoPage(AviajSeoPage.aff),
                           child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -3274,10 +4359,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       Expanded(
                         flex: 3,
                         child: InkWell(
-                          onTap: () {
-                            setState(() => _showAffMegaMenu = false);
-                            _scrollToSection(_affKey);
-                          },
+                          onTap: () =>
+                              _navigateToSeoPage(AviajSeoPage.affDeparturePlans),
                           child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -3318,10 +4401,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       Expanded(
                         flex: 3,
                         child: InkWell(
-                          onTap: () {
-                            setState(() => _showAffMegaMenu = false);
-                            _scrollToSection(_affKey);
-                          },
+                          onTap: () => _navigateToSeoPage(
+                            AviajSeoPage.affCommunityLeaders,
+                          ),
                           child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -3364,10 +4446,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
-                        onTap: () {
-                          setState(() => _showAffMegaMenu = false);
-                          _scrollToSection(_affKey);
-                        },
+                        onTap: () => _navigateToSeoPage(AviajSeoPage.aff),
                         child: const Text(
                           'Explore AFF (Aviaj Friends Forever) ›',
                           style: TextStyle(

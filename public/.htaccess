@@ -1,8 +1,13 @@
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-    RewriteRule ^index\.html$ - [L]
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule . /index.html [L]
+  RewriteEngine On
+  RewriteBase /
+
+  # Allow existing files and directories (JS, WASM, assets, PHP endpoints, sitemap.xml, robots.txt, app-ads.txt)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Route all SEO header & sub-header URLs through seo_router.php so crawlers and users receive page-specific SEO tags
+  RewriteRule ^ seo_router.php [L,QSA]
 </IfModule>
+

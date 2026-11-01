@@ -1,11 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <base href="/">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Aviaj — Solo & Group Travel Buddy, Short-Term Vacation Romance, and Long-Term Relationship Dating Platform.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Meet your next co-pilot on Aviaj. Connect with verified solo & group travel buddies, vacation romance matches, and lifelong relationship partners across Manali, Goa, Andaman, USA, Europe & Middle East.">
+  <meta name="keywords" content="Aviaj, travel dating app, travel buddy app, vacation romance, solo travel companions, Manali trek buddies, Goa travel dating, relationship app">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://aviaj.com/">
+
+  <!-- Open Graph / Social SEO Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Aviaj">
+  <meta property="og:title" content="Aviaj — Travel Buddy, Vacation Romance & Relationship Dating App">
+  <meta property="og:description" content="Meet your next co-pilot on Aviaj. Connect with verified solo & group travel buddies, vacation romance matches, and lifelong relationship partners.">
+  <meta property="og:url" content="https://aviaj.com/">
+  <meta property="og:image" content="https://aviaj.com/icons/Icon-512.png">
+
+  <!-- Twitter Card SEO Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aviaj — Travel Buddy, Vacation Romance & Relationship Dating App">
+  <meta name="twitter:description" content="Meet your next co-pilot on Aviaj. Connect with verified solo & group travel buddies, vacation romance matches, and lifelong relationship partners.">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -16,10 +33,87 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>Aviaj — Travel Buddy & Relationship Dating App for Solo & Group Travellers</title>
+  <title>Aviaj — Travel Buddy, Vacation Romance & Relationship Dating App</title>
   <link rel="manifest" href="manifest.json">
 
+  <!-- Structured Data (JSON-LD) -->
+  <script id="aviaj-jsonld" type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Aviaj",
+    "url": "https://aviaj.com/",
+    "description": "Aviaj — Solo & Group Travel Buddy, Vacation Romance, and Relationship Dating Platform."
+  }
+  </script>
+
   <script>
+    // Dynamic SEO & Multi-Page History Manager for Aviaj Header Pages
+    window.__aviajGetCurrentPath = function() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const queryPage = params.get("page");
+        if (queryPage) {
+          return queryPage.startsWith("/") ? queryPage : "/" + queryPage;
+        }
+        return window.location.pathname || "/";
+      } catch (_) {
+        return "/";
+      }
+    };
+
+    window.__aviajSetMeta = function(selector, attrName, attrVal, contentVal) {
+      let el = document.querySelector(selector);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attrName, attrVal);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", contentVal);
+    };
+
+    window.__aviajApplySeo = function(path, title, description, keywords, canonicalUrl, jsonLd, pushHistory) {
+      try {
+        document.title = title;
+        window.__aviajSetMeta('meta[name="description"]', 'name', 'description', description);
+        window.__aviajSetMeta('meta[name="keywords"]', 'name', 'keywords', keywords);
+        window.__aviajSetMeta('meta[property="og:title"]', 'property', 'og:title', title);
+        window.__aviajSetMeta('meta[property="og:description"]', 'property', 'og:description', description);
+        window.__aviajSetMeta('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
+        window.__aviajSetMeta('meta[name="twitter:title"]', 'name', 'twitter:title', title);
+        window.__aviajSetMeta('meta[name="twitter:description"]', 'name', 'twitter:description', description);
+
+        let canonicalEl = document.querySelector('link[rel="canonical"]');
+        if (!canonicalEl) {
+          canonicalEl = document.createElement("link");
+          canonicalEl.setAttribute("rel", "canonical");
+          document.head.appendChild(canonicalEl);
+        }
+        canonicalEl.setAttribute("href", canonicalUrl);
+
+        let ldEl = document.getElementById("aviaj-jsonld");
+        if (!ldEl) {
+          ldEl = document.createElement("script");
+          ldEl.id = "aviaj-jsonld";
+          ldEl.type = "application/ld+json";
+          document.head.appendChild(ldEl);
+        }
+        ldEl.textContent = jsonLd;
+
+        if (pushHistory && window.location.pathname !== path) {
+          window.history.pushState({ path: path }, title, path);
+        }
+      } catch (_) {}
+    };
+
+    window.__aviajRegisterPopState = function(callback) {
+      window.addEventListener("popstate", function() {
+        if (typeof callback === "function") {
+          callback(window.__aviajGetCurrentPath());
+        }
+      });
+    };
+
     // Live IP & VPN Geolocation Resolver (supports Turbo VPN, browser proxies, and global CDNs)
     window.__aviajDetectedCountry = "";
     window.__aviajFetchCountry = async function() {
