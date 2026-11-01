@@ -7238,369 +7238,201 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     );
   }
 
-  /// SECTION 8: Two-Tier Editorial Footer:
-  ///   1) Upper White Footer (`Aviaj` wordmark + rounded solid Red Love QR card on left, 3 link columns + social icons + region selector pill on right)
-  ///   2) Lower Deep Dark Crimson (`#3B040C`) Footer (Multi-column links + region pill + Colossal Full-Bleed Bright Red `AVIAJ` wordmark spanning 100% width)
+  /// SECTION 8: Single Consistent Red Editorial Footer:
+  /// Deep Dark Crimson (`#3B040C`) Footer with Red Headings, Multi-column SEO links,
+  /// Language/Region Selector Pill, QR App Download Badge, and Colossal Full-Bleed Bright Red `AVIAJ` wordmark spanning 100% width.
   Widget _buildConversionBannerAndFooter(
     BuildContext context,
     bool isDesktop,
   ) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return Column(
-      children: [
-        // TIER 1: UPPER WHITE EDITORIAL FOOTER (Reference Screenshot 1: Giant Wordmark + QR Box Left, 3 Link Columns + Social + Region Pill Right)
-        Container(
-          width: double.infinity,
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(
-            horizontal: isDesktop ? 72 : 24,
-            vertical: isDesktop ? 76 : 48,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1220),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  isDesktop
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Left Column: Giant "Aviaj" Wordmark + Solid Red Love QR Code Box
-                            Expanded(
-                              flex: 5,
-                              child: _buildUpperFooterLeftBrandQr(context),
-                            ),
-                            const SizedBox(width: 48),
-                            // Right Column: 3 Sitemap Link Columns ("Our apps", "Company", "Legal")
-                            Expanded(
-                              flex: 7,
-                              child: _buildUpperFooterRightLinks(context),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildUpperFooterLeftBrandQr(context),
-                            const SizedBox(height: 40),
-                            _buildUpperFooterRightLinks(context),
-                          ],
-                        ),
-                  const SizedBox(height: 36),
-                  // Bottom Row of Upper White Footer: Social Media Icons + Region Selector Pill
-                  Wrap(
-                    spacing: 24,
-                    runSpacing: 16,
-                    alignment: WrapAlignment.spaceBetween,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildSocialIconCircle(Icons.camera_alt_outlined),
-                          const SizedBox(width: 12),
-                          _buildSocialIconCircle(Icons.facebook_rounded),
-                          const SizedBox(width: 12),
-                          _buildSocialIconCircle(Icons.close_rounded),
-                          const SizedBox(width: 12),
-                          _buildSocialIconCircle(Icons.business_center_rounded),
-                          const SizedBox(width: 12),
-                          _buildSocialIconCircle(Icons.push_pin_outlined),
-                          const SizedBox(width: 12),
-                          _buildSocialIconCircle(Icons.play_circle_fill_rounded),
-                          const SizedBox(width: 12),
-                          _buildSocialIconCircle(Icons.music_note_rounded),
-                        ],
-                      ),
-                      _buildRegionSelectorPill(
-                        isDarkPill: false,
-                        showFullLanguageLabel: false,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFF3B040C),
+      padding: EdgeInsets.only(
+        top: isDesktop ? 64 : 44,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isDesktop ? 72 : 24,
             ),
-          ),
-        ),
-
-        // TIER 2: LOWER DEEP DARK CRIMSON FOOTER + COLOSSAL FULL-BLEED BRIGHT RED "AVIAJ" WORDMARK (Reference Screenshot 2)
-        Container(
-          width: double.infinity,
-          color: const Color(0xFF3B040C),
-          padding: EdgeInsets.only(
-            top: isDesktop ? 64 : 44,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isDesktop ? 72 : 24,
-                ),
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1220),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1220),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Wrap(
+                      spacing: 48,
+                      runSpacing: 36,
                       children: [
-                        Wrap(
-                          spacing: 48,
-                          runSpacing: 36,
-                          children: [
-                            // Left Editorial Description + Dark Region Selector Pill
-                            SizedBox(
-                              width: isDesktop ? 300 : double.infinity,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Aviaj is where travel connections actually start, whether you’re looking for a lifelong relationship partner, a spontaneous vacation romance, or a verified travel co-pilot. Available in 190 countries with Destination Radar™, Departure Prompts™, and Crew Villas built for every kind of connection. Download free on iOS and Android.',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13.5,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.5,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 22),
-                                  _buildRegionSelectorPill(
-                                    isDarkPill: true,
-                                    showFullLanguageLabel: true,
-                                  ),
-                                ],
+                        // Left Editorial Description + Dark Region Selector Pill + Red QR Card
+                        SizedBox(
+                          width: isDesktop ? 310 : double.infinity,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Aviaj is where travel connections actually start, whether you’re looking for a lifelong relationship partner, a spontaneous vacation romance, or a verified travel co-pilot. Available in 190 countries with Destination Radar™, Departure Prompts™, and Crew Villas built for every kind of connection. Download free on iOS and Android.',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.5,
+                                ),
                               ),
-                            ),
-                            _FooterColumn(
-                              title: 'LEGAL & PRIVACY',
-                              items: const [
-                                'Do not sell or share my personal information',
-                                'Manage cookies',
-                                'Consumer Health Data Privacy Policy',
-                                'Terms',
-                                'Cookie Policy',
-                                'Intellectual Property',
-                                'Community Guidelines',
-                                'Safety Policy Information',
-                                'Accessibility Statement',
-                              ],
-                              onTap: () => _showPrivacyChoicesModal(context),
-                            ),
-                            _FooterColumn(
-                              title: 'DESTINATIONS',
-                              items: const [
-                                'Destinations',
-                                'Departure Stories',
-                                'Press Room',
-                                'Contact',
-                                'Promo Code',
-                                'Support',
-                                'Gift Cards',
-                              ],
-                              onTap: () => _scrollToSection(_storiesKey),
-                            ),
-                            _FooterColumn(
-                              title: 'CAREERS',
-                              items: const [
-                                'Careers Portal',
-                                'Tech Blog',
-                                'Stripe (${AviajStripeService.defaultStripeAccountId})',
-                                'AdMob & Unity Ads',
-                              ],
-                              onTap: () => _scrollToSection(_pricingKey),
-                            ),
-                            _FooterColumn(
-                              title: 'GET THE APP',
-                              items: const [
-                                'App Store (iOS)',
-                                'Google Play Store',
-                                'Instagram',
-                                'TikTok',
-                                'YouTube',
-                                'X',
-                              ],
-                              onTap: () => showMobileAppDownloadModal(context),
-                            ),
-                          ],
+                              const SizedBox(height: 20),
+                              _buildRegionSelectorPill(
+                                isDarkPill: true,
+                                showFullLanguageLabel: true,
+                              ),
+                              const SizedBox(height: 20),
+                              InkWell(
+                                onTap: () => showMobileAppDownloadModal(context),
+                                borderRadius: BorderRadius.circular(18),
+                                child: Container(
+                                  padding: const EdgeInsets.all(14),
+                                  decoration: BoxDecoration(
+                                    color: AviajTheme.loveRed,
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: 68,
+                                        height: 68,
+                                        padding: const EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            const Icon(
+                                              Icons.qr_code_2_rounded,
+                                              size: 56,
+                                              color: AviajTheme.midnightNavy,
+                                            ),
+                                            Container(
+                                              width: 16,
+                                              height: 16,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                              ),
+                                              child: const Icon(
+                                                Icons.favorite_rounded,
+                                                color: AviajTheme.loveRed,
+                                                size: 11,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      const Flexible(
+                                        child: Text(
+                                          'Scan the QR\ncode to get the\nAviaj app',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 14,
+                                            height: 1.25,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 36),
+                        _FooterColumn(
+                          title: 'LEGAL & PRIVACY',
+                          items: const [
+                            'Do not sell or share my personal information',
+                            'Manage cookies',
+                            'Consumer Health Data Privacy Policy',
+                            'Terms',
+                            'Cookie Policy',
+                            'Intellectual Property',
+                            'Community Guidelines',
+                            'Safety Policy Information',
+                            'Accessibility Statement',
+                          ],
+                          onTap: () => _showPrivacyChoicesModal(context),
+                        ),
+                        _FooterColumn(
+                          title: 'DESTINATIONS',
+                          items: const [
+                            'Destinations',
+                            'Departure Stories',
+                            'The Friendship Hub',
+                            'Seasonal Dating Guides',
+                            'Safety Center',
+                            'Support',
+                            'Gift Cards',
+                          ],
+                          onTap: () => _navigateToSeoPage(AviajSeoPage.stories),
+                        ),
+                        _FooterColumn(
+                          title: 'CAREERS',
+                          items: const [
+                            'Careers Portal',
+                            'Tech Blog',
+                            'Stripe (${AviajStripeService.defaultStripeAccountId})',
+                            'AdMob & Unity Ads',
+                          ],
+                          onTap: () => _scrollToSection(_pricingKey),
+                        ),
+                        _FooterColumn(
+                          title: 'GET THE APP',
+                          items: const [
+                            'App Store (iOS)',
+                            'Google Play Store',
+                            'Instagram',
+                            'TikTok',
+                            'YouTube',
+                            'X',
+                          ],
+                          onTap: () => showMobileAppDownloadModal(context),
+                        ),
                       ],
                     ),
+                    const SizedBox(height: 36),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK SPANNING 100% WIDTH AT THE VERY BOTTOM
+          SizedBox(
+            width: screenWidth,
+            child: FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  'AVIAJ',
+                  style: TextStyle(
+                    color: AviajTheme.loveRed,
+                    fontSize: 320,
+                    fontWeight: FontWeight.w900,
+                    height: 0.84,
+                    letterSpacing: -12,
                   ),
                 ),
               ),
-              // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK SPANNING 100% WIDTH AT THE VERY BOTTOM
-              SizedBox(
-                width: screenWidth,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      'AVIAJ',
-                      style: TextStyle(
-                        color: AviajTheme.loveRed,
-                        fontSize: 320,
-                        fontWeight: FontWeight.w900,
-                        height: 0.84,
-                        letterSpacing: -12,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUpperFooterLeftBrandQr(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Aviaj',
-          style: TextStyle(
-            color: AviajTheme.midnightNavy,
-            fontSize: 64,
-            fontWeight: FontWeight.w900,
-            letterSpacing: -2.2,
-            height: 1.0,
-          ),
-        ),
-        const SizedBox(height: 64),
-        InkWell(
-          onTap: () => showMobileAppDownloadModal(context),
-          borderRadius: BorderRadius.circular(22),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 335),
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: AviajTheme.loveRed,
-              borderRadius: BorderRadius.circular(22),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 118,
-                  height: 118,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      const Icon(
-                        Icons.qr_code_2_rounded,
-                        size: 100,
-                        color: AviajTheme.midnightNavy,
-                      ),
-                      Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Icon(
-                          Icons.favorite_rounded,
-                          color: AviajTheme.loveRed,
-                          size: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 18),
-                const Expanded(
-                  child: Text(
-                    'Scan the QR\ncode to get the\nAviaj app',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16.5,
-                      height: 1.28,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUpperFooterRightLinks(BuildContext context) {
-    return Wrap(
-      spacing: 56,
-      runSpacing: 32,
-      children: [
-        _LightFooterColumn(
-          title: 'Our apps',
-          items: const [
-            'Aviaj Date',
-            'AFF',
-            'Aviaj Crew ↗',
-          ],
-          boldItems: true,
-          onTap: () => _scrollToSection(_affKey),
-        ),
-        _LightFooterColumn(
-          title: 'Company',
-          items: const [
-            'About',
-            'Contact us',
-            'Careers ↗',
-            'Investors ↗',
-            'The Shop ↗',
-            'The Buzz ↗',
-            'Support',
-          ],
-          boldItems: true,
-          onTap: widget.onOpenFullMobilePreview,
-        ),
-        _LightFooterColumn(
-          title: 'Legal',
-          items: const [
-            'Guidelines',
-            'Manage cookies',
-            'Privacy policy',
-            'Terms and conditions',
-            'Accessibility at Aviaj',
-            'Notice at collection',
-            'Modern Slavery act',
-            'Washington Consumer Health\nPrivacy Policy',
-          ],
-          boldItems: false,
-          onTap: () => _showPrivacyChoicesModal(context),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialIconCircle(IconData icon) {
-    return InkWell(
-      onTap: widget.onOpenFullMobilePreview,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        width: 34,
-        height: 34,
-        decoration: BoxDecoration(
-          color: AviajTheme.midnightNavy.withValues(alpha: 0.08),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          icon,
-          size: 17,
-          color: AviajTheme.midnightNavy,
-        ),
+        ],
       ),
     );
   }
@@ -8257,368 +8089,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             ),
           ),
         ),
-
-        // 4. Dark Slate / Charcoal Friendship Hub Footer (`#1B2226`)
-        Container(
-          width: double.infinity,
-          color: const Color(0xFF1B2226),
-          padding: EdgeInsets.fromLTRB(
-            isDesktop ? 88 : 24,
-            isDesktop ? 64 : 44,
-            isDesktop ? 88 : 24,
-            isDesktop ? 44 : 32,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1240),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top Row: Small `aviaj` + `DOWNLOAD NOW` pill on left, App Store Trend of the Year Rosette on right
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 14,
-                                height: 14,
-                                decoration: BoxDecoration(
-                                  color: AviajTheme.loveRed,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: const Icon(
-                                  Icons.menu_rounded,
-                                  color: Colors.white,
-                                  size: 10,
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              const Text(
-                                'aviaj',
-                                style: TextStyle(
-                                  color: AviajTheme.loveRed,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: -0.4,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 26),
-                          InkWell(
-                            onTap: () => showMobileAppDownloadModal(context),
-                            borderRadius: BorderRadius.circular(40),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 34,
-                                vertical: 12,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
-                                border: Border.all(
-                                  color: AviajTheme.loveRed,
-                                  width: 1.4,
-                                ),
-                              ),
-                              child: const Text(
-                                'DOWNLOAD NOW',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.5,
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FontStyle.italic,
-                                  letterSpacing: 0.6,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      // Geometric App Store "Trend of the Year: Connection" Spirograph Rosette Badge
-                      SizedBox(
-                        width: 128,
-                        height: 128,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            CustomPaint(
-                              size: const Size(128, 128),
-                              painter: const _AppStoreTrendRosettePainter(),
-                            ),
-                            const Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  ' App Store',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8.5,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                SizedBox(height: 3),
-                                Text(
-                                  'Trend of the Year:\nConnection',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10.5,
-                                    fontWeight: FontWeight.w800,
-                                    height: 1.15,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  '2021',
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 8.5,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: isDesktop ? 64 : 40),
-                  // Middle Row: Two Horizontal Accent Rules + 3 Columns (`The App`, `The Company`, `The Buzz`)
-                  isDesktop
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 5,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 1.2,
-                                    width: double.infinity,
-                                    color: AviajTheme.loveRed,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        flex: 4,
-                                        child: _buildFriendshipDarkFooterCol(
-                                          context,
-                                          title: 'The App',
-                                          items: const [
-                                            'Aviaj Date',
-                                            'Aviaj AFF',
-                                            'Aviaj Bizz',
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 6,
-                                        child: _buildFriendshipDarkFooterCol(
-                                          context,
-                                          title: 'The Company',
-                                          items: const [
-                                            'Help Centre',
-                                            'Events',
-                                            'Guidelines',
-                                            'Privacy Policy',
-                                            'Terms & Conditions',
-                                            'Do not sell or share my personal information',
-                                            'Contact Us',
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 64),
-                            Expanded(
-                              flex: 5,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 1.2,
-                                    width: double.infinity,
-                                    color: AviajTheme.loveRed,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  _buildFriendshipDarkFooterCol(
-                                    context,
-                                    title: 'The Buzz',
-                                    items: const [
-                                      'Love',
-                                      'Friendship',
-                                      'Career',
-                                      'Wellness',
-                                      'How-to',
-                                      'Events',
-                                      'Submit a story',
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildFriendshipDarkFooterCol(
-                              context,
-                              title: 'The App',
-                              items: const [
-                                'Aviaj Date',
-                                'Aviaj AFF',
-                                'Aviaj Bizz',
-                              ],
-                            ),
-                            const SizedBox(height: 24),
-                            _buildFriendshipDarkFooterCol(
-                              context,
-                              title: 'The Company',
-                              items: const [
-                                'Help Centre',
-                                'Events',
-                                'Guidelines',
-                                'Privacy Policy',
-                                'Terms & Conditions',
-                                'Do not sell or share my personal information',
-                                'Contact Us',
-                              ],
-                            ),
-                            const SizedBox(height: 24),
-                            _buildFriendshipDarkFooterCol(
-                              context,
-                              title: 'The Buzz',
-                              items: const [
-                                'Love',
-                                'Friendship',
-                                'Career',
-                                'Wellness',
-                                'How-to',
-                                'Events',
-                                'Submit a story',
-                              ],
-                            ),
-                          ],
-                        ),
-                  SizedBox(height: isDesktop ? 88 : 44),
-                  // Bottom Row: `MAKE THE FIRST MOVE™` + Hexagonal Social Icons + Scroll-to-Top Button
-                  Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 24,
-                    runSpacing: 20,
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'MAKE THE FIRST MOVE™',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w900,
-                              fontStyle: FontStyle.italic,
-                              letterSpacing: 0.4,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            '©2026 Aviaj. All Rights Reserved',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 11.5,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (final label in const [
-                            'IG',
-                            'f',
-                            '𝕏',
-                            'in',
-                            'P',
-                            '▶',
-                            '♪',
-                          ])
-                            Padding(
-                              padding: const EdgeInsets.only(right: 14),
-                              child: InkWell(
-                                onTap: widget.onOpenFullMobilePreview,
-                                borderRadius: BorderRadius.circular(20),
-                                child: Container(
-                                  width: 34,
-                                  height: 34,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: AviajTheme.loveRed,
-                                      width: 1.2,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    label,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          const SizedBox(width: 8),
-                          InkWell(
-                            onTap: () {
-                              _scrollController.animateTo(
-                                0,
-                                duration: const Duration(milliseconds: 600),
-                                curve: Curves.easeOutCubic,
-                              );
-                            },
-                            borderRadius: BorderRadius.circular(24),
-                            child: Container(
-                              width: 42,
-                              height: 42,
-                              decoration: const BoxDecoration(
-                                color: AviajTheme.loveRed,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.keyboard_arrow_up_rounded,
-                                color: Colors.white,
-                                size: 26,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -8708,52 +8178,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildFriendshipDarkFooterCol(
-    BuildContext context, {
-    required String title,
-    required List<String> items,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: AviajTheme.loveRed,
-            fontSize: 19,
-            fontWeight: FontWeight.w600,
-            letterSpacing: -0.3,
-          ),
-        ),
-        const SizedBox(height: 14),
-        for (final item in items)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 9),
-            child: InkWell(
-              onTap: () {
-                if (item.contains('Do not sell') || item.contains('Privacy')) {
-                  _showPrivacyChoicesModal(context);
-                } else if (item.contains('Submit a story')) {
-                  _openSubmitYourStoryModal(context);
-                } else {
-                  _scrollToSection(_affKey);
-                }
-              },
-              child: Text(
-                item,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  height: 1.35,
-                ),
-              ),
-            ),
-          ),
-      ],
     );
   }
 
@@ -11620,10 +11044,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     const SizedBox(height: 56),
                     // 5. 2-Column Brand Callout Cards ("Safety Center" & "Support and resources")
                     _buildSupportBottomCalloutRow(context, isDesktop),
-
-                    const SizedBox(height: 76),
-                    // 6. Support Upper White Footer ("Aviaj" wordmark + "Scan the QR code to download the app" + Our Apps / Company / Legal + English (United States) ⌄ + Sign in)
-                    _buildSupportWhiteFooter(context, isDesktop),
                     const SizedBox(height: 36),
                   ],
                 ),
@@ -11902,250 +11322,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         safetyCenterCard,
         const SizedBox(height: 18),
         supportResourcesCard,
-      ],
-    );
-  }
-
-  Widget _buildSupportWhiteFooter(BuildContext context, bool isDesktop) {
-    Widget buildFooterCol(
-      String heading,
-      List<({String label, VoidCallback onTap})> links,
-    ) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            heading,
-            style: const TextStyle(
-              color: Color(0xFF7A7A7A),
-              fontSize: 12.5,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 14),
-          for (final item in links) ...[
-            InkWell(
-              onTap: item.onTap,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Text(
-                  item.label,
-                  style: TextStyle(
-                    color: const Color(0xFF1E1E1E),
-                    fontSize: heading == 'Legal' ? 12.5 : 16,
-                    fontWeight: heading == 'Legal'
-                        ? FontWeight.w600
-                        : FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ],
-      );
-    }
-
-    final leftColumn = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Aviaj',
-          style: TextStyle(
-            color: Color(0xFF242424),
-            fontSize: 72,
-            fontWeight: FontWeight.w900,
-            letterSpacing: -2.6,
-            height: 1.0,
-          ),
-        ),
-        const SizedBox(height: 44),
-        InkWell(
-          onTap: widget.onOpenFullMobilePreview,
-          borderRadius: BorderRadius.circular(18),
-          child: Container(
-            width: 325,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AviajTheme.loveRed,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 112,
-                  height: 112,
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      const Icon(
-                        Icons.qr_code_2_rounded,
-                        size: 96,
-                        color: AviajTheme.midnightNavy,
-                      ),
-                      Container(
-                        width: 22,
-                        height: 22,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Icon(
-                          Icons.favorite_rounded,
-                          color: AviajTheme.loveRed,
-                          size: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                const Expanded(
-                  child: Text(
-                    'Scan the QR code to\ndownload the app',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      height: 1.32,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-
-    final rightColumn = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Wrap(
-          spacing: 56,
-          runSpacing: 28,
-          children: [
-            buildFooterCol('Our Apps', [
-              (
-                label: 'Aviaj Date',
-                onTap: () => _scrollToSection(_dateSectionKey),
-              ),
-              (label: 'AFF', onTap: () => _scrollToSection(_affKey)),
-              (
-                label: 'Departure Circles ↗',
-                onTap: () => _scrollToSection(_radarKey),
-              ),
-            ]),
-            buildFooterCol('Company', [
-              (label: 'About', onTap: () => _scrollToSection(_modesKey)),
-              (
-                label: 'Contact us',
-                onTap: () => _openContactSupportModal(context),
-              ),
-              (label: 'Careers ↗', onTap: widget.onOpenFullMobilePreview),
-              (label: 'Investors ↗', onTap: () => _scrollToSection(_pricingKey)),
-              (label: 'The shop ↗', onTap: () => _scrollToSection(_pricingKey)),
-              (
-                label: 'Support',
-                onTap: () => _scrollToSection(_supportCenterKey),
-              ),
-            ]),
-            buildFooterCol('Legal', [
-              (
-                label: 'Guidelines',
-                onTap: () => _scrollToSection(_safetyCenterKey),
-              ),
-              (
-                label: 'Manage cookies',
-                onTap: () => _showPrivacyChoicesModal(context),
-              ),
-              (
-                label: 'Privacy policy',
-                onTap: () => _showPrivacyChoicesModal(context),
-              ),
-              (
-                label: 'Terms and conditions',
-                onTap: () => _showPrivacyChoicesModal(context),
-              ),
-              (
-                label: 'Accessibility Statement',
-                onTap: () => _showPrivacyChoicesModal(context),
-              ),
-              (
-                label: 'Notice at collection',
-                onTap: () => _showPrivacyChoicesModal(context),
-              ),
-              (
-                label: 'Modern Slavery act',
-                onTap: () => _showPrivacyChoicesModal(context),
-              ),
-              (
-                label: 'Washington Consumer\nHealth Privacy Policy',
-                onTap: () => _showPrivacyChoicesModal(context),
-              ),
-            ]),
-          ],
-        ),
-        const SizedBox(height: 36),
-        Wrap(
-          spacing: 14,
-          runSpacing: 12,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            _buildRegionSelectorPill(
-              isDarkPill: false,
-              showFullLanguageLabel: true,
-            ),
-            InkWell(
-              onTap: widget.onOpenFullMobilePreview,
-              borderRadius: BorderRadius.circular(30),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 22,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: const Color(0xFF1E1E1E),
-                    width: 1.1,
-                  ),
-                ),
-                child: const Text(
-                  'Sign in',
-                  style: TextStyle(
-                    color: Color(0xFF1E1E1E),
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-
-    if (isDesktop) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(flex: 5, child: leftColumn),
-          Expanded(flex: 7, child: rightColumn),
-        ],
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        leftColumn,
-        const SizedBox(height: 32),
-        rightColumn,
       ],
     );
   }
@@ -13004,58 +12180,6 @@ class _NavbarLink extends StatelessWidget {
   }
 }
 
-class _LightFooterColumn extends StatelessWidget {
-  final String title;
-  final List<String> items;
-  final bool boldItems;
-  final VoidCallback onTap;
-
-  const _LightFooterColumn({
-    required this.title,
-    required this.items,
-    required this.boldItems,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: boldItems ? 160 : 210,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Color(0xFF5C4B51),
-              fontWeight: FontWeight.w500,
-              fontSize: 13.5,
-            ),
-          ),
-          const SizedBox(height: 16),
-          ...items.map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: InkWell(
-                onTap: onTap,
-                child: Text(
-                  item,
-                  style: TextStyle(
-                    color: AviajTheme.midnightNavy,
-                    fontWeight: boldItems ? FontWeight.w800 : FontWeight.w600,
-                    fontSize: boldItems ? 18 : 13.5,
-                    height: 1.25,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _FooterColumn extends StatelessWidget {
   final String title;
   final List<String> items;
@@ -13244,48 +12368,6 @@ class _WavyFriendshipFrameClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
-}
-
-/// Custom painter for the multi-ring geometric spirograph rosette badge
-/// ("App Store • Trend of the Year: Connection • 2021").
-class _AppStoreTrendRosettePainter extends CustomPainter {
-  const _AppStoreTrendRosettePainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final baseR = size.width * 0.44;
-    final paintOuter = Paint()
-      ..color = const Color(0xFF3E7BFA).withValues(alpha: 0.85)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.1;
-    final paintInner = Paint()
-      ..color = const Color(0xFF6DA8FF).withValues(alpha: 0.65)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.9;
-
-    for (int ring = 0; ring < 3; ring++) {
-      final phase = ring * 0.42;
-      final path = Path();
-      const steps = 180;
-      for (int i = 0; i <= steps; i++) {
-        final theta = (i / steps) * math.pi * 2;
-        final r = baseR + math.sin(theta * 10 + phase) * 5.2;
-        final x = center.dx + math.cos(theta) * r;
-        final y = center.dy + math.sin(theta) * r;
-        if (i == 0) {
-          path.moveTo(x, y);
-        } else {
-          path.lineTo(x, y);
-        }
-      }
-      path.close();
-      canvas.drawPath(path, ring.isEven ? paintOuter : paintInner);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _SafetySparkleStarPainter extends CustomPainter {
