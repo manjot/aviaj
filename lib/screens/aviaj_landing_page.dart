@@ -7555,7 +7555,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       color: const Color(0xFF3B040C),
       padding: EdgeInsets.only(
         top: isDesktop ? 64 : 44,
-        bottom: isDesktop ? 36 : 24,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -7717,21 +7716,31 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               ),
             ),
           ),
-          // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK SPANNING 100% WIDTH AT THE VERY BOTTOM
-          SizedBox(
-            width: screenWidth,
-            child: FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-                child: Text(
-                  'AVIAJ',
-                  style: TextStyle(
-                    color: AviajTheme.loveRed,
-                    fontSize: 300,
-                    fontWeight: FontWeight.w900,
-                    height: 1.0,
-                    letterSpacing: -10,
+          // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK FLUSH WITH THE BOTTOM EDGE
+          ClipRect(
+            child: Align(
+              alignment: Alignment.topCenter,
+              heightFactor: 0.84,
+              child: SizedBox(
+                width: screenWidth,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: Text(
+                      'AVIAJ',
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                      ),
+                      style: TextStyle(
+                        color: AviajTheme.loveRed,
+                        fontSize: 300,
+                        fontWeight: FontWeight.w900,
+                        height: 1.0,
+                        letterSpacing: -10,
+                      ),
+                    ),
                   ),
                 ),
               ),
