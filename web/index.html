@@ -239,8 +239,8 @@
             for (var i = 0; i < registrations.length; i++) {
               promises.push(registrations[i].unregister());
             }
-            if (hadSw && !sessionStorage.getItem("__aviaj_sw_purged_20261101g")) {
-              sessionStorage.setItem("__aviaj_sw_purged_20261101g", "1");
+            if (hadSw && !sessionStorage.getItem("__aviaj_sw_purged_20261101h")) {
+              sessionStorage.setItem("__aviaj_sw_purged_20261101h", "1");
               Promise.all(promises).then(function() {
                 window.location.reload();
               });
@@ -252,6 +252,6 @@
   </script>
 </head>
 <body>
-  <script src="/flutter_bootstrap.js?v=20261101g" async></script>
+  <script src="/flutter_bootstrap.js?v=20261101h" async></script>
 </body>
 </html>

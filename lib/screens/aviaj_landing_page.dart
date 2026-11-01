@@ -8083,7 +8083,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       width: double.infinity,
       color: const Color(0xFF3B040C),
       padding: EdgeInsets.only(
-        top: isDesktop ? 64 : 44,
+        top: isDesktop ? 40 : 32,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -8239,7 +8239,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         ),
                       ],
                     ),
-                    const SizedBox(height: 36),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),
@@ -8247,34 +8247,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
           // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK FULLY READABLE AT BOTTOM
           Padding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 10),
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 18),
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final availWidth = constraints.maxWidth.isFinite
                     ? constraints.maxWidth
                     : screenWidth - 48;
-                const double refFontSize = 300.0;
-                final tp = TextPainter(
-                  text: const TextSpan(
-                    text: 'AVIAJ',
-                    style: TextStyle(
-                      color: AviajTheme.loveRed,
-                      fontSize: refFontSize,
-                      fontWeight: FontWeight.w900,
-                      height: 1.0,
-                      letterSpacing: -8,
-                    ),
-                  ),
-                  textDirection: TextDirection.ltr,
-                )..layout();
-                final metrics = tp.computeLineMetrics();
-                final baseline = metrics.isNotEmpty
-                    ? metrics.first.baseline
-                    : tp.height * 0.80;
-                final glyphTop = baseline - (refFontSize * 0.76);
-                final glyphBottom = baseline + (refFontSize * 0.06);
-                final glyphHeight = glyphBottom - glyphTop;
-                final boxHeight = availWidth * (glyphHeight / tp.width);
+                final boxHeight = (availWidth * 0.175).clamp(96.0, 230.0);
                 return SizedBox(
                   width: availWidth,
                   height: boxHeight,
@@ -13346,14 +13325,15 @@ class _FooterAviajWordmarkPainter extends CustomPainter {
     final metrics = tp.computeLineMetrics();
     final baseline =
         metrics.isNotEmpty ? metrics.first.baseline : tp.height * 0.80;
-    final glyphBottom = baseline + (refFontSize * 0.06);
-    final scale = size.width / tp.width;
-    final dy = size.height - (glyphBottom * scale);
+    final glyphTop = baseline - (refFontSize * 0.75);
+    final glyphBottom = baseline + (refFontSize * 0.05);
+    final glyphHeight = glyphBottom - glyphTop;
+    final scaleX = size.width / tp.width;
+    final scaleY = size.height / glyphHeight;
 
     canvas.save();
-    canvas.translate(0, dy);
-    canvas.scale(scale, scale);
-    tp.paint(canvas, Offset.zero);
+    canvas.scale(scaleX, scaleY);
+    tp.paint(canvas, Offset(0, -glyphTop));
     canvas.restore();
   }
 
