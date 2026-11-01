@@ -2138,10 +2138,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         ),
                       ),
 
-                    // Floating Bottom-Right "Get the Aviaj app" QR Badge (matching Reference Screenshot)
-                    Positioned(
-                      right: 0,
-                      bottom: 22,
+                    // Floating Bottom-Right "Get the Aviaj app" QR Badge (shown only when a dropdown is open)
+                    if (isAnyMegaMenuOpen)
+                      Positioned(
+                        right: 0,
+                        bottom: 22,
                       child: InkWell(
                         onTap: () => showMobileAppDownloadModal(context),
                         borderRadius: const BorderRadius.horizontal(
