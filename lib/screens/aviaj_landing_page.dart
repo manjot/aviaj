@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:ui' show lerpDouble;
+import 'dart:ui' show ImageFilter, lerpDouble;
 import 'package:flutter/material.dart';
 import '../data/regional_data.dart';
 import '../models/models.dart';
@@ -527,30 +527,21 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   }
 
   Widget _buildStandalonePageHeaderBar(BuildContext context, bool isDesktop) {
-    final isRedHeader = _activeSeoPage.navGroup == 'Date' ||
-        _activeSeoPage.navGroup == 'AFF';
-    final bgColor = isRedHeader ? AviajTheme.loveRed : Colors.white;
-    final wordmarkColor = isRedHeader ? Colors.white : const Color(0xFF1E1E1E);
-
-    final subNavItems = <({String label, AviajSeoPage page})>[
-      if (_activeSeoPage.navGroup == 'Date') ...[
-        (label: 'Explore Date', page: AviajSeoPage.date),
-        (label: 'Compliments', page: AviajSeoPage.dateCompliments),
-        (label: 'Incognito Mode', page: AviajSeoPage.dateIncognito),
-        (label: 'Video Calls', page: AviajSeoPage.dateVideoCalls),
-        (label: 'Travel Mode', page: AviajSeoPage.dateTravelMode),
-        (label: 'Snooze Mode', page: AviajSeoPage.dateSnoozeMode),
-        (label: 'SuperSwipe', page: AviajSeoPage.dateSuperSwipe),
-      ] else if (_activeSeoPage.navGroup == 'AFF') ...[
-        (label: 'Explore AFF', page: AviajSeoPage.aff),
-        (label: 'Departure Plans', page: AviajSeoPage.affDeparturePlans),
-        (label: 'Community Leaders', page: AviajSeoPage.affCommunityLeaders),
-      ] else if (_activeSeoPage.navGroup == 'Stories') ...[
-        (label: 'Love Stories', page: AviajSeoPage.stories),
-        (label: 'The Friendship Hub', page: AviajSeoPage.friendshipHub),
-        (label: 'Seasonal Dating Guides', page: AviajSeoPage.seasonalGuides),
-      ],
-    ];
+    final isSubFeaturePage = _activeSeoPage == AviajSeoPage.dateCompliments ||
+        _activeSeoPage == AviajSeoPage.dateIncognito ||
+        _activeSeoPage == AviajSeoPage.dateVideoCalls ||
+        _activeSeoPage == AviajSeoPage.dateTravelMode ||
+        _activeSeoPage == AviajSeoPage.dateSnoozeMode ||
+        _activeSeoPage == AviajSeoPage.dateSuperSwipe ||
+        _activeSeoPage == AviajSeoPage.affDeparturePlans ||
+        _activeSeoPage == AviajSeoPage.affCommunityLeaders;
+    final isRedHeader = !isSubFeaturePage &&
+        (_activeSeoPage.navGroup == 'Date' ||
+            _activeSeoPage.navGroup == 'AFF');
+    final bgColor = isSubFeaturePage
+        ? const Color(0xFFFFF8D6)
+        : (isRedHeader ? AviajTheme.loveRed : Colors.white);
+    final wordmarkColor = isRedHeader ? Colors.white : const Color(0xFF242424);
 
     return Container(
       width: double.infinity,
@@ -560,7 +551,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           Padding(
             padding: EdgeInsets.fromLTRB(
               isDesktop ? 48 : 20,
-              isDesktop ? 20 : 14,
+              isDesktop ? 22 : 14,
               isDesktop ? 48 : 20,
               14,
             ),
@@ -573,7 +564,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     'Aviaj',
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
-                      fontSize: 34,
+                      fontSize: 36,
                       letterSpacing: -1.4,
                       color: wordmarkColor,
                     ),
@@ -583,11 +574,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                 if (isDesktop)
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
+                      horizontal: 22,
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: isRedHeader
+                      color: isRedHeader || isSubFeaturePage
                           ? Colors.white
                           : const Color(0xFFF5F4F0),
                       borderRadius: BorderRadius.circular(40),
@@ -645,41 +636,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     ),
                   ),
                 const Spacer(),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (isDesktop) ...[
-                      InkWell(
-                        onTap: () => _navigateToSeoPage(AviajSeoPage.appOnly),
-                        borderRadius: BorderRadius.circular(40),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isRedHeader
-                                ? Colors.white.withValues(alpha: 0.18)
-                                : const Color(0xFF1E1E1E),
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          child: const Text(
-                            'Sign in',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 13.5,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                    _buildRegionSelectorPill(
-                      isDarkPill: false,
-                      showFullLanguageLabel: false,
-                    ),
-                  ],
+                _buildRegionSelectorPill(
+                  isDarkPill: false,
+                  showFullLanguageLabel: false,
                 ),
               ],
             ),
@@ -714,77 +673,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               ),
               child: _buildExploreStoriesMegaMenuCard(context, isDesktop),
             ),
-          if (subNavItems.isNotEmpty)
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: isDesktop ? 48 : 16,
-                vertical: 12,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFAF9F5),
-                border: Border(
-                  top: BorderSide(
-                    color: Colors.black.withValues(alpha: 0.06),
-                  ),
-                  bottom: BorderSide(
-                    color: Colors.black.withValues(alpha: 0.08),
-                  ),
-                ),
-              ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1220),
-                  child: Wrap(
-                    spacing: 10,
-                    runSpacing: 8,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Text(
-                        'Aviaj › ${_activeSeoPage.navGroup} ›',
-                        style: const TextStyle(
-                          color: Color(0xFF6E6266),
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      for (final item in subNavItems)
-                        InkWell(
-                          onTap: () => _navigateToSeoPage(item.page),
-                          borderRadius: BorderRadius.circular(24),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 7,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _activeSeoPage == item.page
-                                  ? AviajTheme.loveRed
-                                  : Colors.white,
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(
-                                color: _activeSeoPage == item.page
-                                    ? AviajTheme.loveRed
-                                    : const Color(0xFFE0DFD9),
-                              ),
-                            ),
-                            child: Text(
-                              item.label,
-                              style: TextStyle(
-                                color: _activeSeoPage == item.page
-                                    ? Colors.white
-                                    : const Color(0xFF1E1E1E),
-                                fontSize: 12.5,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -795,13 +683,16 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     bool isDesktop,
     AviajSeoPage page,
   ) {
+    final pack = widget.state.regionalPack;
     final featureConfig = switch (page) {
       AviajSeoPage.dateCompliments => (
-          eyebrow: 'AVIAJ DATE • COMPLIMENTS',
-          headline: 'MAKE THEM BLUSH WITH AVIAJ COMPLIMENTS.',
+          heroTitle: 'COMPLIMENTS ON AVIAJ',
+          heroSubtitle:
+              'Want to make their day? Sounds like you’re ready to use Compliments.',
+          heroPhotoUrl:
+              'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1400&q=85',
           lead:
               'Stand out before you even match. Send a thoughtful Compliment on someone’s photo, bio prompt, or upcoming travel route so your first move feels personal and genuine.',
-          illustrationType: 'compliments',
           steps: [
             (
               num: '01',
@@ -834,11 +725,12 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ],
         ),
       AviajSeoPage.dateIncognito => (
-          eyebrow: 'AVIAJ DATE • INCOGNITO MODE',
-          headline: 'GO UNDERCOVER WITH AVIAJ INCOGNITO MODE.',
+          heroTitle: 'INCOGNITO MODE ON AVIAJ',
+          heroSubtitle:
+              'Want to browse privately on your own terms? Sounds like you’re ready for Incognito Mode.',
+          heroPhotoUrl: pack.storyCoupleImageUrl,
           lead:
               'Date on your own terms with complete privacy. Hide your profile from your boss, relatives, coworkers, or exes—only the people you swipe right on will ever see your profile.',
-          illustrationType: 'incognito',
           steps: [
             (
               num: '01',
@@ -871,11 +763,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ],
         ),
       AviajSeoPage.dateVideoCalls => (
-          eyebrow: 'AVIAJ DATE • VIDEO CALLS & AUDIO CHATS',
-          headline: 'SOUND IT OUT WITH IN-APP VIDEO & VOICE CALLS.',
+          heroTitle: 'VIDEO CALLS ON AVIAJ',
+          heroSubtitle:
+              'Ready for a real vibe check before meeting IRL? Try Aviaj Video Calls & Audio Chats.',
+          heroPhotoUrl:
+              'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?auto=format&fit=crop&w=1400&q=85',
           lead:
               'Get as close to IRL without leaving your house. Verify chemistry, plan a shared trek, or have a virtual coffee date using encrypted HD video calls and audio chats—without ever sharing your phone number.',
-          illustrationType: 'videocall',
           steps: [
             (
               num: '01',
@@ -908,11 +802,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ],
         ),
       AviajSeoPage.dateTravelMode => (
-          eyebrow: 'AVIAJ DATE • TRAVEL MODE',
-          headline: 'TAKE US AWAY WITH AVIAJ TRAVEL MODE.',
+          heroTitle: 'TRAVEL MODE ON AVIAJ',
+          heroSubtitle:
+              'Planning your next getaway? Match with locals and fellow travellers before you even pack.',
+          heroPhotoUrl:
+              'https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=1400&q=85',
           lead:
               'Find your duty-free snack and match anywhere in the world before you even pack your bags. Set your city to Manali, Goa, Andaman, Bali, Paris, Dubai, or New York and line up dates before you land.',
-          illustrationType: 'travelmode',
           steps: [
             (
               num: '01',
@@ -924,7 +820,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               num: '02',
               title: 'Display your Travel Mode badge',
               body:
-                  'Aplanes-and-passport badge lets locals and fellow travellers know you are visiting soon.'
+                  'A planes-and-passport badge lets locals and fellow travellers know you are visiting soon.'
             ),
             (
               num: '03',
@@ -945,11 +841,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ],
         ),
       AviajSeoPage.dateSnoozeMode => (
-          eyebrow: 'AVIAJ DATE • SNOOZE MODE',
-          headline: 'TAKE A MINDFUL BREAK WITH AVIAJ SNOOZE MODE.',
+          heroTitle: 'SNOOZE MODE ON AVIAJ',
+          heroSubtitle:
+              'Need a mindful break from swiping? Pause your profile without losing your matches.',
+          heroPhotoUrl:
+              'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1400&q=85',
           lead:
               'Put online dating on hold whenever you need offline time. Pause your profile for 24 hours, 72 hours, a week, or indefinitely—without losing a single match or conversation.',
-          illustrationType: 'snooze',
           steps: [
             (
               num: '01',
@@ -982,11 +880,13 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ],
         ),
       _ => (
-          eyebrow: 'AVIAJ DATE • SUPERSWIPE',
-          headline: 'GET THEIR ATTENTION WITH AVIAJ SUPERSWIPE.',
+          heroTitle: 'SUPERSWIPE ON AVIAJ',
+          heroSubtitle:
+              'Seen someone who passed the vibe check? Let them know they stood out with SuperSwipe.',
+          heroPhotoUrl:
+              'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=85',
           lead:
               'Seen someone who passed the vibe check 100%? Send a SuperSwipe to place your profile at the front of their queue with a golden star badge so they know you’re genuinely interested.',
-          illustrationType: 'superswipe',
           steps: [
             (
               num: '01',
@@ -1022,97 +922,74 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
     return Container(
       width: double.infinity,
-      color: const Color(0xFFFFF7EC),
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 64 : 20,
-        vertical: isDesktop ? 68 : 44,
+      color: const Color(0xFFFFF8D6),
+      padding: EdgeInsets.fromLTRB(
+        isDesktop ? 64 : 20,
+        isDesktop ? 42 : 24,
+        isDesktop ? 64 : 20,
+        isDesktop ? 72 : 44,
       ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
+          constraints: const BoxConstraints(maxWidth: 1120),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // 1. 2-Column SEO Feature Hero
-              isDesktop
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 6,
-                          child: _buildDateFeatureSeoLeftCopy(
-                            context,
-                            featureConfig.eyebrow,
-                            featureConfig.headline,
-                            featureConfig.lead,
-                            page,
-                          ),
-                        ),
-                        const SizedBox(width: 48),
-                        Expanded(
-                          flex: 5,
-                          child: Container(
-                            height: 330,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(28),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.08),
-                                  blurRadius: 28,
-                                  offset: const Offset(0, 12),
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Transform.scale(
-                                scale: 1.25,
-                                child: _buildDateFeatureIllustration(
-                                  featureConfig.illustrationType,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildDateFeatureSeoLeftCopy(
-                          context,
-                          featureConfig.eyebrow,
-                          featureConfig.headline,
-                          featureConfig.lead,
-                          page,
-                        ),
-                        const SizedBox(height: 28),
-                        Container(
-                          height: 260,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Center(
-                            child: _buildDateFeatureIllustration(
-                              featureConfig.illustrationType,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
+              // 1. Centered Condensed All-Caps Display Headline ("COMPLIMENTS ON AVIAJ")
+              Text(
+                featureConfig.heroTitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: const Color(0xFF242424),
+                  fontSize: isDesktop ? 76 : 40,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -2.4,
+                  height: 0.98,
+                ),
+              ),
+              const SizedBox(height: 18),
+              // 2. Centered Subtitle ("Want to make their day? Sounds like you’re ready to use Compliments.")
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 760),
+                child: Text(
+                  featureConfig.heroSubtitle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: const Color(0xFF242424),
+                    fontSize: isDesktop ? 19 : 15.5,
+                    fontWeight: FontWeight.w500,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+              SizedBox(height: isDesktop ? 42 : 26),
+              // 3. Wide Rounded Couple Hero Photograph
+              ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: isDesktop ? 490 : 280,
+                  child: AviajNetworkImage(
+                    imageUrl: featureConfig.heroPhotoUrl,
+                    width: double.infinity,
+                    height: isDesktop ? 490 : 280,
+                    fallbackLabel: featureConfig.heroTitle,
+                  ),
+                ),
+              ),
               const SizedBox(height: 56),
 
-              // 2. 3-Step "How It Works" SEO Cards
-              Text(
-                'How ${page.breadcrumbLabel} works on Aviaj Date',
-                style: TextStyle(
-                  color: const Color(0xFF1E1E1E),
-                  fontSize: isDesktop ? 36 : 26,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.9,
+              // 4. 3-Step "How It Works" SEO Cards
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'How ${page.breadcrumbLabel} works on Aviaj Date',
+                  style: TextStyle(
+                    color: const Color(0xFF1E1E1E),
+                    fontSize: isDesktop ? 36 : 26,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.9,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
@@ -1150,14 +1027,17 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
               const SizedBox(height: 48),
 
-              // 3. SEO FAQ Block
-              Text(
-                'Frequently asked questions about ${page.breadcrumbLabel}',
-                style: TextStyle(
-                  color: const Color(0xFF1E1E1E),
-                  fontSize: isDesktop ? 30 : 22,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.7,
+              // 5. SEO FAQ Block
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Frequently asked questions about ${page.breadcrumbLabel}',
+                  style: TextStyle(
+                    color: const Color(0xFF1E1E1E),
+                    fontSize: isDesktop ? 30 : 22,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.7,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -1199,106 +1079,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildDateFeatureSeoLeftCopy(
-    BuildContext context,
-    String eyebrow,
-    String headline,
-    String lead,
-    AviajSeoPage page,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-          decoration: BoxDecoration(
-            color: AviajTheme.loveRed.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Text(
-            eyebrow,
-            style: const TextStyle(
-              color: AviajTheme.loveRed,
-              fontSize: 12,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 0.8,
-            ),
-          ),
-        ),
-        const SizedBox(height: 18),
-        Text(
-          headline,
-          style: const TextStyle(
-            color: Color(0xFF1E1E1E),
-            fontSize: 48,
-            fontWeight: FontWeight.w900,
-            letterSpacing: -1.5,
-            height: 1.04,
-          ),
-        ),
-        const SizedBox(height: 18),
-        Text(
-          lead,
-          style: const TextStyle(
-            color: Color(0xFF3E3034),
-            fontSize: 17.5,
-            fontWeight: FontWeight.w500,
-            height: 1.48,
-          ),
-        ),
-        const SizedBox(height: 26),
-        Wrap(
-          spacing: 14,
-          runSpacing: 12,
-          children: [
-            FilledButton(
-              onPressed: () => showMobileAppDownloadModal(context),
-              style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF1E1E1E),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 28,
-                  vertical: 18,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-              ),
-              child: Text(
-                'Try ${page.breadcrumbLabel} on the App',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 15,
-                ),
-              ),
-            ),
-            OutlinedButton(
-              onPressed: () => _navigateToSeoPage(AviajSeoPage.date),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF1E1E1E),
-                side: const BorderSide(color: Color(0xFF1E1E1E), width: 1.6),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 18,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-              ),
-              child: const Text(
-                'All Aviaj Date Features',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 14.5,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 
@@ -1365,15 +1145,14 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     AviajSeoPage page,
   ) {
     final isPlans = page == AviajSeoPage.affDeparturePlans;
-    final eyebrow = isPlans
-        ? 'AFF (AVIAJ FRIENDS FOREVER) • DEPARTURE PLANS'
-        : 'AFF (AVIAJ FRIENDS FOREVER) • COMMUNITY LEADERS';
-    final headline = isPlans
-        ? 'COORDINATE GROUP TRIPS & LOCAL MEETUPS WITH AFF PLANS.'
-        : 'MEET VERIFIED LOCAL HOSTS WITH AFF COMMUNITY LEADERS.';
-    final lead = isPlans
-        ? 'Organize a group trek in Manali, a sunset beach mixer in Goa, or a weekend city walk anywhere in the world. AFF Departure Plans lets you post your schedule and build a verified crew before you arrive.'
-        : 'Our vetted AFF Community Leaders host welcoming social mixers, hiking groups, and city orientation walks across 190+ destinations so you never feel alone in a new place.';
+    final heroTitle =
+        isPlans ? 'PLANS ON AVIAJ AFF' : 'COMMUNITY LEADERS ON AVIAJ';
+    final heroSubtitle = isPlans
+        ? 'Organize a group trek, sunset mixer, or local meetup with verified AFF members.'
+        : 'Meet verified local hosts bringing Aviaj Friends Forever communities together.';
+    final heroPhotoUrl = isPlans
+        ? 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1400&q=85'
+        : 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1400&q=85';
 
     final steps = isPlans
         ? [
@@ -1419,25 +1198,59 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
     return Container(
       width: double.infinity,
-      color: const Color(0xFFFFF7EC),
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 64 : 20,
-        vertical: isDesktop ? 64 : 40,
+      color: const Color(0xFFFFF8D6),
+      padding: EdgeInsets.fromLTRB(
+        isDesktop ? 64 : 20,
+        isDesktop ? 42 : 24,
+        isDesktop ? 64 : 20,
+        isDesktop ? 68 : 40,
       ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
+          constraints: const BoxConstraints(maxWidth: 1120),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildDateFeatureSeoLeftCopy(
-                context,
-                eyebrow,
-                headline,
-                lead,
-                page,
+              Text(
+                heroTitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: const Color(0xFF242424),
+                  fontSize: isDesktop ? 74 : 38,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -2.3,
+                  height: 0.98,
+                ),
               ),
-              const SizedBox(height: 44),
+              const SizedBox(height: 18),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 760),
+                child: Text(
+                  heroSubtitle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: const Color(0xFF242424),
+                    fontSize: isDesktop ? 19 : 15.5,
+                    fontWeight: FontWeight.w500,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+              SizedBox(height: isDesktop ? 42 : 26),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: isDesktop ? 480 : 280,
+                  child: AviajNetworkImage(
+                    imageUrl: heroPhotoUrl,
+                    width: double.infinity,
+                    height: isDesktop ? 480 : 280,
+                    fallbackLabel: heroTitle,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 48),
               if (isDesktop)
                 IntrinsicHeight(
                   child: Row(
@@ -1519,6 +1332,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     final profiles = widget.state.allProfiles;
     final stageHeight = isDesktop ? 610.0 : 460.0;
     final cardScale = isDesktop ? 1.0 : 0.64;
+    final isAnyMegaMenuOpen =
+        _showDateMegaMenu || _showAffMegaMenu || _showStoriesMegaMenu;
 
     return Container(
       width: double.infinity,
@@ -1527,7 +1342,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         bottom: false,
         child: Column(
           children: [
-            // Top Integrated Navigation Bar (Wordmark Left • Floating White Pill Center • Pill Right)
+            // Top Integrated Navigation Bar (Wordmark Left • Floating White Pill Center • Globe Pill Right)
             Padding(
               padding: EdgeInsets.fromLTRB(
                 isDesktop ? 48 : 20,
@@ -1607,7 +1422,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                 _showAffMegaMenu = false;
                                 _showStoriesMegaMenu = false;
                               });
-                              _scrollToSection(_safetyCenterKey);
+                              _navigateToSeoPage(AviajSeoPage.safety);
                             },
                           ),
                           _NavbarLink(
@@ -1618,237 +1433,237 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                 _showAffMegaMenu = false;
                                 _showStoriesMegaMenu = false;
                               });
-                              _scrollToSection(_supportCenterKey);
+                              _navigateToSeoPage(AviajSeoPage.support);
                             },
                           ),
                         ],
                       ),
                     ),
                   const Spacer(),
-                  // Right Floating White Stadium Pills
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (isDesktop) ...[
-                        InkWell(
-                          onTap: widget.onOpenFullMobilePreview,
-                          borderRadius: BorderRadius.circular(40),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: 11,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.18),
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                            child: const Text(
-                              'App Demo',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13.5,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                      ],
-                      _buildRegionSelectorPill(
-                        isDarkPill: false,
-                        showFullLanguageLabel: false,
-                      ),
-                    ],
+                  // Right Floating White Globe Pill
+                  _buildRegionSelectorPill(
+                    isDarkPill: false,
+                    showFullLanguageLabel: false,
                   ),
                 ],
               ),
             ),
 
-            // Interactive "Explore Date ›" Mega-Menu Dropdown Card
-            if (_showDateMegaMenu)
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                  isDesktop ? 48 : 16,
-                  8,
-                  isDesktop ? 48 : 16,
-                  12,
-                ),
-                child: _buildExploreDateMegaMenuCard(context, isDesktop),
-              ),
-
-            // Interactive "Explore AFF (Aviaj Friends Forever) ›" Mega-Menu Dropdown Card
-            if (_showAffMegaMenu)
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                  isDesktop ? 48 : 16,
-                  8,
-                  isDesktop ? 48 : 16,
-                  12,
-                ),
-                child: _buildExploreAffMegaMenuCard(context, isDesktop),
-              ),
-
-            // Interactive "Explore Stories ›" Mega-Menu Dropdown Card
-            if (_showStoriesMegaMenu)
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                  isDesktop ? 48 : 16,
-                  8,
-                  isDesktop ? 48 : 16,
-                  12,
-                ),
-                child: _buildExploreStoriesMegaMenuCard(context, isDesktop),
-              ),
-
-            // Main Animated Stage: Giant "Aviaj" Name + 3D Angled Profiles Slider
+            // Main Animated Stage + Overlaid Mega-Menu Dropdown + Floating Bottom-Right QR Card
             ClipRect(
               child: SizedBox(
                 width: double.infinity,
                 height: stageHeight,
-                child: AnimatedBuilder(
-                  animation: Listenable.merge([
-                    _bannerIntroController,
-                    _profileSliderController,
-                  ]),
-                  builder: (context, _) {
-                    final giantFontSize = isDesktop
-                        ? (screenWidth * 0.25).clamp(210.0, 355.0)
-                        : (screenWidth * 0.26).clamp(92.0, 145.0);
-                    const brandSegments = ['Av', 'i', 'aj'];
+                child: Stack(
+                  children: [
+                    // Blurred when Date / AFF / Stories Mega-Menu is open
+                    Positioned.fill(
+                      child: ImageFiltered(
+                        imageFilter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                        enabled: isAnyMegaMenuOpen,
+                        child: AnimatedBuilder(
+                          animation: Listenable.merge([
+                            _bannerIntroController,
+                            _profileSliderController,
+                          ]),
+                          builder: (context, _) {
+                            final giantFontSize = isDesktop
+                                ? (screenWidth * 0.25).clamp(210.0, 355.0)
+                                : (screenWidth * 0.26).clamp(92.0, 145.0);
+                            const brandSegments = ['Av', 'i', 'aj'];
 
-                    return Stack(
-                      alignment: Alignment.center,
-                      clipBehavior: Clip.hardEdge,
-                      children: [
-                        // STEP 1: GIANT EDGE-TO-EDGE "Aviaj" WORDMARK ANIMATION
-                        Positioned(
-                          left: isDesktop ? 36 : 12,
-                          right: isDesktop ? 36 : 12,
-                          bottom: isDesktop ? 62 : 70,
-                          child: IgnorePointer(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: List.generate(
-                                brandSegments.length,
-                                (index) {
-                                  final start = (index * 0.11).clamp(0.0, 0.4);
-                                  final end =
-                                      (0.48 + index * 0.11).clamp(0.0, 1.0);
-                                  final rawT = ((_bannerIntroController.value -
-                                              start) /
-                                          (end - start))
-                                      .clamp(0.0, 1.0);
-                                  final curvedT =
-                                      Curves.easeOutBack.transform(rawT);
-                                  final opacityT =
-                                      Curves.easeOut.transform(rawT);
-
-                                  return Transform.translate(
-                                    offset: Offset(0, (1.0 - curvedT) * 145.0),
-                                    child: Transform.scale(
-                                      scale: 0.78 + (0.22 * curvedT),
-                                      child: Opacity(
-                                        opacity: opacityT,
-                                        child: Text(
-                                          brandSegments[index],
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: giantFontSize,
-                                            fontWeight: FontWeight.w900,
-                                            height: 0.88,
-                                            letterSpacing: -10,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // STEP 2 & 3: 3D ANGLED PERSPECTIVE PROFILES SLIDER
-                        // Render back-to-front (Slot 3 -> Slot 2 -> Slot 1 -> Slot 0 -> Outgoing)
-                        for (final slotIndex in [3, 2, 1, 0])
-                          _buildAnimatedPerspectiveProfileCard(
-                            context: context,
-                            profiles: profiles,
-                            slotIndex: slotIndex,
-                            cardScale: cardScale,
-                            stageWidth: screenWidth,
-                            stageHeight: stageHeight,
-                          ),
-
-                        // Subtle Bottom-Right Interactive Slider Controls
-                        Positioned(
-                          right: isDesktop ? 44 : 16,
-                          bottom: 18,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 7,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.92),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
+                            return Stack(
+                              alignment: Alignment.center,
+                              clipBehavior: Clip.hardEdge,
                               children: [
-                                InkWell(
-                                  onTap: _replayBannerAnimation,
-                                  child: const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 2,
-                                    ),
-                                    child: Icon(
-                                      Icons.replay_rounded,
-                                      size: 16,
-                                      color: AviajTheme.midnightNavy,
+                                // STEP 1: GIANT EDGE-TO-EDGE "Aviaj" WORDMARK ANIMATION
+                                Positioned(
+                                  left: isDesktop ? 36 : 12,
+                                  right: isDesktop ? 36 : 12,
+                                  bottom: isDesktop ? 62 : 70,
+                                  child: IgnorePointer(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.baseline,
+                                      textBaseline: TextBaseline.alphabetic,
+                                      children: List.generate(
+                                        brandSegments.length,
+                                        (index) {
+                                          final start =
+                                              (index * 0.11).clamp(0.0, 0.4);
+                                          final end = (0.48 + index * 0.11)
+                                              .clamp(0.0, 1.0);
+                                          final rawT =
+                                              ((_bannerIntroController.value -
+                                                          start) /
+                                                      (end - start))
+                                                  .clamp(0.0, 1.0);
+                                          final curvedT = Curves.easeOutBack
+                                              .transform(rawT);
+                                          final opacityT =
+                                              Curves.easeOut.transform(rawT);
+
+                                          return Transform.translate(
+                                            offset: Offset(
+                                                0, (1.0 - curvedT) * 145.0),
+                                            child: Transform.scale(
+                                              scale: 0.78 + (0.22 * curvedT),
+                                              child: Opacity(
+                                                opacity: opacityT,
+                                                child: Text(
+                                                  brandSegments[index],
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: giantFontSize,
+                                                    fontWeight: FontWeight.w900,
+                                                    height: 0.88,
+                                                    letterSpacing: -10,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 4),
-                                GestureDetector(
-                                  onTap: _triggerNextProfileSlide,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        '${profiles[_selectedHeroIndex % profiles.length].name.split(' ').first}, ${profiles[_selectedHeroIndex % profiles.length].age}',
-                                        style: const TextStyle(
-                                          color: AviajTheme.midnightNavy,
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 12.5,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: const BoxDecoration(
-                                          color: AviajTheme.loveRed,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.arrow_forward_rounded,
-                                          size: 13,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
+
+                                // STEP 2 & 3: 3D ANGLED PERSPECTIVE PROFILES SLIDER
+                                for (final slotIndex in [3, 2, 1, 0])
+                                  _buildAnimatedPerspectiveProfileCard(
+                                    context: context,
+                                    profiles: profiles,
+                                    slotIndex: slotIndex,
+                                    cardScale: cardScale,
+                                    stageWidth: screenWidth,
+                                    stageHeight: stageHeight,
                                   ),
-                                ),
                               ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+
+                    // Interactive "Explore Date ›" Mega-Menu Dropdown Card Overlaid on Blurred Stage
+                    if (_showDateMegaMenu)
+                      Positioned(
+                        top: 8,
+                        left: isDesktop ? 48 : 16,
+                        right: isDesktop ? 48 : 16,
+                        child: _buildExploreDateMegaMenuCard(
+                          context,
+                          isDesktop,
+                        ),
+                      ),
+
+                    // Interactive "Explore AFF ›" Mega-Menu Dropdown Card Overlaid on Blurred Stage
+                    if (_showAffMegaMenu)
+                      Positioned(
+                        top: 8,
+                        left: isDesktop ? 48 : 16,
+                        right: isDesktop ? 48 : 16,
+                        child: _buildExploreAffMegaMenuCard(
+                          context,
+                          isDesktop,
+                        ),
+                      ),
+
+                    // Interactive "Explore Stories ›" Mega-Menu Dropdown Card Overlaid on Blurred Stage
+                    if (_showStoriesMegaMenu)
+                      Positioned(
+                        top: 8,
+                        left: isDesktop ? 48 : 16,
+                        right: isDesktop ? 48 : 16,
+                        child: _buildExploreStoriesMegaMenuCard(
+                          context,
+                          isDesktop,
+                        ),
+                      ),
+
+                    // Floating Bottom-Right "Get the Aviaj app" QR Badge (matching Reference Screenshot)
+                    Positioned(
+                      right: 0,
+                      bottom: 22,
+                      child: InkWell(
+                        onTap: () => showMobileAppDownloadModal(context),
+                        borderRadius: const BorderRadius.horizontal(
+                          left: Radius.circular(18),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(14, 14, 24, 14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD91837),
+                            borderRadius: const BorderRadius.horizontal(
+                              left: Radius.circular(18),
                             ),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.28),
+                              width: 1.1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.16),
+                                blurRadius: 20,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: isDesktop ? 92 : 68,
+                                height: isDesktop ? 92 : 68,
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.qr_code_2_rounded,
+                                      size: isDesktop ? 78 : 54,
+                                      color: const Color(0xFF1E1E1E),
+                                    ),
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: const Icon(
+                                        Icons.favorite_rounded,
+                                        color: AviajTheme.loveRed,
+                                        size: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Text(
+                                'Get the\nAviaj app',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: isDesktop ? 24 : 17,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.6,
+                                  height: 1.15,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    );
-                  },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -3334,14 +3149,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
     return Container(
       width: double.infinity,
-      constraints: const BoxConstraints(maxWidth: 1220),
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 44 : 24,
-        vertical: isDesktop ? 36 : 24,
-      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.14),
@@ -3353,8 +3163,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       child: Stack(
         children: [
           Positioned(
-            right: 0,
-            top: 0,
+            right: 16,
+            top: 14,
             child: IconButton(
               onPressed: () => setState(() => _showDateMegaMenu = false),
               icon: const Icon(
@@ -3366,7 +3176,12 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 36),
+            padding: EdgeInsets.fromLTRB(
+              isDesktop ? 56 : 24,
+              isDesktop ? 52 : 28,
+              isDesktop ? 76 : 36,
+              isDesktop ? 52 : 28,
+            ),
             child: isDesktop
                 ? Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -3382,75 +3197,84 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                 'Explore Date ›',
                                 style: TextStyle(
                                   color: AviajTheme.midnightNavy,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: -0.8,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.9,
                                 ),
                               ),
-                              SizedBox(height: 10),
-                              Text(
-                                'Features designed to create space for real, respectful, and meaningful connections.',
-                                style: TextStyle(
-                                  color: Color(0xFF3E3034),
-                                  fontSize: 15.5,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.45,
+                              SizedBox(height: 12),
+                              SizedBox(
+                                width: 370,
+                                child: Text(
+                                  'Features designed to create space for real, respectful, and meaningful connections.',
+                                  style: TextStyle(
+                                    color: Color(0xFF3E3034),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.45,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: 40),
+                      const SizedBox(width: 48),
                       Expanded(
                         flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildFeatureItem(
-                              'Compliments',
-                              'Throw some Compliments their way so you stand out.',
-                              AviajSeoPage.dateCompliments,
-                            ),
-                            const SizedBox(height: 14),
-                            buildFeatureItem(
-                              'Video Calls',
-                              'Get as close to IRL without leaving your house.',
-                              AviajSeoPage.dateVideoCalls,
-                            ),
-                            const SizedBox(height: 14),
-                            buildFeatureItem(
-                              'Snooze mode',
-                              'Put dating on hold with Snooze Mode.',
-                              AviajSeoPage.dateSnoozeMode,
-                            ),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildFeatureItem(
+                                'Compliments',
+                                'Throw some Compliments their way so you stand out.',
+                                AviajSeoPage.dateCompliments,
+                              ),
+                              const SizedBox(height: 18),
+                              buildFeatureItem(
+                                'Video Calls',
+                                'Get as close to IRL without leaving your house.',
+                                AviajSeoPage.dateVideoCalls,
+                              ),
+                              const SizedBox(height: 18),
+                              buildFeatureItem(
+                                'Snooze mode',
+                                'Put dating on hold with Snooze Mode.',
+                                AviajSeoPage.dateSnoozeMode,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 32),
+                      const SizedBox(width: 36),
                       Expanded(
                         flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildFeatureItem(
-                              'Incognito Mode',
-                              'Hide your profile from your boss, relatives, or exes.',
-                              AviajSeoPage.dateIncognito,
-                            ),
-                            const SizedBox(height: 14),
-                            buildFeatureItem(
-                              'Travel mode',
-                              'Find your duty-free snack and match anywhere.',
-                              AviajSeoPage.dateTravelMode,
-                            ),
-                            const SizedBox(height: 14),
-                            buildFeatureItem(
-                              'SuperSwipe',
-                              'Seen someone you like? Let them know.',
-                              AviajSeoPage.dateSuperSwipe,
-                            ),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildFeatureItem(
+                                'Incognito Mode',
+                                'Hide your profile from your boss, relatives, or exes.',
+                                AviajSeoPage.dateIncognito,
+                              ),
+                              const SizedBox(height: 18),
+                              buildFeatureItem(
+                                'Travel mode',
+                                'Find your duty-free snack and match anywhere.',
+                                AviajSeoPage.dateTravelMode,
+                              ),
+                              const SizedBox(height: 18),
+                              buildFeatureItem(
+                                'SuperSwipe',
+                                'Seen someone you like? Let them know.',
+                                AviajSeoPage.dateSuperSwipe,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -4298,14 +4122,15 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   Widget _buildExploreAffMegaMenuCard(BuildContext context, bool isDesktop) {
     return Container(
       width: double.infinity,
-      constraints: const BoxConstraints(maxWidth: 1220),
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 44 : 24,
-        vertical: isDesktop ? 36 : 24,
+      padding: EdgeInsets.fromLTRB(
+        isDesktop ? 56 : 24,
+        isDesktop ? 48 : 24,
+        isDesktop ? 56 : 24,
+        isDesktop ? 48 : 24,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.14),
@@ -4490,14 +4315,15 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   ) {
     return Container(
       width: double.infinity,
-      constraints: const BoxConstraints(maxWidth: 1220),
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 44 : 24,
-        vertical: isDesktop ? 36 : 24,
+      padding: EdgeInsets.fromLTRB(
+        isDesktop ? 56 : 24,
+        isDesktop ? 48 : 24,
+        isDesktop ? 56 : 24,
+        isDesktop ? 48 : 24,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.14),
@@ -4530,10 +4356,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       Expanded(
                         flex: 5,
                         child: InkWell(
-                          onTap: () {
-                            setState(() => _showStoriesMegaMenu = false);
-                            _scrollToSection(_storiesKey);
-                          },
+                          onTap: () => _navigateToSeoPage(AviajSeoPage.stories),
                           child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -4567,10 +4390,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             InkWell(
-                              onTap: () {
-                                setState(() => _showStoriesMegaMenu = false);
-                                _scrollToSection(_storiesKey);
-                              },
+                              onTap: () =>
+                                  _navigateToSeoPage(AviajSeoPage.stories),
                               child: const Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -4598,10 +4419,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             ),
                             const SizedBox(height: 22),
                             InkWell(
-                              onTap: () {
-                                setState(() => _showStoriesMegaMenu = false);
-                                _scrollToSection(_friendshipHubKey);
-                              },
+                              onTap: () => _navigateToSeoPage(
+                                AviajSeoPage.friendshipHub,
+                              ),
                               child: const Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -4633,10 +4453,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       Expanded(
                         flex: 3,
                         child: InkWell(
-                          onTap: () {
-                            setState(() => _showStoriesMegaMenu = false);
-                            _scrollToSection(_seasonalGuidesKey);
-                          },
+                          onTap: () =>
+                              _navigateToSeoPage(AviajSeoPage.seasonalGuides),
                           child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
