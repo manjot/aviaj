@@ -2127,7 +2127,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             'Uttarakhand • White-Water River Rafting, Bungee Jumping, Tapovan Hostels & Ganga Aarti',
         categoryBadge: '🌊 SOLO GROUP HUB',
         imageUrl:
-            'https://images.unsplash.com/photo-1591018533273-3c7822e090c5?auto=format&fit=crop&w=900&q=80',
+            'https://images.unsplash.com/photo-1589802829985-817e51171b92?auto=format&fit=crop&w=900&q=80',
       ),
       (
         title: 'Kasol & Parvati Valley (Himachal Pradesh)',
