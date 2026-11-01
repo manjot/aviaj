@@ -2484,28 +2484,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                 ),
               ),
             ),
-            OutlinedButton.icon(
-              onPressed: widget.onOpenFullMobilePreview,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AviajTheme.loveRed,
-                side: const BorderSide(color: AviajTheme.loveRed, width: 1.8),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 22,
-                  vertical: 17,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-              ),
-              icon: const Icon(Icons.smartphone_rounded, size: 18),
-              label: Text(
-                _langPack.learnMore,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 14.5,
-                ),
-              ),
-            ),
+
           ],
         ),
         const SizedBox(height: 20),
@@ -2956,7 +2935,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     }) dest,
   ) {
     return InkWell(
-      onTap: widget.onOpenFullMobilePreview,
+      onTap: () => showMobileAppDownloadModal(context),
       borderRadius: BorderRadius.circular(26),
       child: Container(
         decoration: BoxDecoration(
@@ -3481,7 +3460,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
           const SizedBox(height: 20),
           InkWell(
-            onTap: widget.onOpenFullMobilePreview,
+            onTap: () => _navigateToSeoPage(AviajSeoPage.date),
             child: Text(
               _langPack.exploreDateTitle,
               style: const TextStyle(
@@ -3749,7 +3728,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
           ),
           const SizedBox(height: 20),
           InkWell(
-            onTap: () => _scrollToSection(_affKey),
+            onTap: () => _navigateToSeoPage(AviajSeoPage.aff),
             child: Text(
               _langPack.exploreAffTitle,
               style: const TextStyle(
@@ -5364,13 +5343,19 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                   icon: Icons.apple_rounded,
                                   topLabel: 'Download on the',
                                   storeName: 'App Store',
-                                  onTap: widget.onOpenFullMobilePreview,
+                                  onTap: () => showMobileAppDownloadModal(
+                                    context,
+                                    initialStore: 'Apple App Store (iOS)',
+                                  ),
                                 ),
                                 _buildStoreDownloadPill(
                                   icon: Icons.play_arrow_rounded,
                                   topLabel: 'GET IT ON',
                                   storeName: 'Google Play',
-                                  onTap: widget.onOpenFullMobilePreview,
+                                  onTap: () => showMobileAppDownloadModal(
+                                    context,
+                                    initialStore: 'Google Play Store (Android)',
+                                  ),
                                 ),
                               ],
                             ),
@@ -6062,7 +6047,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                               ),
                             ),
                             OutlinedButton(
-                              onPressed: widget.onOpenFullMobilePreview,
+                              onPressed: () => showMobileAppDownloadModal(context),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: AviajTheme.midnightNavy,
                                 side: const BorderSide(
@@ -7710,6 +7695,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             ),
           ),
         ),
+        const SizedBox(height: 24),
+        const AppStoreDownloadBadges(lightOnDark: false),
       ],
     );
 
@@ -12356,6 +12343,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             ),
           ),
         ),
+        const SizedBox(height: 24),
+        const AppStoreDownloadBadges(lightOnDark: false),
       ],
     );
 

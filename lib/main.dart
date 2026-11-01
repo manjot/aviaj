@@ -61,14 +61,11 @@ class _AviajAppState extends State<AviajApp> {
           home: _showMobileAppExperience
               ? AviajMobileAppShell(
                   state: _state,
-                  onBackToLandingPage: kIsWeb
-                      ? () => setState(() => _showMobileAppExperience = false)
-                      : null,
+                  onBackToLandingPage: null,
                 )
               : AviajLandingPage(
                   state: _state,
-                  onOpenFullMobilePreview: () =>
-                      setState(() => _showMobileAppExperience = true),
+                  onOpenFullMobilePreview: () {},
                 ),
         );
       },
