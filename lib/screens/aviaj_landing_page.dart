@@ -3922,7 +3922,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${_langPack.exploreDateTitle} ›',
+                                _langPack.exploreDateTitle,
                                 style: const TextStyle(
                                   color: AviajTheme.midnightNavy,
                                   fontSize: 32,
@@ -4013,7 +4013,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       InkWell(
                         onTap: () => _navigateToSeoPage(AviajSeoPage.date),
                         child: Text(
-                          '${_langPack.exploreDateTitle} ›',
+                          _langPack.exploreDateTitle,
                           style: const TextStyle(
                             color: AviajTheme.midnightNavy,
                             fontSize: 22,
@@ -4896,7 +4896,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${_langPack.exploreAffTitle} ›',
+                                _langPack.exploreAffTitle,
                                 style: const TextStyle(
                                   color: AviajTheme.midnightNavy,
                                   fontSize: 28,
@@ -5011,7 +5011,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       InkWell(
                         onTap: () => _navigateToSeoPage(AviajSeoPage.aff),
                         child: Text(
-                          '${_langPack.exploreAffTitle} ›',
+                          _langPack.exploreAffTitle,
                           style: const TextStyle(
                             color: AviajTheme.midnightNavy,
                             fontSize: 22,
@@ -5089,7 +5089,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${_langPack.exploreStoriesTitle} ›',
+                                _langPack.exploreStoriesTitle,
                                 style: const TextStyle(
                                   color: AviajTheme.midnightNavy,
                                   fontSize: 28,
