@@ -9,8 +9,9 @@ enum AviajRegion {
     label: 'India',
     languageLabel: 'English (India)',
     sampleDestinations:
-        'Manali & Himachal Hiking, Uttarakhand Famous Treks, Goa & Andaman Beaches',
-    coPilotLocationHeader: 'Manali, Uttarakhand, Goa & Andaman, IN ⌄',
+        'Chopta-Tungnath, Kasol-Kheerganga, Triund, Kedarkantha, Spiti, Kudremukh, Sahyadri, Rishikesh, Goa, Ladakh & Kerala',
+    coPilotLocationHeader:
+        'Himachal, Uttarakhand, Sahyadri, Goa, Ladakh & Kerala, IN ⌄',
   ),
   middleEast(
     code: 'AE',
@@ -626,20 +627,52 @@ class AviajRegionalCatalog {
     ],
     featuredDestinations: [
       (
+        title: 'Chopta – Tungnath – Chandrashila – Deoriatal Trek (Uttarakhand)',
+        subtitle:
+            'Uttarakhand • World’s Highest Shiva Temple, Chandrashila Summit & Deoriatal Lake Reflection',
+        categoryBadge: '🏔️ UTTARAKHAND TREK',
+        imageUrl:
+            'https://images.unsplash.com/photo-1589802829985-817e51171b92?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Kasol – Kheerganga Trek (Himachal Pradesh)',
+        subtitle:
+            'Himachal Pradesh • Parvati Valley Pine Forests, Rudra Nag Waterfall & Mountain Hot Springs',
+        categoryBadge: '🌲 HIMACHAL TREK',
+        imageUrl:
+            'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Triund Trek (Himachal Pradesh)',
+        subtitle:
+            'Himachal Pradesh • McLeodGanj, Dharamkot Cafés & Dhauladhar Snow Ridge Starlight Camp',
+        categoryBadge: '⛺ HIMACHAL TREK',
+        imageUrl:
+            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Kedarkantha Winter Trek (Uttarakhand)',
+        subtitle:
+            'Uttarakhand • Sankri Base, Juda Ka Talab Frozen Lake & 12,500 ft 360° Himalayan Snow Summit',
+        categoryBadge: '❄️ WINTER SNOW TREK',
+        imageUrl:
+            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Spiti Valley Winter / Circuit Group Trip',
+        subtitle:
+            'Himachal Pradesh • Kaza, Key Monastery, Chicham Bridge & Chandratal High-Altitude Expedition',
+        categoryBadge: '🚙 CIRCUIT GROUP TRIP',
+        imageUrl:
+            'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
         title: 'Manali & Hampta Pass Trek',
         subtitle:
             'Himachal Pradesh • Solang Valley, Beas Kund & Rohtang Alpine Trails',
         categoryBadge: '🏔️ HIKING & TREKKING',
         imageUrl:
-            'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=900&q=80',
-      ),
-      (
-        title: 'Uttarakhand Famous Treks',
-        subtitle:
-            'Kedarkantha Summit, Valley of Flowers, Chopta-Tungnath & Rishikesh',
-        categoryBadge: '🥾 HIMALAYAN TREKS',
-        imageUrl:
-            'https://images.unsplash.com/photo-1589802829985-817e51171b92?auto=format&fit=crop&w=900&q=80',
+            'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=900&q=80',
       ),
       (
         title: 'Goa Sunset Beaches & Cliffs',
@@ -655,7 +688,7 @@ class AviajRegionalCatalog {
             'Havelock Island, Radhanagar Beach & Coral Reef Scuba Diving',
         categoryBadge: '🏝️ ISLANDS & DIVING',
         imageUrl:
-            'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=900&q=80',
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
       ),
     ],
     departureCirclePhotoUrl:

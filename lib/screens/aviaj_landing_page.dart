@@ -2100,6 +2100,139 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     final region = pack.region;
     final destinations = pack.featuredDestinations;
 
+    const westernGhatsTreks = [
+      (
+        title: 'Kudremukh Trek (Karnataka)',
+        subtitle:
+            'Karnataka • Rolling Shola Grasslands, Chikmagalur Misty Peaks & Waterfall Trails',
+        categoryBadge: '🌿 WESTERN GHATS TREK',
+        imageUrl:
+            'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title:
+            'Sahyadri Fort Treks (Maharashtra — e.g., Kalsubai, Harishchandragad, Ratangad)',
+        subtitle:
+            'Maharashtra • Kalsubai Highest Peak, Harishchandragad Konkan Kada & Ratangad Fort Cloud Trails',
+        categoryBadge: '🏰 SAHYADRI FORT TREKS',
+        imageUrl:
+            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=80',
+      ),
+    ];
+
+    const soloGroupIndiaDestinations = [
+      (
+        title: 'Rishikesh (Uttarakhand)',
+        subtitle:
+            'Uttarakhand • White-Water River Rafting, Bungee Jumping, Tapovan Hostels & Ganga Aarti',
+        categoryBadge: '🌊 SOLO GROUP HUB',
+        imageUrl:
+            'https://images.unsplash.com/photo-1591018533273-3c7822e090c5?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Kasol & Parvati Valley (Himachal Pradesh)',
+        subtitle:
+            'Himachal Pradesh • Chalal River Walk, Tosh Village, Mountain Cafés & Bonfire Acoustic Nights',
+        categoryBadge: '🎸 PARVATI VALLEY',
+        imageUrl:
+            'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Bir Billing (Himachal Pradesh)',
+        subtitle:
+            'Himachal Pradesh • World-Famous Tandem Paragliding, Tibetan Monasteries & Sunset Landing Zone',
+        categoryBadge: '🪂 PARAGLIDING CAPITAL',
+        imageUrl:
+            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Jaipur (Rajasthan)',
+        subtitle:
+            'Rajasthan • Amber Fort, Nahargarh Sunset Point, Heritage Havelis & Rooftop Folk Nights',
+        categoryBadge: '👑 HERITAGE & CULTURE',
+        imageUrl:
+            'https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Goa',
+        subtitle:
+            'North & South Goa • Anjuna, Vagator, Assagao Villa Crews, Surf Mornings & Beach Sundowners',
+        categoryBadge: '🌴 COASTAL VILLA CREWS',
+        imageUrl:
+            'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Leh-Ladakh',
+        subtitle:
+            'Ladakh • Pangong Tso, Nubra Valley Sand Dunes, Khardung La Pass & Hanle Stargazing Roadtrips',
+        categoryBadge: '🏍️ HIGH-PASS EXPEDITION',
+        imageUrl:
+            'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=900&q=80',
+      ),
+      (
+        title: 'Kerala (Munnar, Varkala, Kochi)',
+        subtitle:
+            'Kerala • Munnar Misty Tea Estates, Varkala Cliff Surf Cafés, Fort Kochi & Alleppey Backwaters',
+        categoryBadge: '🛶 BACKWATERS & CLIFFS',
+        imageUrl:
+            'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=900&q=80',
+      ),
+    ];
+
+    Widget buildGridOfCards(
+      List<
+              ({
+                String title,
+                String subtitle,
+                String categoryBadge,
+                String imageUrl,
+              })>
+          items, {
+      int desktopCols = 4,
+    }) {
+      if (!isDesktop) {
+        return Column(
+          children: [
+            for (int i = 0; i < items.length; i++) ...[
+              if (i > 0) const SizedBox(height: 18),
+              _buildRegionalDestinationCard(context, items[i]),
+            ],
+          ],
+        );
+      }
+
+      final rows = <Widget>[];
+      for (int start = 0; start < items.length; start += desktopCols) {
+        final end = (start + desktopCols < items.length)
+            ? start + desktopCols
+            : items.length;
+        final chunk = items.sublist(start, end);
+        if (rows.isNotEmpty) {
+          rows.add(const SizedBox(height: 22));
+        }
+        rows.add(
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (int i = 0; i < chunk.length; i++) ...[
+                  if (i > 0) const SizedBox(width: 20),
+                  Expanded(
+                    child: _buildRegionalDestinationCard(context, chunk[i]),
+                  ),
+                ],
+                for (int pad = chunk.length; pad < desktopCols; pad++) ...[
+                  const SizedBox(width: 20),
+                  const Expanded(child: SizedBox.shrink()),
+                ],
+              ],
+            ),
+          ),
+        );
+      }
+      return Column(children: rows);
+    }
+
     return Container(
       width: double.infinity,
       color: const Color(0xFFFFF5F6),
@@ -2163,7 +2296,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               const SizedBox(height: 18),
               Text(
                 region == AviajRegion.india
-                    ? 'Famous Indian Treks & Beaches — Manali, Uttarakhand, Goa & Andaman'
+                    ? 'Famous Indian Treks, Circuit Trips & Solo Group Destinations'
                     : 'Famous ${region.label} Hiking Treks & Iconic Beach Escapes',
                 style: TextStyle(
                   color: AviajTheme.midnightNavy,
@@ -2176,7 +2309,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               const SizedBox(height: 10),
               Text(
                 region == AviajRegion.india
-                    ? 'Match with verified hikers, trekkers, and beach lovers heading to Himachal (Manali, Hampta Pass, Kasol), Uttarakhand (Kedarkantha, Valley of Flowers, Chopta-Tungnath, Rishikesh), Goa (Palolem, Vagator, Cabo de Rama), and Andaman & Nicobar Islands (Havelock & Radhanagar Beach).'
+                    ? 'Match with verified hikers, trekkers, and solo group travellers heading to Chopta–Tungnath–Chandrashila–Deoriatal, Kasol–Kheerganga, Triund, Kedarkantha, Spiti Valley, Western Ghats & Sahyadri Forts, Rishikesh, Bir Billing, Jaipur, Goa, Leh-Ladakh & Kerala.'
                     : 'Match with verified hikers, trekkers, and island hoppers heading to ${region.sampleDestinations} on your exact travel dates.',
                 style: const TextStyle(
                   color: Color(0xFF4A353B),
@@ -2186,32 +2319,73 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                 ),
               ),
               const SizedBox(height: 32),
-              isDesktop
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (int i = 0; i < destinations.length; i++) ...[
-                          if (i > 0) const SizedBox(width: 20),
-                          Expanded(
-                            child: _buildRegionalDestinationCard(
-                              context,
-                              destinations[i],
-                            ),
-                          ),
-                        ],
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        for (int i = 0; i < destinations.length; i++) ...[
-                          if (i > 0) const SizedBox(height: 18),
-                          _buildRegionalDestinationCard(
-                            context,
-                            destinations[i],
-                          ),
-                        ],
-                      ],
+              buildGridOfCards(destinations, desktopCols: 4),
+              if (region == AviajRegion.india) ...[
+                const SizedBox(height: 48),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AviajTheme.loveRed.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: const Text(
+                    '🌿 WESTERN GHATS & SOUTHERN TREKS',
+                    style: TextStyle(
+                      color: AviajTheme.loveRed,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 11.5,
+                      letterSpacing: 0.8,
                     ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Western Ghats & Southern Treks',
+                  style: TextStyle(
+                    color: AviajTheme.midnightNavy,
+                    fontSize: isDesktop ? 32 : 24,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.9,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                buildGridOfCards(westernGhatsTreks, desktopCols: 2),
+                const SizedBox(height: 48),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AviajTheme.loveRed.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: const Text(
+                    '🎒 SOLO & GROUP SQUAD HUBS',
+                    style: TextStyle(
+                      color: AviajTheme.loveRed,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 11.5,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Top Solo Group Travel Destinations in India',
+                  style: TextStyle(
+                    color: AviajTheme.midnightNavy,
+                    fontSize: isDesktop ? 32 : 24,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.9,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                buildGridOfCards(soloGroupIndiaDestinations, desktopCols: 4),
+              ],
             ],
           ),
         ),
