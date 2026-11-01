@@ -215,19 +215,36 @@
         return "";
       }
     };
-    // Clear any stale service worker cache so updates to aviaj.com are reflected immediately
-    try {
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for (let registration of registrations) {
-            registration.unregister();
-          }
-        });
-      }
-    } catch (_) {}
+    // Clear any stale service worker and CacheStorage so updates to aviaj.com are reflected immediately
+    (function() {
+      try {
+        if ("caches" in window) {
+          caches.keys().then(function(keys) {
+            for (var i = 0; i < keys.length; i++) {
+              caches.delete(keys[i]);
+            }
+          });
+        }
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            var hadSw = registrations && registrations.length > 0;
+            var promises = [];
+            for (var i = 0; i < registrations.length; i++) {
+              promises.push(registrations[i].unregister());
+            }
+            if (hadSw && !sessionStorage.getItem("__aviaj_sw_purged_20261101f")) {
+              sessionStorage.setItem("__aviaj_sw_purged_20261101f", "1");
+              Promise.all(promises).then(function() {
+                window.location.reload();
+              });
+            }
+          });
+        }
+      } catch (_) {}
+    })();
   </script>
 </head>
 <body>
-  <script src="flutter_bootstrap.js?v=20261101d" async></script>
+  <script src="/flutter_bootstrap.js?v=20261101f" async></script>
 </body>
 </html>

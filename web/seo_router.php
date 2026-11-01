@@ -211,6 +211,12 @@ $noscriptBlock = '<noscript><main><h1>' . $h1Esc . '</h1><p>' . $descEsc . '</p>
 
 $html = str_replace('<body>', '<body>' . $noscriptBlock, $html);
 
+$jsVer = @filemtime(__DIR__ . '/main.dart.js') ?: '20261101f';
+$html = preg_replace('/src="\/?flutter_bootstrap\.js(\?[^"]*)?"/i', 'src="/flutter_bootstrap.js?v=20261101f_' . $jsVer . '"', $html);
+
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 header('Content-Type: text/html; charset=UTF-8');
 echo $html;
 

@@ -8257,9 +8257,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               ),
             ),
           ),
-          // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK TOUCHING THE BOTTOM EDGE READABLY
+          // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK FULLY READABLE AT BOTTOM
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 10),
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final availWidth = constraints.maxWidth.isFinite
@@ -8282,18 +8282,16 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                 final metrics = tp.computeLineMetrics();
                 final baseline = metrics.isNotEmpty
                     ? metrics.first.baseline
-                    : tp.height * 0.82;
-                final glyphTop = baseline - (refFontSize * 0.74);
-                final glyphBottom = baseline + (refFontSize * 0.025);
+                    : tp.height * 0.80;
+                final glyphTop = baseline - (refFontSize * 0.76);
+                final glyphBottom = baseline + (refFontSize * 0.06);
                 final glyphHeight = glyphBottom - glyphTop;
                 final boxHeight = availWidth * (glyphHeight / tp.width);
                 return SizedBox(
                   width: availWidth,
                   height: boxHeight,
-                  child: CustomPaint(
-                    painter: _FooterAviajWordmarkPainter(
-                      glyphBottom: glyphBottom,
-                    ),
+                  child: const CustomPaint(
+                    painter: _FooterAviajWordmarkPainter(),
                   ),
                 );
               },
@@ -13338,9 +13336,7 @@ class _LanguageSelectorDropdownCardState
 }
 
 class _FooterAviajWordmarkPainter extends CustomPainter {
-  final double glyphBottom;
-
-  const _FooterAviajWordmarkPainter({required this.glyphBottom});
+  const _FooterAviajWordmarkPainter();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -13359,6 +13355,10 @@ class _FooterAviajWordmarkPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     )..layout();
 
+    final metrics = tp.computeLineMetrics();
+    final baseline =
+        metrics.isNotEmpty ? metrics.first.baseline : tp.height * 0.80;
+    final glyphBottom = baseline + (refFontSize * 0.06);
     final scale = size.width / tp.width;
     final dy = size.height - (glyphBottom * scale);
 
@@ -13371,5 +13371,5 @@ class _FooterAviajWordmarkPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _FooterAviajWordmarkPainter oldDelegate) =>
-      oldDelegate.glyphBottom != glyphBottom;
+      false;
 }
