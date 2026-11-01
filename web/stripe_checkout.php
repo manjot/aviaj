@@ -49,7 +49,7 @@ $currency = strtolower($input['currency'] ?? 'usd');
 $paymentMethod = $input['payment_method'] ?? 'Card (Visa / Mastercard / Amex)';
 $customerName = $input['customer_name'] ?? 'Aviaj Traveller';
 $shouldRedirect = !empty($input['redirect']);
-$successUrl = $input['success_url'] ?? 'https://aviaj.com/?stripe_status=success&account=' . $stripeAccountId . '&plan=' . urlencode($planId);
+$successUrl = $input['success_url'] ?? 'https://aviaj.com/?stripe_status=success&plan=' . urlencode($planId);
 $cancelUrl = $input['cancel_url'] ?? 'https://aviaj.com/?stripe_status=cancel';
 
 if (!empty($stripeSecretKey)) {
@@ -60,11 +60,9 @@ if (!empty($stripeSecretKey)) {
         'cancel_url' => $cancelUrl,
         'line_items[0][price_data][currency]' => $currency,
         'line_items[0][price_data][product_data][name]' => $planName,
-        'line_items[0][price_data][product_data][description]' => 'Aviaj Travel Buddy & Romance Platform (' . $stripeAccountId . ')',
+        'line_items[0][price_data][product_data][description]' => 'Aviaj Travel Buddy, Vacation Romance & Relationship Membership',
         'line_items[0][price_data][unit_amount]' => $amountCents,
         'line_items[0][quantity]' => 1,
-        'metadata[stripe_account]' => $stripeAccountId,
-        'metadata[stripe_key_id]' => $stripeKeyId,
         'metadata[plan_id]' => $planId,
         'metadata[customer_name]' => $customerName,
     ]);

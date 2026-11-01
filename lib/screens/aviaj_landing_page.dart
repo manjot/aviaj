@@ -4,7 +4,6 @@ import 'dart:ui' show ImageFilter, lerpDouble;
 import 'package:flutter/material.dart';
 import '../data/regional_data.dart';
 import '../models/models.dart';
-import '../services/ad_service.dart';
 import '../services/localization_service.dart';
 import '../services/seo_service.dart';
 import '../services/stripe_service.dart';
@@ -7929,27 +7928,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
-                      'STRIPE CHECKOUT • acct_1TNTVyJD1U0jWVOT',
+                      'SECURE STRIPE CHECKOUT',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w900,
                         fontSize: 11,
-                      ),
-                    ),
-                  ),
-                  TextButton.icon(
-                    onPressed: () => showAdMobUnityConsoleModal(context),
-                    icon: const Icon(
-                      Icons.monetization_on_rounded,
-                      size: 16,
-                      color: AviajTheme.horizonTeal,
-                    ),
-                    label: const Text(
-                      'Or earn free passes via AdMob & Unity Ads',
-                      style: TextStyle(
-                        color: AviajTheme.horizonTeal,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12.5,
                       ),
                     ),
                   ),
@@ -8232,8 +8215,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           items: const [
                             'Careers Portal',
                             'Tech Blog',
-                            'Stripe (${AviajStripeService.defaultStripeAccountId})',
-                            'AdMob & Unity Ads',
+                            'Press & Media',
+                            'Investor Relations',
                           ],
                           onTap: () => _scrollToSection(_pricingKey),
                         ),

@@ -28,5 +28,7 @@ class StripeGatewayClient {
     }
     return null;
   }
+
+  static void openCheckoutUrl(String url) {}
 }
 

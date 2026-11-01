@@ -11,5 +11,7 @@ class StripeGatewayClient {
           'ch_1TNTVyJD_${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
     };
   }
+
+  static void openCheckoutUrl(String url) {}
 }
 

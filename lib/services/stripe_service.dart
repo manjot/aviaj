@@ -85,7 +85,7 @@ class AviajStripeService extends ChangeNotifier {
         'Unlimited Co-Pilot Connects & Destination Matches Worldwide',
         'Destination Radar: Match in Any City Before Your Flight Departs',
         '5 Free Priority Boarding Passes Every Week',
-        '100% Ad-Free Experience (Disables AdMob & Unity Ads)',
+        '100% Ad-Free Experience Across All Destinations',
         'Unlimited Rewinds on Accidental Passes',
       ],
     ),
@@ -187,7 +187,7 @@ class AviajStripeService extends ChangeNotifier {
   }
 }
 
-/// Opens the Aviaj Storefront & Stripe Checkout Modal (`acct_1TNTVyJD1U0jWVOT`)
+/// Opens the Aviaj Storefront & Stripe Checkout Modal
 /// for Subscriptions (Business Class / First Class), Priority Boarding Packs, or Trip Deposits.
 Future<void> showStripeStorefrontModal(
   BuildContext context, {
@@ -195,13 +195,12 @@ Future<void> showStripeStorefrontModal(
   VoidCallback? onCustomPlanPaid,
 }) async {
   final stripe = AviajStripeService.instance;
+  final isCustomTripOnly = customTripPlan != null &&
+      !AviajStripeService.plans.any((p) => p.id == customTripPlan.id);
   StripeProductPlan selectedPlan =
       customTripPlan ?? AviajStripeService.plans[0];
   String selectedMethod = 'Card (Visa / Mastercard / Amex)';
-  final cardNumberCtrl = TextEditingController(text: '4242 •••• •••• 4242');
-  final expiryCtrl = TextEditingController(text: '12 / 28');
-  final cvcCtrl = TextEditingController(text: '884');
-  final nameCtrl = TextEditingController(text: 'Aarav Mehta');
+  final nameCtrl = TextEditingController();
   bool isProcessing = false;
 
   await showDialog<void>(
@@ -212,7 +211,7 @@ Future<void> showStripeStorefrontModal(
           return ListenableBuilder(
             listenable: stripe,
             builder: (context, _) {
-              final availablePlans = customTripPlan != null
+              final availablePlans = isCustomTripOnly
                   ? [customTripPlan, ...AviajStripeService.plans]
                   : AviajStripeService.plans;
 
@@ -229,7 +228,7 @@ Future<void> showStripeStorefrontModal(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Header bar with Stripe Account ID badge
+                        // Header bar with Secure Stripe Checkout badge
                         Row(
                           children: [
                             Container(
@@ -241,18 +240,18 @@ Future<void> showStripeStorefrontModal(
                                 color: AviajTheme.loveRed,
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Row(
+                              child: const Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.lock_rounded,
                                     color: Colors.white,
                                     size: 14,
                                   ),
-                                  const SizedBox(width: 6),
+                                  SizedBox(width: 6),
                                   Text(
-                                    'STRIPE CHECKOUT • ${stripe.stripeAccountId}',
-                                    style: const TextStyle(
+                                    'SECURE STRIPE CHECKOUT',
+                                    style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w900,
                                       fontSize: 11,
@@ -271,9 +270,9 @@ Future<void> showStripeStorefrontModal(
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          customTripPlan != null
+                          isCustomTripOnly
                               ? 'Reserve Your Trip Spot or Upgrade with Stripe'
-                              : 'Upgrade to Aviaj Business Class™ & First Class™',
+                              : 'Upgrade Your Aviaj Cabin Class',
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w900,
@@ -282,7 +281,7 @@ Future<void> showStripeStorefrontModal(
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Current Tier: ${stripe.activeTier} • Account: ${stripe.stripeAccountId} • Key: ${stripe.stripeKeyId}',
+                          'Current Tier: ${stripe.activeTier} • 256-Bit SSL Encrypted Checkout',
                           style: const TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w700,
@@ -440,46 +439,14 @@ Future<void> showStripeStorefrontModal(
                           }).toList(),
                         ),
                         const SizedBox(height: 14),
-                        if (selectedMethod.startsWith('Card')) ...[
-                          TextField(
-                            controller: nameCtrl,
-                            decoration: const InputDecoration(
-                              labelText: 'Cardholder Name',
-                              prefixIcon: Icon(Icons.person_outline_rounded),
-                            ),
+                        TextField(
+                          controller: nameCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'Full Name or Email (Optional)',
+                            prefixIcon: Icon(Icons.person_outline_rounded),
                           ),
-                          const SizedBox(height: 10),
-                          TextField(
-                            controller: cardNumberCtrl,
-                            decoration: const InputDecoration(
-                              labelText: 'Card Number (Stripe Encrypted)',
-                              prefixIcon: Icon(Icons.credit_card_rounded),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: expiryCtrl,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Expiry (MM / YY)',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: TextField(
-                                  controller: cvcCtrl,
-                                  decoration: const InputDecoration(
-                                    labelText: 'CVC',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 14),
-                        ],
+                        ),
+                        const SizedBox(height: 14),
                         // Pay Button
                         SizedBox(
                           width: double.infinity,
@@ -490,14 +457,24 @@ Future<void> showStripeStorefrontModal(
                                     setModalState(() {
                                       isProcessing = true;
                                     });
-                                    final receipt = await stripe
-                                        .authorizeProductionPayment(
+                                    final customerLabel =
+                                        nameCtrl.text.trim().isEmpty
+                                            ? 'Aviaj Member'
+                                            : nameCtrl.text.trim();
+                                    await stripe.authorizeProductionPayment(
                                       plan: selectedPlan,
-                                      last4: '4242',
+                                      last4: 'Live',
                                       paymentMethod: selectedMethod,
-                                      customerName: nameCtrl.text.trim(),
+                                      customerName: customerLabel,
                                       onAfterSuccess: onCustomPlanPaid,
                                     );
+                                    final liveUrl = stripe.lastCheckoutUrl;
+                                    if (liveUrl != null &&
+                                        liveUrl.startsWith('https://')) {
+                                      StripeGatewayClient.openCheckoutUrl(
+                                        liveUrl,
+                                      );
+                                    }
                                     if (ctx.mounted) {
                                       Navigator.of(ctx).pop();
                                       ScaffoldMessenger.of(context)
@@ -506,7 +483,7 @@ Future<void> showStripeStorefrontModal(
                                           backgroundColor:
                                               AviajTheme.solidEmerald,
                                           content: Text(
-                                            '✓ Stripe Production Charge ${receipt.receiptId} (${stripe.stripeAccountId})! Activated ${selectedPlan.name}.',
+                                            '✓ Redirecting to Secure Stripe Checkout for ${selectedPlan.name}...',
                                           ),
                                         ),
                                       );
@@ -528,8 +505,8 @@ Future<void> showStripeStorefrontModal(
                             ),
                             label: Text(
                               isProcessing
-                                  ? 'Authorizing with Stripe (${stripe.stripeAccountId})...'
-                                  : 'Pay \$${selectedPlan.amountUsd.toStringAsFixed(2)} via Stripe',
+                                  ? 'Connecting to Secure Stripe Checkout...'
+                                  : 'Continue to Stripe Checkout (\$${selectedPlan.amountUsd.toStringAsFixed(2)})',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 15,

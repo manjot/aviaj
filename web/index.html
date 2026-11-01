@@ -201,7 +201,7 @@
     // Kick off initial IP geolocation check immediately before Flutter finishes loading
     window.__aviajFetchCountry();
 
-    // Production Stripe Checkout Session creator via /stripe_checkout.php (acct_1TNTVyJD1U0jWVOT)
+    // Production Stripe Checkout Session creator via /stripe_checkout.php
     window.__aviajCreateStripeSession = async function(payloadJson) {
       try {
         const res = await fetch("/stripe_checkout.php", {
@@ -214,6 +214,13 @@
       } catch (_) {
         return "";
       }
+    };
+    window.__aviajOpenStripeCheckout = function(url) {
+      try {
+        if (url && typeof url === "string" && url.startsWith("https://")) {
+          window.location.assign(url);
+        }
+      } catch (_) {}
     };
     // Clear any stale service worker and CacheStorage so updates to aviaj.com are reflected immediately
     (function() {
@@ -232,8 +239,8 @@
             for (var i = 0; i < registrations.length; i++) {
               promises.push(registrations[i].unregister());
             }
-            if (hadSw && !sessionStorage.getItem("__aviaj_sw_purged_20261101f")) {
-              sessionStorage.setItem("__aviaj_sw_purged_20261101f", "1");
+            if (hadSw && !sessionStorage.getItem("__aviaj_sw_purged_20261101g")) {
+              sessionStorage.setItem("__aviaj_sw_purged_20261101g", "1");
               Promise.all(promises).then(function() {
                 window.location.reload();
               });
@@ -245,6 +252,6 @@
   </script>
 </head>
 <body>
-  <script src="/flutter_bootstrap.js?v=20261101f" async></script>
+  <script src="/flutter_bootstrap.js?v=20261101g" async></script>
 </body>
 </html>

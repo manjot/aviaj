@@ -4,6 +4,9 @@ import 'dart:js_interop';
 @JS('__aviajCreateStripeSession')
 external JSPromise<JSString>? _jsCreateStripeSession(JSString payloadJson);
 
+@JS('__aviajOpenStripeCheckout')
+external void _jsOpenStripeCheckout(JSString url);
+
 class StripeGatewayClient {
   static Future<Map<String, dynamic>?> createProductionPayment({
     required String endpointUrl,
@@ -25,6 +28,14 @@ class StripeGatewayClient {
       // Fallback to local receipt generation when offline
     }
     return null;
+  }
+
+  static void openCheckoutUrl(String url) {
+    try {
+      if (url.isNotEmpty) {
+        _jsOpenStripeCheckout(url.toJS);
+      }
+    } catch (_) {}
   }
 }
 
