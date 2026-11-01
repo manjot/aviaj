@@ -8257,34 +8257,46 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               ),
             ),
           ),
-          // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK FLUSH WITH THE BOTTOM EDGE
-          ClipRect(
-            child: Align(
-              alignment: Alignment.topCenter,
-              heightFactor: 0.84,
-              child: SizedBox(
-                width: screenWidth,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18),
-                    child: Text(
-                      'AVIAJ',
-                      textHeightBehavior: const TextHeightBehavior(
-                        applyHeightToFirstAscent: false,
-                        applyHeightToLastDescent: false,
-                      ),
-                      style: TextStyle(
-                        color: AviajTheme.loveRed,
-                        fontSize: 300,
-                        fontWeight: FontWeight.w900,
-                        height: 1.0,
-                        letterSpacing: -10,
-                      ),
+          // COLOSSAL FULL-BLEED BRIGHT LOVE RED "AVIAJ" WORDMARK TOUCHING THE BOTTOM EDGE READABLY
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final availWidth = constraints.maxWidth.isFinite
+                    ? constraints.maxWidth
+                    : screenWidth - 48;
+                const double refFontSize = 300.0;
+                final tp = TextPainter(
+                  text: const TextSpan(
+                    text: 'AVIAJ',
+                    style: TextStyle(
+                      color: AviajTheme.loveRed,
+                      fontSize: refFontSize,
+                      fontWeight: FontWeight.w900,
+                      height: 1.0,
+                      letterSpacing: -8,
                     ),
                   ),
-                ),
-              ),
+                  textDirection: TextDirection.ltr,
+                )..layout();
+                final metrics = tp.computeLineMetrics();
+                final baseline = metrics.isNotEmpty
+                    ? metrics.first.baseline
+                    : tp.height * 0.82;
+                final glyphTop = baseline - (refFontSize * 0.74);
+                final glyphBottom = baseline + (refFontSize * 0.025);
+                final glyphHeight = glyphBottom - glyphTop;
+                final boxHeight = availWidth * (glyphHeight / tp.width);
+                return SizedBox(
+                  width: availWidth,
+                  height: boxHeight,
+                  child: CustomPaint(
+                    painter: _FooterAviajWordmarkPainter(
+                      glyphBottom: glyphBottom,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -13323,4 +13335,41 @@ class _LanguageSelectorDropdownCardState
       ),
     );
   }
+}
+
+class _FooterAviajWordmarkPainter extends CustomPainter {
+  final double glyphBottom;
+
+  const _FooterAviajWordmarkPainter({required this.glyphBottom});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const double refFontSize = 300.0;
+    final tp = TextPainter(
+      text: const TextSpan(
+        text: 'AVIAJ',
+        style: TextStyle(
+          color: AviajTheme.loveRed,
+          fontSize: refFontSize,
+          fontWeight: FontWeight.w900,
+          height: 1.0,
+          letterSpacing: -8,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final scale = size.width / tp.width;
+    final dy = size.height - (glyphBottom * scale);
+
+    canvas.save();
+    canvas.translate(0, dy);
+    canvas.scale(scale, scale);
+    tp.paint(canvas, Offset.zero);
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant _FooterAviajWordmarkPainter oldDelegate) =>
+      oldDelegate.glyphBottom != glyphBottom;
 }
