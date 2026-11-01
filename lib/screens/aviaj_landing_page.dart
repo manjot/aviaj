@@ -51,8 +51,16 @@ class _AviajLandingPageState extends State<AviajLandingPage>
   bool _showDateMegaMenu = false;
   bool _showAffMegaMenu = false;
   bool _showStoriesMegaMenu = false;
-  bool _showPrivacyBanner = true;
+  bool _showPrivacyBanner = !SeoService.hasPrivacyConsent();
   bool _optOutMarketingPartners = false;
+
+  void _setPrivacyConsentAccepted(bool accepted) {
+    setState(() {
+      _showPrivacyBanner = !accepted;
+    });
+    SeoService.setPrivacyConsent(accepted);
+    widget.state.setPrivacyConsent(accepted);
+  }
 
   late final AnimationController _bannerIntroController;
   late final AnimationController _profileSliderController;
@@ -1486,7 +1494,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                   children: _buildActiveSeoPageSections(context, isDesktop),
                 ),
               ),
-              if (_showPrivacyBanner)
+              if (_showPrivacyBanner &&
+                  !widget.state.hasAcceptedPrivacyConsent &&
+                  !SeoService.hasPrivacyConsent())
                 Positioned(
                   left: 0,
                   right: 0,
@@ -7710,8 +7720,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           ),
                           const Spacer(),
                           IconButton(
-                            onPressed: () =>
-                                setState(() => _showPrivacyBanner = false),
+                            onPressed: () => _setPrivacyConsentAccepted(true),
                             icon: const Icon(
                               Icons.close_rounded,
                               size: 20,
@@ -7808,11 +7817,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         ),
         const SizedBox(height: 20),
         ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _showPrivacyBanner = false;
-            });
-          },
+          onPressed: () => _setPrivacyConsentAccepted(true),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF2B2B2B),
             foregroundColor: Colors.white,
@@ -7920,9 +7925,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         children: [
                           TextButton(
                             onPressed: () {
-                              setState(() {
-                                _showPrivacyBanner = true;
-                              });
+                              _setPrivacyConsentAccepted(false);
                               Navigator.of(dialogContext).pop();
                             },
                             child: const Text(
@@ -7938,8 +7941,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             onPressed: () {
                               setState(() {
                                 _optOutMarketingPartners = localOptOut;
-                                _showPrivacyBanner = false;
                               });
+                              _setPrivacyConsentAccepted(true);
                               Navigator.of(dialogContext).pop();
                               ScaffoldMessenger.of(this.context).showSnackBar(
                                 SnackBar(

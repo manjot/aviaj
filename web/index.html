@@ -114,6 +114,29 @@
       });
     };
 
+    // Persistent Privacy Consent Storage (localStorage + 1-year cookie so popup never reappears once accepted)
+    window.__aviajHasPrivacyConsent = function() {
+      try {
+        if (window.localStorage && window.localStorage.getItem("aviaj_privacy_consent_v1") === "1") {
+          return true;
+        }
+        if (document.cookie && document.cookie.indexOf("aviaj_privacy_consent_v1=1") !== -1) {
+          return true;
+        }
+      } catch (_) {}
+      return false;
+    };
+
+    window.__aviajSetPrivacyConsent = function(accepted) {
+      try {
+        const val = accepted ? "1" : "0";
+        if (window.localStorage) {
+          window.localStorage.setItem("aviaj_privacy_consent_v1", val);
+        }
+        document.cookie = "aviaj_privacy_consent_v1=" + val + "; path=/; max-age=31536000; SameSite=Lax";
+      } catch (_) {}
+    };
+
     // Live IP & VPN Geolocation Resolver (supports Turbo VPN, browser proxies, and global CDNs)
     window.__aviajDetectedCountry = "";
     window.__aviajFetchCountry = async function() {

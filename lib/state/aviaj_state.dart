@@ -14,6 +14,7 @@ class AviajState extends ChangeNotifier {
   static const String _passedIdsKey = 'aviaj_passed_ids';
   static const String _joinedTripsKey = 'aviaj_joined_trips';
   static const String _darkModeKey = 'aviaj_dark_mode';
+  static const String _privacyConsentKey = 'aviaj_privacy_consent_v1';
   static const String _userProfileKey = 'aviaj_user_profile';
   static const String _customMessagesKey = 'aviaj_custom_messages';
 
@@ -39,6 +40,7 @@ class AviajState extends ChangeNotifier {
   TravelStyle? _selectedStyleFilter;
   String _searchQuery = '';
   bool _isDarkMode = false;
+  bool _hasAcceptedPrivacyConsent = false;
   int _activeTabIndex = 0;
   String? _selectedConversationProfileId = 'p1';
 
@@ -64,6 +66,7 @@ class AviajState extends ChangeNotifier {
   TravelStyle? get selectedStyleFilter => _selectedStyleFilter;
   String get searchQuery => _searchQuery;
   bool get isDarkMode => _isDarkMode;
+  bool get hasAcceptedPrivacyConsent => _hasAcceptedPrivacyConsent;
   int get activeTabIndex => _activeTabIndex;
   String? get selectedConversationProfileId => _selectedConversationProfileId;
   bool get canUndoSwipe => _swipeHistory.isNotEmpty;
@@ -107,6 +110,7 @@ class AviajState extends ChangeNotifier {
       }
 
       _isDarkMode = prefs.getBool(_darkModeKey) ?? false;
+      _hasAcceptedPrivacyConsent = prefs.getBool(_privacyConsentKey) ?? false;
 
       final savedUserJson = prefs.getString(_userProfileKey);
       if (savedUserJson != null) {
@@ -176,6 +180,7 @@ class AviajState extends ChangeNotifier {
           .toList();
       await prefs.setStringList(_joinedTripsKey, joinedTripIds);
       await prefs.setBool(_darkModeKey, _isDarkMode);
+      await prefs.setBool(_privacyConsentKey, _hasAcceptedPrivacyConsent);
 
       final userMap = {
         'name': _currentUser.name,
@@ -201,6 +206,12 @@ class AviajState extends ChangeNotifier {
   void setActiveTab(int index) {
     _activeTabIndex = index;
     notifyListeners();
+  }
+
+  void setPrivacyConsent(bool accepted) {
+    _hasAcceptedPrivacyConsent = accepted;
+    notifyListeners();
+    _persistState();
   }
 
   void setRegion(AviajRegion region, {bool manualOverride = true}) {

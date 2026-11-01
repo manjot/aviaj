@@ -324,5 +324,10 @@ class SeoService {
   static void listenPopState(void Function(AviajSeoPage page) onRouteChanged) {
     impl.listenPopState(onRouteChanged);
   }
+
+  static bool hasPrivacyConsent() => impl.hasPrivacyConsent();
+
+  static void setPrivacyConsent(bool accepted) =>
+      impl.setPrivacyConsent(accepted);
 }
 

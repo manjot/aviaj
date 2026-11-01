@@ -18,6 +18,12 @@ external void _jsApplySeo(
 @JS('__aviajRegisterPopState')
 external void _jsRegisterPopState(JSFunction callback);
 
+@JS('__aviajHasPrivacyConsent')
+external JSBoolean? _jsHasPrivacyConsent();
+
+@JS('__aviajSetPrivacyConsent')
+external void _jsSetPrivacyConsent(JSBoolean accepted);
+
 AviajSeoPage detectInitialPage() {
   try {
     final raw = _jsGetCurrentPath()?.toDart ?? '/';
@@ -48,6 +54,20 @@ void listenPopState(void Function(AviajSeoPage page) onRouteChanged) {
     }
 
     _jsRegisterPopState(handlePath.toJS);
+  } catch (_) {}
+}
+
+bool hasPrivacyConsent() {
+  try {
+    return _jsHasPrivacyConsent()?.toDart ?? false;
+  } catch (_) {
+    return false;
+  }
+}
+
+void setPrivacyConsent(bool accepted) {
+  try {
+    _jsSetPrivacyConsent(accepted.toJS);
   } catch (_) {}
 }
 
