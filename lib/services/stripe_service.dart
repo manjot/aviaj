@@ -514,6 +514,39 @@ Future<void> showStripeStorefrontModal(
                             ),
                           ),
                         ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                              AviajAdService.instance.showRewardedAd(context);
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AviajTheme.midnightNavy,
+                              side: const BorderSide(
+                                color: AviajTheme.compassAmber,
+                                width: 1.6,
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 13),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                            ),
+                            icon: const Icon(
+                              Icons.play_circle_fill_rounded,
+                              color: AviajTheme.compassAmber,
+                              size: 18,
+                            ),
+                            label: const Text(
+                              'Or Watch AdMob / Unity Rewarded Ad (+3 Free Passes)',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
                         if (stripe.receipts.isNotEmpty) ...[
                           const SizedBox(height: 16),
                           Container(

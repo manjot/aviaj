@@ -11,6 +11,17 @@ class NativeAdBridge {
   }) async =>
       true;
 
+  static Future<void> preloadAds({
+    required String admobAndroidInterstitialId,
+    required String admobIosInterstitialId,
+    required String admobAndroidRewardedId,
+    required String admobIosRewardedId,
+    required String unityAndroidInterstitialPlacement,
+    required String unityIosInterstitialPlacement,
+    required String unityAndroidRewardedPlacement,
+    required String unityIosRewardedPlacement,
+  }) async {}
+
   static Widget buildNativeBannerWidget({
     required String admobAndroidUnitId,
     required String admobIosUnitId,

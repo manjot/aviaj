@@ -6,6 +6,7 @@ import '../data/regional_data.dart';
 import '../models/models.dart';
 import '../services/localization_service.dart';
 import '../services/seo_service.dart';
+import '../services/ad_service.dart';
 import '../services/stripe_service.dart';
 import '../state/aviaj_state.dart';
 import '../theme/app_theme.dart';
@@ -8058,6 +8059,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     ),
                   );
                 }).toList(),
+              ),
+              const SizedBox(height: 28),
+              const AviajAdBannerWidget(
+                placementLabel: 'Cabin Class Rewards',
               ),
             ],
           ),

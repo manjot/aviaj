@@ -228,9 +228,19 @@ class AviajMobileAppShell extends StatelessWidget {
           ),
         ),
       ),
-      body: IndexedStack(
-        index: state.activeTabIndex,
-        children: screens,
+      body: Column(
+        children: [
+          Expanded(
+            child: IndexedStack(
+              index: state.activeTabIndex,
+              children: screens,
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(12, 4, 12, 6),
+            child: AviajAdBannerWidget(placementLabel: 'App Mediation Bar'),
+          ),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: state.activeTabIndex,

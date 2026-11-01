@@ -104,7 +104,21 @@ class AviajAdService extends ChangeNotifier {
       iosGameId: unityIosGameId,
       testMode: false,
     );
+    await preloadAllAds();
     notifyListeners();
+  }
+
+  Future<void> preloadAllAds() async {
+    await NativeAdBridge.preloadAds(
+      admobAndroidInterstitialId: admobInterstitialUnitId,
+      admobIosInterstitialId: admobIosInterstitialUnitId,
+      admobAndroidRewardedId: admobRewardedUnitId,
+      admobIosRewardedId: admobIosRewardedUnitId,
+      unityAndroidInterstitialPlacement: unityInterstitialPlacement,
+      unityIosInterstitialPlacement: 'Interstitial_iOS',
+      unityAndroidRewardedPlacement: unityRewardedPlacement,
+      unityIosRewardedPlacement: 'Rewarded_iOS',
+    );
   }
 
   void setProvider(AdNetworkProvider provider) {
@@ -155,6 +169,7 @@ class AviajAdService extends ChangeNotifier {
     );
 
     interstitialImpressions++;
+    unawaited(preloadAllAds());
     notifyListeners();
 
     if (!shownNatively && context.mounted) {
@@ -183,6 +198,7 @@ class AviajAdService extends ChangeNotifier {
         rewardedVideosCompleted++;
         superBoardingPassCredits += 3;
         spotlightBoostMinutes += 30;
+        unawaited(preloadAllAds());
         notifyListeners();
       },
     );
