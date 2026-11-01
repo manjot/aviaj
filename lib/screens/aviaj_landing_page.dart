@@ -508,6 +508,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
       case AviajSeoPage.support:
         return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
           Container(
             key: _supportCenterKey,
             child: _buildSupportCenterSection(context, isDesktop),
@@ -517,6 +518,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
       case AviajSeoPage.appOnly:
         return [
+          _buildStandalonePageHeaderBar(context, isDesktop),
           Container(
             key: _appOnlyKey,
             child: _buildAppOnlySwitchSection(context, isDesktop),
@@ -534,7 +536,8 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         _activeSeoPage == AviajSeoPage.dateSnoozeMode ||
         _activeSeoPage == AviajSeoPage.dateSuperSwipe ||
         _activeSeoPage == AviajSeoPage.affDeparturePlans ||
-        _activeSeoPage == AviajSeoPage.affCommunityLeaders;
+        _activeSeoPage == AviajSeoPage.affCommunityLeaders ||
+        _activeSeoPage == AviajSeoPage.appOnly;
     final isRedHeader = !isSubFeaturePage &&
         (_activeSeoPage.navGroup == 'Date' ||
             _activeSeoPage.navGroup == 'AFF');
@@ -7677,133 +7680,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
     return Column(
       children: [
-        // 1. Top White Sub-Navigation Bar (`≡ aviaj | About • The Buzz • The Shop • Ambassadors | [Download the App] [Sign In]`)
-        Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            border: Border(
-              top: BorderSide(color: Color(0xFFECECEC), width: 1),
-            ),
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: isDesktop ? 56 : 20,
-            vertical: 16,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1280),
-              child: Row(
-                children: [
-                  // Hexagonal / Emblem Mark + "aviaj"
-                  InkWell(
-                    onTap: () => _scrollToSection(_affKey),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: AviajTheme.loveRed,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.menu_rounded,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'aviaj',
-                          style: TextStyle(
-                            color: AviajTheme.loveRed,
-                            fontSize: 27,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: -0.9,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (isDesktop) ...[
-                    const SizedBox(width: 36),
-                    for (final navItem in const [
-                      'About',
-                      'The Buzz',
-                      'The Shop',
-                      'Ambassadors',
-                    ])
-                      Padding(
-                        padding: const EdgeInsets.only(right: 28),
-                        child: InkWell(
-                          onTap: () => _scrollToSection(_affKey),
-                          child: Text(
-                            navItem,
-                            style: const TextStyle(
-                              color: Color(0xFF1E1E1E),
-                              fontSize: 14.5,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                  const Spacer(),
-                  FilledButton(
-                    onPressed: () => showMobileAppDownloadModal(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AviajTheme.loveRed,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 22,
-                        vertical: 14,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                    ),
-                    child: const Text(
-                      'Download the App',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  OutlinedButton(
-                    onPressed: widget.onOpenFullMobilePreview,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF1E1E1E),
-                      side: const BorderSide(
-                        color: Color(0xFF1E1E1E),
-                        width: 1.2,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 22,
-                        vertical: 14,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                    ),
-                    child: const Text(
-                      'Sign In',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-
-        // 2. Full-Bleed Brand Banner with Wavy / Scalloped Cloud Frame ("The Friendship Hub")
+        // 1. Full-Bleed Brand Banner with Wavy / Scalloped Cloud Frame ("The Friendship Hub")
         Container(
           width: double.infinity,
           color: AviajTheme.loveRed,
@@ -8297,127 +8174,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
     return Column(
       children: [
-        // 1. Top White Sub-Navigation Bar (`≡ aviaj | About • The Buzz • The Shop • Ambassadors | [Download the App] [Sign In]`)
-        Container(
-          width: double.infinity,
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(
-            horizontal: isDesktop ? 56 : 20,
-            vertical: 16,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1280),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () => _scrollToSection(_dateSectionKey),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: AviajTheme.loveRed,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.menu_rounded,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'aviaj',
-                          style: TextStyle(
-                            color: AviajTheme.loveRed,
-                            fontSize: 27,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: -0.9,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (isDesktop) ...[
-                    const SizedBox(width: 36),
-                    for (final navItem in const [
-                      'About',
-                      'The Buzz',
-                      'The Shop',
-                      'Ambassadors',
-                    ])
-                      Padding(
-                        padding: const EdgeInsets.only(right: 28),
-                        child: InkWell(
-                          onTap: () => _scrollToSection(_dateSectionKey),
-                          child: Text(
-                            navItem,
-                            style: const TextStyle(
-                              color: Color(0xFF1E1E1E),
-                              fontSize: 14.5,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                  const Spacer(),
-                  FilledButton(
-                    onPressed: () => showMobileAppDownloadModal(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AviajTheme.loveRed,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 22,
-                        vertical: 14,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                    ),
-                    child: const Text(
-                      'Download the App',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  OutlinedButton(
-                    onPressed: widget.onOpenFullMobilePreview,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF1E1E1E),
-                      side: const BorderSide(
-                        color: Color(0xFF1E1E1E),
-                        width: 1.2,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 22,
-                        vertical: 14,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                    ),
-                    child: const Text(
-                      'Sign In',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-
-        // 2. Full-Bleed Forest Hiking Couple Hero Banner ("Seasonal\nDating Guides")
+        // 1. Full-Bleed Forest Hiking Couple Hero Banner ("Seasonal\nDating Guides")
         SizedBox(
           width: double.infinity,
           height: isDesktop ? 560 : 400,
@@ -10556,131 +10313,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       color: Colors.white,
       child: Column(
         children: [
-          const Divider(height: 1, color: Color(0xFFEAEAEA)),
-          // 1. Top Support Sub-Navbar (Aviaj | Date • Friends • Stories • Events • Safety • [Support] | 🌐 ⌄ | [Sign in])
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: isDesktop ? 64 : 20,
-              vertical: 18,
-            ),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1200),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () => _scrollToSection(_modesKey),
-                      child: const Text(
-                        'Aviaj',
-                        style: TextStyle(
-                          color: Color(0xFF1E1E1E),
-                          fontSize: 32,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -1.2,
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    if (isDesktop)
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF6F6F6),
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            for (final nav in [
-                              (label: 'Date', key: _dateSectionKey, active: false),
-                              (label: 'Friends', key: _affKey, active: false),
-                              (label: 'Stories', key: _storiesKey, active: false),
-                              (label: 'Events', key: _radarKey, active: false),
-                              (
-                                label: 'Safety',
-                                key: _safetyCenterKey,
-                                active: false,
-                              ),
-                              (
-                                label: 'Support',
-                                key: _supportCenterKey,
-                                active: true,
-                              ),
-                            ])
-                              InkWell(
-                                onTap: () => _scrollToSection(nav.key),
-                                borderRadius: BorderRadius.circular(30),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 18,
-                                    vertical: 9,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: nav.active
-                                        ? Colors.white
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(30),
-                                    boxShadow: nav.active
-                                        ? [
-                                            BoxShadow(
-                                              color: Colors.black.withValues(
-                                                alpha: 0.06,
-                                              ),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Text(
-                                    nav.label,
-                                    style: TextStyle(
-                                      color: const Color(0xFF1E1E1E),
-                                      fontSize: 13.5,
-                                      fontWeight: nav.active
-                                          ? FontWeight.w700
-                                          : FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    const Spacer(),
-                    _buildRegionSelectorPill(
-                      isDarkPill: false,
-                      showFullLanguageLabel: false,
-                    ),
-                    const SizedBox(width: 10),
-                    InkWell(
-                      onTap: () => _scrollToSection(_appOnlyKey),
-                      borderRadius: BorderRadius.circular(30),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 11,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF242424),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: const Text(
-                          'Sign in',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
           // Main Support Center Body Container
           Padding(
             padding: EdgeInsets.symmetric(
@@ -11686,10 +11318,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         // 1. Top Soft Cream/Blush Banner ("AVIAJ IS NOW APP-ONLY.")
         Container(
           width: double.infinity,
-          color: const Color(0xFFFFF5CC),
+          color: const Color(0xFFFFF8D6),
           padding: EdgeInsets.fromLTRB(
             isDesktop ? 64 : 20,
-            24,
+            isDesktop ? 42 : 24,
             isDesktop ? 64 : 20,
             isDesktop ? 88 : 56,
           ),
@@ -11698,67 +11330,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               constraints: const BoxConstraints(maxWidth: 1200),
               child: Column(
                 children: [
-                  // Sub-navbar row
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () => _scrollToSection(_modesKey),
-                        child: const Text(
-                          'Aviaj',
-                          style: TextStyle(
-                            color: Color(0xFF242424),
-                            fontSize: 32,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -1.2,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      if (isDesktop)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              _NavbarLink(
-                                label: 'Date',
-                                onTap: () => _scrollToSection(_dateSectionKey),
-                              ),
-                              _NavbarLink(
-                                label: 'AFF',
-                                onTap: () => _scrollToSection(_affKey),
-                              ),
-                              _NavbarLink(
-                                label: 'Stories',
-                                onTap: () => _scrollToSection(_storiesKey),
-                              ),
-                              _NavbarLink(
-                                label: 'Safety',
-                                onTap: () => _scrollToSection(_safetyCenterKey),
-                              ),
-                              _NavbarLink(
-                                label: 'Support',
-                                onTap: () =>
-                                    _scrollToSection(_supportCenterKey),
-                              ),
-                            ],
-                          ),
-                        ),
-                      const Spacer(),
-                      _buildRegionSelectorPill(
-                        isDarkPill: false,
-                        showFullLanguageLabel: false,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: isDesktop ? 68 : 40),
                   Text(
                     'AVIAJ IS NOW APP-ONLY.',
                     textAlign: TextAlign.center,
