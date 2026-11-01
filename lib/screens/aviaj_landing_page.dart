@@ -237,8 +237,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     final overlay =
         Overlay.of(pillContext).context.findRenderObject() as RenderBox?;
     Offset anchor = const Offset(100, 24);
+    Size pillSize = const Size(98, 44);
     if (box != null && overlay != null) {
       anchor = box.localToGlobal(Offset.zero, ancestor: overlay);
+      pillSize = box.size;
     }
 
     showGeneralDialog<void>(
@@ -251,15 +253,17 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         final screenSize = MediaQuery.of(dialogContext).size;
         const menuWidth = 248.0;
         const menuCardHeight = 472.0;
-        const tabHeight = 46.0;
-        const totalHeight = menuCardHeight + tabHeight;
+        final tabHeight = pillSize.height;
+        final totalHeight = menuCardHeight + tabHeight;
 
-        final left = anchor.dx
+        final left = (anchor.dx + pillSize.width - menuWidth)
             .clamp(12.0, math.max(12.0, screenSize.width - menuWidth - 16.0))
             .toDouble();
         final top = anchor.dy
             .clamp(12.0, math.max(12.0, screenSize.height - totalHeight - 16.0))
             .toDouble();
+        final tabLeftOffset =
+            (anchor.dx - left).clamp(0.0, menuWidth - pillSize.width);
 
         return Stack(
           children: [
@@ -278,6 +282,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                 child: _LanguageSelectorDropdownCard(
                   selectedLanguageLabel: _selectedLanguageLabel,
                   options: _languageOptions,
+                  tabLeftOffset: tabLeftOffset,
+                  tabWidth: pillSize.width,
+                  tabHeight: pillSize.height,
                   onSelect: (option) {
                     Navigator.of(dialogContext).pop();
                     _selectRegion(
@@ -13110,12 +13117,18 @@ class _AppSwitchIdCardsPainter extends CustomPainter {
 class _LanguageSelectorDropdownCard extends StatefulWidget {
   final String selectedLanguageLabel;
   final List<({String label, AviajRegion region})> options;
+  final double tabLeftOffset;
+  final double tabWidth;
+  final double tabHeight;
   final ValueChanged<({String label, AviajRegion region})> onSelect;
   final VoidCallback onClose;
 
   const _LanguageSelectorDropdownCard({
     required this.selectedLanguageLabel,
     required this.options,
+    required this.tabLeftOffset,
+    required this.tabWidth,
+    required this.tabHeight,
     required this.onSelect,
     required this.onClose,
   });
@@ -13131,6 +13144,22 @@ class _LanguageSelectorDropdownCardState
   int? _hoveredIndex;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      final selectedIdx = widget.options.indexWhere(
+        (o) => o.label == widget.selectedLanguageLabel,
+      );
+      if (selectedIdx > 8) {
+        final maxExtent = _scrollController.position.maxScrollExtent;
+        final target = ((selectedIdx - 8) * 36.0).clamp(0.0, maxExtent);
+        _scrollController.jumpTo(target);
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -13144,40 +13173,42 @@ class _LanguageSelectorDropdownCardState
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Top Connected Globe + Up-Chevron Tab ("🌐 ∧")
-          GestureDetector(
-            onTap: widget.onClose,
-            child: Container(
-              width: 98,
-              height: 46,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFAF9F4),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
-                border: Border.all(
-                  color: const Color(0xFFE5E4DD),
-                  width: 1,
-                ),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.language_rounded,
-                    color: Color(0xFF1E1E1E),
-                    size: 21,
+          // Top Connected Globe + Up-Chevron Tab ("🌐 ∧") aligned directly over the header pill
+          Padding(
+            padding: EdgeInsets.only(left: widget.tabLeftOffset),
+            child: GestureDetector(
+              onTap: widget.onClose,
+              child: Container(
+                width: widget.tabWidth,
+                height: widget.tabHeight,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: const Color(0xFF1E1E1E),
+                    width: 1.5,
                   ),
-                  SizedBox(width: 8),
-                  Icon(
-                    Icons.keyboard_arrow_up_rounded,
-                    color: Color(0xFF1E1E1E),
-                    size: 25,
-                  ),
-                ],
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.language_rounded,
+                      color: Color(0xFF1E1E1E),
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Icon(
+                      Icons.keyboard_arrow_up_rounded,
+                      color: Color(0xFF1E1E1E),
+                      size: 22,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
+          const SizedBox(height: 6),
 
           // Scrollable 28-Language Dropdown List Card
           Container(
@@ -13185,11 +13216,7 @@ class _LanguageSelectorDropdownCardState
             height: 472,
             decoration: BoxDecoration(
               color: const Color(0xFFFAF9F4),
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(18),
-                bottomLeft: Radius.circular(18),
-                bottomRight: Radius.circular(18),
-              ),
+              borderRadius: BorderRadius.circular(18),
               border: Border.all(
                 color: const Color(0xFFE5E4DD),
                 width: 1,
@@ -13203,11 +13230,7 @@ class _LanguageSelectorDropdownCardState
               ],
             ),
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(18),
-                bottomLeft: Radius.circular(18),
-                bottomRight: Radius.circular(18),
-              ),
+              borderRadius: BorderRadius.circular(18),
               child: ScrollConfiguration(
                 behavior:
                     ScrollConfiguration.of(context).copyWith(scrollbars: false),
