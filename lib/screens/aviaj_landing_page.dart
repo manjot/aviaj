@@ -596,6 +596,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
         : (isRedHeader ? AviajTheme.loveRed : Colors.white);
     final wordmarkColor = isRedHeader ? Colors.white : const Color(0xFF242424);
 
+    final isAnyMegaMenuOpen =
+        _showDateMegaMenu || _showAffMegaMenu || _showStoriesMegaMenu;
+
     return Container(
       width: double.infinity,
       color: bgColor,
@@ -641,8 +644,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       children: [
                         _NavbarLink(
                           label: 'Date',
-                          isHighlighted: _activeSeoPage.navGroup == 'Date' ||
-                              _showDateMegaMenu,
+                          isHighlighted: isAnyMegaMenuOpen
+                              ? _showDateMegaMenu
+                              : _activeSeoPage.navGroup == 'Date',
                           onTap: () {
                             setState(() {
                               _showDateMegaMenu = !_showDateMegaMenu;
@@ -653,8 +657,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         ),
                         _NavbarLink(
                           label: 'AFF',
-                          isHighlighted: _activeSeoPage.navGroup == 'AFF' ||
-                              _showAffMegaMenu,
+                          isHighlighted: isAnyMegaMenuOpen
+                              ? _showAffMegaMenu
+                              : _activeSeoPage.navGroup == 'AFF',
                           onTap: () {
                             setState(() {
                               _showAffMegaMenu = !_showAffMegaMenu;
@@ -665,8 +670,9 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         ),
                         _NavbarLink(
                           label: _langPack.navStories,
-                          isHighlighted: _activeSeoPage.navGroup == 'Stories' ||
-                              _showStoriesMegaMenu,
+                          isHighlighted: isAnyMegaMenuOpen
+                              ? _showStoriesMegaMenu
+                              : _activeSeoPage.navGroup == 'Stories',
                           onTap: () {
                             setState(() {
                               _showStoriesMegaMenu = !_showStoriesMegaMenu;
@@ -677,12 +683,14 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         ),
                         _NavbarLink(
                           label: _langPack.navSafety,
-                          isHighlighted: _activeSeoPage == AviajSeoPage.safety,
+                          isHighlighted: !isAnyMegaMenuOpen &&
+                              _activeSeoPage == AviajSeoPage.safety,
                           onTap: () => _navigateToSeoPage(AviajSeoPage.safety),
                         ),
                         _NavbarLink(
                           label: _langPack.navSupport,
-                          isHighlighted: _activeSeoPage == AviajSeoPage.support,
+                          isHighlighted: !isAnyMegaMenuOpen &&
+                              _activeSeoPage == AviajSeoPage.support,
                           onTap: () => _navigateToSeoPage(AviajSeoPage.support),
                         ),
                       ],
@@ -1132,7 +1140,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       color: const Color(0xFFFFEC19),
       padding: EdgeInsets.fromLTRB(
         isDesktop ? 64 : 20,
-        0,
+        isDesktop ? 56 : 36,
         isDesktop ? 64 : 20,
         isDesktop ? 56 : 36,
       ),
@@ -1409,12 +1417,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
     return Column(
       children: [
-        _buildLocalizedFeatureShowcaseSplitSection(
-          context: context,
-          isDesktop: isDesktop,
-          seoSegmentUpper: seoSegmentUpper,
-          seoSegmentName: seoSegmentName,
-        ),
         Container(
           width: double.infinity,
           color: const Color(0xFFFFF8D6),
@@ -1422,7 +1424,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             isDesktop ? 64 : 20,
             isDesktop ? 42 : 24,
             isDesktop ? 64 : 20,
-            isDesktop ? 72 : 44,
+            isDesktop ? 64 : 40,
           ),
           child: Center(
             child: ConstrainedBox(
@@ -1472,8 +1474,32 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 56),
-
+                ],
+              ),
+            ),
+          ),
+        ),
+        _buildLocalizedFeatureShowcaseSplitSection(
+          context: context,
+          isDesktop: isDesktop,
+          seoSegmentUpper: seoSegmentUpper,
+          seoSegmentName: seoSegmentName,
+        ),
+        Container(
+          width: double.infinity,
+          color: const Color(0xFFFFF8D6),
+          padding: EdgeInsets.fromLTRB(
+            isDesktop ? 64 : 20,
+            isDesktop ? 56 : 36,
+            isDesktop ? 64 : 20,
+            isDesktop ? 72 : 44,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1120),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
                   // 4. 3-Step "How It Works" SEO Cards
                   Align(
                     alignment: Alignment.centerLeft,
@@ -1699,12 +1725,6 @@ class _AviajLandingPageState extends State<AviajLandingPage>
 
     return Column(
       children: [
-        _buildLocalizedFeatureShowcaseSplitSection(
-          context: context,
-          isDesktop: isDesktop,
-          seoSegmentUpper: seoSegmentUpper,
-          seoSegmentName: seoSegmentName,
-        ),
         Container(
           width: double.infinity,
           color: const Color(0xFFFFF8D6),
@@ -1712,7 +1732,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             isDesktop ? 64 : 20,
             isDesktop ? 42 : 24,
             isDesktop ? 64 : 20,
-            isDesktop ? 68 : 40,
+            isDesktop ? 64 : 40,
           ),
           child: Center(
             child: ConstrainedBox(
@@ -1759,7 +1779,32 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 48),
+                ],
+              ),
+            ),
+          ),
+        ),
+        _buildLocalizedFeatureShowcaseSplitSection(
+          context: context,
+          isDesktop: isDesktop,
+          seoSegmentUpper: seoSegmentUpper,
+          seoSegmentName: seoSegmentName,
+        ),
+        Container(
+          width: double.infinity,
+          color: const Color(0xFFFFF8D6),
+          padding: EdgeInsets.fromLTRB(
+            isDesktop ? 64 : 20,
+            isDesktop ? 56 : 36,
+            isDesktop ? 64 : 20,
+            isDesktop ? 68 : 40,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1120),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
                   if (isDesktop)
                     IntrinsicHeight(
                       child: Row(
@@ -5075,11 +5120,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                             InkWell(
                               onTap: () =>
                                   _navigateToSeoPage(AviajSeoPage.stories),
-                              child: const Column(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: 6),
-                                  Text(
+                                  const SizedBox(height: 6),
+                                  const Text(
                                     'Love Stories ›',
                                     style: TextStyle(
                                       color: AviajTheme.midnightNavy,
@@ -5087,10 +5132,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),
-                                  SizedBox(height: 6),
+                                  const SizedBox(height: 6),
                                   Text(
-                                    'From Tokyo to Toronto, explore the love found on Aviaj around the world.',
-                                    style: TextStyle(
+                                    _langPack.loveStoriesDesc,
+                                    style: const TextStyle(
                                       color: Color(0xFF4A3B40),
                                       fontSize: 13.5,
                                       fontWeight: FontWeight.w500,
@@ -5105,10 +5150,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                               onTap: () => _navigateToSeoPage(
                                 AviajSeoPage.friendshipHub,
                               ),
-                              child: const Column(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  const Text(
                                     'The Friendship Hub ›',
                                     style: TextStyle(
                                       color: AviajTheme.midnightNavy,
@@ -5116,10 +5161,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),
-                                  SizedBox(height: 6),
+                                  const SizedBox(height: 6),
                                   Text(
-                                    'Advice and stories to help you build the AFF friendships you want.',
-                                    style: TextStyle(
+                                    _langPack.friendshipHubDesc,
+                                    style: const TextStyle(
                                       color: Color(0xFF4A3B40),
                                       fontSize: 13.5,
                                       fontWeight: FontWeight.w500,
@@ -5138,11 +5183,11 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                         child: InkWell(
                           onTap: () =>
                               _navigateToSeoPage(AviajSeoPage.seasonalGuides),
-                          child: const Column(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 6),
-                              Text(
+                              const SizedBox(height: 6),
+                              const Text(
                                 'Seasonal Dating Guides ›',
                                 style: TextStyle(
                                   color: AviajTheme.midnightNavy,
@@ -5150,10 +5195,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                                   fontWeight: FontWeight.w800,
                                 ),
                               ),
-                              SizedBox(height: 6),
+                              const SizedBox(height: 6),
                               Text(
-                                'Plan the perfect date—no matter when, where or who you’re dating.',
-                                style: TextStyle(
+                                _langPack.seasonalGuidesDesc,
+                                style: const TextStyle(
                                   color: Color(0xFF4A3B40),
                                   fontSize: 13.5,
                                   fontWeight: FontWeight.w500,
