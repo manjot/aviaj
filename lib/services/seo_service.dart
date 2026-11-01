@@ -245,11 +245,70 @@ enum AviajSeoPage {
     return jsonEncode(schema);
   }
 
-  static AviajSeoPage fromPath(String rawPath) {
+  static const Set<String> supportedLangPrefixes = {
+    'en',
+    'en-us',
+    'en-gb',
+    'en-ca',
+    'en-au',
+    'en-in',
+    'hi',
+    'de',
+    'fr',
+    'fr-ca',
+    'es',
+    'es-es',
+    'es-mx',
+    'es-co',
+    'es-ar',
+    'it',
+    'pt',
+    'pt-br',
+    'pt-pt',
+    'ru',
+    'zh',
+    'zh-cn',
+    'zh-tw',
+    'id',
+    'da',
+    'nl',
+    'nb',
+    'no',
+    'pl',
+    'fi',
+    'sv',
+    'ja',
+    'ko',
+  };
+
+  /// Extracts a leading language code from a path like `/hi/date/compliments` -> `'hi'`.
+  static String? extractLangPrefixFromPath(String rawPath) {
     final cleaned = rawPath.trim().toLowerCase();
-    final withoutTrailing = cleaned.length > 1 && cleaned.endsWith('/')
-        ? cleaned.substring(0, cleaned.length - 1)
-        : cleaned;
+    final segments =
+        cleaned.split('/').where((s) => s.isNotEmpty).toList();
+    if (segments.isNotEmpty && supportedLangPrefixes.contains(segments.first)) {
+      return segments.first;
+    }
+    return null;
+  }
+
+  /// Strips any leading `/<lang>` prefix so `/hi/date/compliments` or `/hi/features/compliments` resolves cleanly.
+  static String stripLangPrefix(String rawPath) {
+    final cleaned = rawPath.trim().toLowerCase();
+    final segments =
+        cleaned.split('/').where((s) => s.isNotEmpty).toList();
+    if (segments.isNotEmpty && supportedLangPrefixes.contains(segments.first)) {
+      final rest = segments.sublist(1).join('/');
+      return rest.isEmpty ? '/' : '/$rest';
+    }
+    return cleaned.isEmpty ? '/' : cleaned;
+  }
+
+  static AviajSeoPage fromPath(String rawPath) {
+    final stripped = stripLangPrefix(rawPath);
+    final withoutTrailing = stripped.length > 1 && stripped.endsWith('/')
+        ? stripped.substring(0, stripped.length - 1)
+        : stripped;
     switch (withoutTrailing) {
       case '':
       case '/':
@@ -259,21 +318,27 @@ enum AviajSeoPage {
       case '/explore-date':
         return AviajSeoPage.date;
       case '/date/compliments':
+      case '/features/compliments':
       case '/compliments':
         return AviajSeoPage.dateCompliments;
       case '/date/incognito-mode':
+      case '/features/incognito-mode':
       case '/incognito-mode':
         return AviajSeoPage.dateIncognito;
       case '/date/video-calls':
+      case '/features/video-calls':
       case '/video-calls':
         return AviajSeoPage.dateVideoCalls;
       case '/date/travel-mode':
+      case '/features/travel-mode':
       case '/travel-mode':
         return AviajSeoPage.dateTravelMode;
       case '/date/snooze-mode':
+      case '/features/snooze-mode':
       case '/snooze-mode':
         return AviajSeoPage.dateSnoozeMode;
       case '/date/superswipe':
+      case '/features/superswipe':
       case '/superswipe':
         return AviajSeoPage.dateSuperSwipe;
       case '/aff':
@@ -317,8 +382,20 @@ enum AviajSeoPage {
 class SeoService {
   static AviajSeoPage detectInitialPage() => impl.detectInitialPage();
 
-  static void applyPageSeo(AviajSeoPage page, {bool pushHistory = true}) {
-    impl.applyPageSeo(page, pushHistory: pushHistory);
+  static String? detectInitialLangCode() => impl.detectInitialLangCode();
+
+  static void applyPageSeo(
+    AviajSeoPage page, {
+    bool pushHistory = true,
+    String langCode = 'en',
+    String? localizedTitle,
+  }) {
+    impl.applyPageSeo(
+      page,
+      pushHistory: pushHistory,
+      langCode: langCode,
+      localizedTitle: localizedTitle,
+    );
   }
 
   static void listenPopState(void Function(AviajSeoPage page) onRouteChanged) {

@@ -13,6 +13,17 @@ if ($path === '') {
     $path = '/';
 }
 
+// Detect and strip optional leading language prefix (e.g., /hi/date/compliments or /hi/features/compliments)
+$supportedLangs = ['en', 'en-us', 'en-gb', 'en-ca', 'en-au', 'en-in', 'hi', 'de', 'fr', 'fr-ca', 'es', 'es-es', 'es-mx', 'es-co', 'es-ar', 'it', 'pt', 'pt-br', 'pt-pt', 'ru', 'zh', 'zh-cn', 'zh-tw', 'id', 'da', 'nl', 'nb', 'no', 'pl', 'fi', 'sv', 'ja', 'ko'];
+$activeLang = isset($_GET['lang']) ? strtolower(trim($_GET['lang'])) : 'en';
+$segments = array_values(array_filter(explode('/', $path), 'strlen'));
+if (!empty($segments) && in_array($segments[0], $supportedLangs, true)) {
+    $activeLang = $segments[0];
+    array_shift($segments);
+    $path = empty($segments) ? '/' : '/' . implode('/', $segments);
+}
+$path = str_replace('/features/', '/date/', $path);
+
 $seoPages = [
     '/' => [
         'title' => 'Aviaj — Travel Buddy, Vacation Romance & Relationship Dating App',
@@ -168,6 +179,8 @@ $kwEsc = htmlspecialchars($meta['keywords'], ENT_QUOTES, 'UTF-8');
 $canonEsc = htmlspecialchars($canonicalUrl, ENT_QUOTES, 'UTF-8');
 $h1Esc = htmlspecialchars($meta['h1'], ENT_QUOTES, 'UTF-8');
 
+$langEsc = htmlspecialchars($activeLang, ENT_QUOTES, 'UTF-8');
+$html = preg_replace('/<html lang=".*?">/i', '<html lang="' . $langEsc . '">', $html);
 $html = preg_replace('/<title>.*?<\/title>/is', '<title>' . $titleEsc . '</title>', $html);
 $html = preg_replace('/<meta name="description" content=".*?">/i', '<meta name="description" content="' . $descEsc . '">', $html);
 $html = preg_replace('/<meta name="keywords" content=".*?">/i', '<meta name="keywords" content="' . $kwEsc . '">', $html);

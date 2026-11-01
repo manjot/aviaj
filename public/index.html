@@ -106,6 +106,29 @@
       } catch (_) {}
     };
 
+    window.__aviajGetInitialLang = function() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const qLang = params.get("lang") || params.get("hl");
+        if (qLang) return qLang.toLowerCase();
+        if (window.localStorage) {
+          const saved = window.localStorage.getItem("aviaj_lang_v1");
+          if (saved) return saved;
+        }
+      } catch (_) {}
+      return "";
+    };
+
+    window.__aviajSetLang = function(langCode) {
+      try {
+        const code = (langCode || "en").toLowerCase();
+        document.documentElement.lang = code;
+        if (window.localStorage) {
+          window.localStorage.setItem("aviaj_lang_v1", code);
+        }
+      } catch (_) {}
+    };
+
     window.__aviajRegisterPopState = function(callback) {
       window.addEventListener("popstate", function() {
         if (typeof callback === "function") {

@@ -4,7 +4,14 @@ bool _stubPrivacyAccepted = false;
 
 AviajSeoPage detectInitialPage() => AviajSeoPage.home;
 
-void applyPageSeo(AviajSeoPage page, {bool pushHistory = true}) {}
+String? detectInitialLangCode() => null;
+
+void applyPageSeo(
+  AviajSeoPage page, {
+  bool pushHistory = true,
+  String langCode = 'en',
+  String? localizedTitle,
+}) {}
 
 void listenPopState(void Function(AviajSeoPage page) onRouteChanged) {}
 
