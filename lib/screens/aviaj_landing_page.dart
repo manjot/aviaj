@@ -1300,25 +1300,23 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     return ListenableBuilder(
       listenable: widget.state,
       builder: (context, _) {
+        final showPrivacy = _showPrivacyBanner &&
+            !widget.state.hasAcceptedPrivacyConsent &&
+            !SeoService.hasPrivacyConsent();
         return Scaffold(
           backgroundColor: Colors.white,
-          body: Stack(
+          body: Column(
             children: [
-              SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  children: _buildActiveSeoPageSections(context, isDesktop),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    children: _buildActiveSeoPageSections(context, isDesktop),
+                  ),
                 ),
               ),
-              if (_showPrivacyBanner &&
-                  !widget.state.hasAcceptedPrivacyConsent &&
-                  !SeoService.hasPrivacyConsent())
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: _buildPrivacyAcknowledgmentBanner(context, isDesktop),
-                ),
+              if (showPrivacy)
+                _buildPrivacyAcknowledgmentBanner(context, isDesktop),
             ],
           ),
         );
@@ -7072,6 +7070,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       color: const Color(0xFF3B040C),
       padding: EdgeInsets.only(
         top: isDesktop ? 64 : 44,
+        bottom: isDesktop ? 36 : 24,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -7239,15 +7238,15 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             child: FittedBox(
               fit: BoxFit.fitWidth,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
                 child: Text(
                   'AVIAJ',
                   style: TextStyle(
                     color: AviajTheme.loveRed,
-                    fontSize: 320,
+                    fontSize: 300,
                     fontWeight: FontWeight.w900,
-                    height: 0.84,
-                    letterSpacing: -12,
+                    height: 1.0,
+                    letterSpacing: -10,
                   ),
                 ),
               ),
