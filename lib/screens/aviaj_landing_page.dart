@@ -4982,71 +4982,361 @@ class _AviajLandingPageState extends State<AviajLandingPage>
       ),
     );
 
-    final featuredStories = [
-      (
-        couple: 'Tosin & Kieron',
-        metYear: 'Met on Aviaj in 2020',
-        summary: '36 questions later, it was love.',
-        standfirst:
-            'The middle of a global pandemic isn’t when most people expect to meet their future spouse, but it was for this Dublin couple.',
-        cityTag: 'Dublin | Unexpected',
-        imageUrl: pack.storyCoupleImageUrl,
-        secondImageUrl: pack.coPilotCrewImageUrl,
-      ),
-      (
-        couple: 'Truett & Bimal',
-        metYear: 'Met on Aviaj in 2018',
-        summary:
-            'His friends played virtual Cupid, and it worked like a charm.',
-        standfirst:
-            'One spontaneous right swipe during a weekend getaway turned into six years of adventures across three continents.',
-        cityTag: 'Dallas, TX | LGBTQIA+',
-        imageUrl: pack.coPilotCrewImageUrl,
-        secondImageUrl: pack.profiles[1].imageUrl,
-      ),
-      (
-        couple: 'Nina & Thomas',
-        metYear: 'Met on Aviaj in 2022',
-        summary: 'As it turned out, love really was just around the corner.',
-        standfirst:
-            'After matching on Aviaj Travel Mode before a flight to Paris, Nina and Thomas realized they lived just three blocks apart.',
-        cityTag: 'Paris, France | Unexpected',
-        imageUrl: pack.profiles[1].imageUrl,
-        secondImageUrl: pack.storyCoupleImageUrl,
-      ),
-      (
-        couple: 'Jayde & Joel',
-        metYear: 'Met on Aviaj in 2024',
-        summary:
-            'A mutual love of fashion led to a connection that fit just right.',
-        standfirst:
-            'What started as an AFF Departure Circle coffee meetup in SoHo quickly blossomed into an inseparable partnership.',
-        cityTag: 'New York City, NY | Friends First',
-        imageUrl: pack.profiles[2].imageUrl,
-        secondImageUrl: pack.profiles[3].imageUrl,
-      ),
-      (
-        couple: 'Leslie & Thomas',
-        metYear: 'Met on Aviaj in 2021',
-        summary:
-            'From Covid masks to a wedding-day marsupial, this love story has it all.',
-        standfirst:
-            'Delayed flights and shared boarding gate laughs led to the adventure of a lifetime.',
-        cityTag: 'Dallas, TX | Unexpected',
-        imageUrl: pack.profiles[3].imageUrl,
-        secondImageUrl: pack.storyCoupleImageUrl,
-      ),
-      (
-        couple: pack.storyAttribution.split(',').first.trim(),
-        metYear: 'Met on Aviaj in 2023',
-        summary: pack.storyQuote,
-        standfirst:
-            'Matched via Aviaj Destination Radar™ while planning overlapping trekking and coastal itineraries.',
-        cityTag: '${widget.state.activeRegion.label} | Departure Match',
-        imageUrl: pack.profiles[4].imageUrl,
-        secondImageUrl: pack.storyCoupleImageUrl,
-      ),
-    ];
+    final region = widget.state.activeRegion;
+    final String regionalSubtitle = switch (region) {
+      AviajRegion.india =>
+        'From Manali & Udaipur to Goa, Rishikesh, Sahyadri & Kerala—explore real love stories across India.',
+      AviajRegion.middleEast =>
+        'From Dubai & AlUla to Muscat, Doha & Wadi Rum—explore real love stories across the Middle East.',
+      AviajRegion.americas =>
+        'From New York & Austin to Yosemite, Maui & Banff—explore real love stories across the Americas.',
+      AviajRegion.europe =>
+        'From London & Paris to the Dolomites, Amalfi & Santorini—explore real love stories across Europe.',
+      AviajRegion.asiaPacific =>
+        'From Tokyo & Singapore to Bali, Phuket & Queenstown—explore real love stories across Asia-Pacific.',
+    };
+
+    final featuredStories = switch (region) {
+      AviajRegion.india => [
+          (
+            couple: 'Ananya & Rohan',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'From a Chopta–Tungnath sunrise trek to a Lake Pichola wedding in Udaipur.',
+            standfirst:
+                'Matched via Aviaj Destination Radar™ before a winter trek in Uttarakhand, Ananya and Rohan turned a shared love of Himalayan trails into a forever partnership.',
+            cityTag: 'Mumbai & Bengaluru | Chopta–Tungnath & Udaipur',
+            imageUrl: pack.storyCoupleImageUrl,
+            secondImageUrl: pack.coPilotCrewImageUrl,
+          ),
+          (
+            couple: 'Kavya & Kabir',
+            metYear: 'Met on Aviaj in 2024',
+            summary:
+                'Filter coffee in Fontainhas and a sunset scooter ride to Cabo de Rama.',
+            standfirst:
+                'What began as a spontaneous Goa Travel Mode match between New Delhi and Mumbai ended with a beachside engagement in South Goa.',
+            cityTag: 'New Delhi & Mumbai | Goa & Varkala',
+            imageUrl: pack.coPilotCrewImageUrl,
+            secondImageUrl: pack.profiles[1].imageUrl,
+          ),
+          (
+            couple: 'Meera & Vikram',
+            metYear: 'Met on Aviaj in 2022',
+            summary:
+                'Shared kulhad chai in Kasol led to a Kheerganga starlight proposal.',
+            standfirst:
+                'After joining the same AFF Parvati Valley Departure Circle from Bengaluru and Jaipur, Meera and Vikram discovered their travel rhythms matched effortlessly.',
+            cityTag: 'Bengaluru & Jaipur | Kasol–Kheerganga Trek',
+            imageUrl: pack.profiles[1].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Diya & Aarav',
+            metYear: 'Met on Aviaj in 2024',
+            summary:
+                'Paragliding over Bir Billing and acoustic bonfire nights in Triund.',
+            standfirst:
+                'Two solo travellers who booked the same weekend group trip to Bir Billing and Triund ended up sitting next to each other on the overnight bus from Delhi.',
+            cityTag: 'Kolkata & Pune | Bir Billing & Triund, Himachal',
+            imageUrl: pack.profiles[2].imageUrl,
+            secondImageUrl: pack.profiles[3].imageUrl,
+          ),
+          (
+            couple: 'Riya & Dev',
+            metYear: 'Met on Aviaj in 2021',
+            summary:
+                'Conquering Khardung La and stargazing together at Pangong Tso & Spiti.',
+            standfirst:
+                'A Leh-Ladakh and Spiti Valley circuit crew brought Riya and Dev together at 17,000 feet—and they have been co-pilots on every roadtrip since.',
+            cityTag: 'Chandigarh & Gurugram | Leh-Ladakh & Spiti Valley',
+            imageUrl: pack.profiles[3].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Nisha & Siddharth',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'Monsoon treks in Kudremukh and Sahyadri forts turned friends into soulmates.',
+            standfirst:
+                'They first met on an AFF weekend trek up Kalsubai and Harishchandragad before celebrating their anniversary in Munnar and Varkala, Kerala.',
+            cityTag: 'Hyderabad & Mumbai | Kudremukh, Sahyadri & Kerala',
+            imageUrl: pack.profiles[4].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+        ],
+      AviajRegion.middleEast => [
+          (
+            couple: 'Layla & Tariq',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'Desert stargazing in AlUla and a sunset dhow cruise in Muscat.',
+            standfirst:
+                'Matched on Aviaj Destination Radar™ between Dubai and Riyadh before a weekend expedition to Hegra and Maraya.',
+            cityTag: 'Dubai & Riyadh | AlUla & Muscat',
+            imageUrl: pack.storyCoupleImageUrl,
+            secondImageUrl: pack.coPilotCrewImageUrl,
+          ),
+          (
+            couple: 'Noor & Omar',
+            metYear: 'Met on Aviaj in 2022',
+            summary:
+                'Specialty Arabic coffee in Alserkal Avenue turned into a Jebel Jais roadtrip.',
+            standfirst:
+                'One spontaneous right swipe in Dubai led to sunrise mountain drives and a lifelong partnership.',
+            cityTag: 'Dubai & Abu Dhabi | Jebel Jais',
+            imageUrl: pack.coPilotCrewImageUrl,
+            secondImageUrl: pack.profiles[1].imageUrl,
+          ),
+          (
+            couple: 'Yasmin & Rami',
+            metYear: 'Met on Aviaj in 2024',
+            summary:
+                'Hot air balloons over Wadi Rum and coral diving in Aqaba.',
+            standfirst:
+                'After matching on Travel Mode ahead of a Jordan itinerary, Yasmin and Rami discovered they lived in the same neighborhood.',
+            cityTag: 'Amman & Doha | Wadi Rum & Red Sea',
+            imageUrl: pack.profiles[1].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Farah & Zayd',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'An AFF sailing crew in the Musandam fjords sparked something unforgettable.',
+            standfirst:
+                'What started as a 6-person coastal dhow group trip quickly blossomed into an inseparable bond.',
+            cityTag: 'Muscat & Kuwait City | Musandam Fjords',
+            imageUrl: pack.profiles[2].imageUrl,
+            secondImageUrl: pack.profiles[3].imageUrl,
+          ),
+          (
+            couple: 'Amira & Kareem',
+            metYear: 'Met on Aviaj in 2021',
+            summary:
+                'From Souq Waqif lantern walks to a sunset proposal on Saadiyat Beach.',
+            standfirst:
+                'Delayed flights and shared airport lounge laughs led to the adventure of a lifetime across the Gulf.',
+            cityTag: 'Doha & Abu Dhabi | Saadiyat Island',
+            imageUrl: pack.profiles[3].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Salma & Youssef',
+            metYear: 'Met on Aviaj in 2024',
+            summary:
+                'Nile felucca sunsets in Aswan and coastal escapes in El Gouna.',
+            standfirst:
+                'Matched via Aviaj Destination Radar™ while planning overlapping Red Sea diving and heritage itineraries.',
+            cityTag: 'Cairo & Dubai | El Gouna & Aswan',
+            imageUrl: pack.profiles[4].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+        ],
+      AviajRegion.americas => [
+          (
+            couple: 'Chloe & Marcus',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'Sunrise at Yosemite’s Half Dome and a Big Sur coastal roadtrip.',
+            standfirst:
+                'Matched on Aviaj Destination Radar™ between Austin and Denver before an autumn national parks expedition.',
+            cityTag: 'Austin, TX & Denver, CO | Yosemite & Big Sur',
+            imageUrl: pack.storyCoupleImageUrl,
+            secondImageUrl: pack.coPilotCrewImageUrl,
+          ),
+          (
+            couple: 'Truett & Bimal',
+            metYear: 'Met on Aviaj in 2021',
+            summary:
+                'His friends played virtual Cupid in Dallas, and it worked like a charm.',
+            standfirst:
+                'One spontaneous right swipe during a Texas weekend getaway turned into years of adventures across the Americas.',
+            cityTag: 'Dallas, TX | LGBTQIA+',
+            imageUrl: pack.coPilotCrewImageUrl,
+            secondImageUrl: pack.profiles[1].imageUrl,
+          ),
+          (
+            couple: 'Jayde & Joel',
+            metYear: 'Met on Aviaj in 2024',
+            summary:
+                'A mutual love of SoHo galleries and Hudson Valley hikes fit just right.',
+            standfirst:
+                'What started as an AFF Departure Circle coffee meetup in New York City quickly blossomed into an inseparable partnership.',
+            cityTag: 'New York City, NY | Friends First',
+            imageUrl: pack.profiles[1].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Sienna & Mateo',
+            metYear: 'Met on Aviaj in 2022',
+            summary:
+                'Canyon trails in Zion and sunset surf sessions along Maui’s Road to Hana.',
+            standfirst:
+                'Two solo travellers from Los Angeles and Seattle matched on Travel Mode three days before landing in Maui.',
+            cityTag: 'Los Angeles, CA & Seattle, WA | Zion & Maui',
+            imageUrl: pack.profiles[2].imageUrl,
+            secondImageUrl: pack.profiles[3].imageUrl,
+          ),
+          (
+            couple: 'Leslie & Thomas',
+            metYear: 'Met on Aviaj in 2021',
+            summary:
+                'From airport boarding gate laughs in Chicago to a Banff mountain wedding.',
+            standfirst:
+                'Delayed flights and shared travel stories led to the adventure of a lifetime across North America.',
+            cityTag: 'Chicago, IL & Toronto | Banff Rockies',
+            imageUrl: pack.profiles[3].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Camila & Lucas',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'Sailing Key West and trekking Patagonia’s Fitz Roy with an AFF squad.',
+            standfirst:
+                'Matched via Aviaj Destination Radar™ while planning overlapping coastal and mountain itineraries.',
+            cityTag: 'Miami, FL | Key West & Patagonia',
+            imageUrl: pack.profiles[4].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+        ],
+      AviajRegion.europe => [
+          (
+            couple: 'Tosin & Kieron',
+            metYear: 'Met on Aviaj in 2020',
+            summary: '36 questions in Dublin later, it was love.',
+            standfirst:
+                'A three-hour walk with hot chocolate in Dublin turned into a Venice proposal and coastal wedding in Portugal.',
+            cityTag: 'Dublin & London | Venice & Portugal',
+            imageUrl: pack.storyCoupleImageUrl,
+            secondImageUrl: pack.coPilotCrewImageUrl,
+          ),
+          (
+            couple: 'Nina & Thomas',
+            metYear: 'Met on Aviaj in 2022',
+            summary:
+                'As it turned out in Paris, love really was just around the corner.',
+            standfirst:
+                'After matching on Aviaj Travel Mode before a train to Chamonix, Nina and Thomas realized they lived three blocks apart in Paris.',
+            cityTag: 'Paris, France | Chamonix Alps',
+            imageUrl: pack.coPilotCrewImageUrl,
+            secondImageUrl: pack.profiles[1].imageUrl,
+          ),
+          (
+            couple: 'Elena & Luca',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'Hiking Tre Cime in the Dolomites and sailing the Amalfi Coast.',
+            standfirst:
+                'Matched on Aviaj Destination Radar™ between Barcelona and Milan ahead of an Italian summer itinerary.',
+            cityTag: 'Barcelona & Milan | Dolomites & Amalfi',
+            imageUrl: pack.profiles[1].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Freya & Lukas',
+            metYear: 'Met on Aviaj in 2024',
+            summary:
+                'An AFF island-hopping crew in Santorini and Milos sparked romance.',
+            standfirst:
+                'What started as a 6-person Greek Cyclades sailing crew turned into a lifelong co-pilot match.',
+            cityTag: 'Berlin & Amsterdam | Santorini & Milos',
+            imageUrl: pack.profiles[2].imageUrl,
+            secondImageUrl: pack.profiles[3].imageUrl,
+          ),
+          (
+            couple: 'Clara & Henri',
+            metYear: 'Met on Aviaj in 2021',
+            summary:
+                'Glacier Express trains across Zermatt and fondue nights in Zurich.',
+            standfirst:
+                'Two avid alpine hikers matched on Aviaj before a weekend ridge trail in the Swiss Alps.',
+            cityTag: 'Zurich & Geneva | Swiss Alps',
+            imageUrl: pack.profiles[3].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Sofia & Mateus',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'Sunrise cloud hikes in Madeira and acoustic fado nights in Lisbon.',
+            standfirst:
+                'Matched via Aviaj Destination Radar™ while working remotely from Ponta do Sol.',
+            cityTag: 'Lisbon & Madrid | Madeira Island',
+            imageUrl: pack.profiles[4].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+        ],
+      AviajRegion.asiaPacific => [
+          (
+            couple: 'Hana & Kenji',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'Autumn maple trails in Kyoto and a sunrise climb up Mt. Fuji.',
+            standfirst:
+                'Matched on Aviaj Destination Radar™ between Tokyo and Osaka ahead of a Shinkansen weekend getaway.',
+            cityTag: 'Tokyo & Kyoto | Mt. Fuji & Hakone',
+            imageUrl: pack.storyCoupleImageUrl,
+            secondImageUrl: pack.coPilotCrewImageUrl,
+          ),
+          (
+            couple: 'Maya & Ethan',
+            metYear: 'Met on Aviaj in 2024',
+            summary:
+                'Cliffside surf mornings in Uluwatu and Mt. Batur volcano sunrises.',
+            standfirst:
+                'What began as an AFF Bali villa crew from Singapore and Sydney turned into an unforgettable romance.',
+            cityTag: 'Singapore & Sydney | Bali & Lombok',
+            imageUrl: pack.coPilotCrewImageUrl,
+            secondImageUrl: pack.profiles[1].imageUrl,
+          ),
+          (
+            couple: 'Ji-Yoon & Min-Ho',
+            metYear: 'Met on Aviaj in 2022',
+            summary:
+                'Coastal drives around Jeju Island and specialty coffee in Seoul.',
+            standfirst:
+                'After matching on Aviaj Travel Mode before a flight to Jeju, Ji-Yoon and Min-Ho discovered they shared the exact same bucket list.',
+            cityTag: 'Seoul & Busan | Jeju Island',
+            imageUrl: pack.profiles[1].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Chloe & Liam',
+            metYear: 'Met on Aviaj in 2023',
+            summary:
+                'Milford Sound fiord cruises and Roy’s Peak starlight hikes in Wanaka.',
+            standfirst:
+                'Two solo roadtrippers matched on Aviaj in Queenstown and spent two weeks exploring New Zealand’s South Island.',
+            cityTag: 'Melbourne & Auckland | Queenstown, NZ',
+            imageUrl: pack.profiles[2].imageUrl,
+            secondImageUrl: pack.profiles[3].imageUrl,
+          ),
+          (
+            couple: 'Nari & Krit',
+            metYear: 'Met on Aviaj in 2021',
+            summary:
+                'Longtail boat sunsets in Krabi and lantern festivals in Chiang Mai.',
+            standfirst:
+                'Matched via Aviaj Destination Radar™ while planning island-hopping routes across Thailand.',
+            cityTag: 'Bangkok & Phuket | Krabi & Phi Phi',
+            imageUrl: pack.profiles[3].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+          (
+            couple: 'Mei & Lucas',
+            metYear: 'Met on Aviaj in 2024',
+            summary:
+                'Night market street food in Taipei and Taroko Gorge mountain trails.',
+            standfirst:
+                'An AFF weekend hiking group in Taiwan brought Mei and Lucas together on the trail.',
+            cityTag: 'Taipei & Hong Kong | Taroko & Sun Moon Lake',
+            imageUrl: pack.profiles[4].imageUrl,
+            secondImageUrl: pack.storyCoupleImageUrl,
+          ),
+        ],
+    };
 
     final activeStory =
         featuredStories[_selectedStoryIndex % featuredStories.length];
@@ -5290,10 +5580,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const Text(
-                          'From Tokyo to Toronto, explore the love found on Aviaj around the world.',
+                        Text(
+                          regionalSubtitle,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFF4A3B40),
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -5551,10 +5841,10 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'From Tokyo to Toronto, explore the love found on Aviaj around the world.',
+                  Text(
+                    regionalSubtitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xFF3A3A3A),
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -5804,8 +6094,39 @@ class _AviajLandingPageState extends State<AviajLandingPage>
     required String secondaryImageUrl,
   }) {
     final parts = coupleName.split('&');
-    final firstPartner = parts.isNotEmpty ? parts.first.trim() : 'Tosin';
-    final secondPartner = parts.length > 1 ? parts.last.trim() : 'Kieron';
+    final firstPartner = parts.isNotEmpty ? parts.first.trim() : 'Ananya';
+    final secondPartner = parts.length > 1 ? parts.last.trim() : 'Rohan';
+    final region = widget.state.activeRegion;
+    final cafeAndWalkLine = switch (region) {
+      AviajRegion.india =>
+        'What was meant to be a quick meetup turned into filter coffee in Bandra and a three-hour sunset walk along Marine Drive—followed by planning a weekend trek to Chopta–Tungnath and Kasol.',
+      AviajRegion.middleEast =>
+        'What was meant to be a quick meetup turned into specialty Arabic coffee at Alserkal Avenue and a three-hour sunset walk by Dubai Creek—followed by a weekend drive to Jebel Jais and AlUla.',
+      AviajRegion.americas =>
+        'What was meant to be a quick meetup turned into pour-over coffee in SoHo and a three-hour sunset walk—followed by planning a roadtrip to Yosemite and Big Sur.',
+      AviajRegion.europe =>
+        'What was meant to be a quick meetup turned into hot chocolate at Butler’s Café and a three-hour walk—followed by planning an alpine getaway to the Dolomites and Amalfi Coast.',
+      AviajRegion.asiaPacific =>
+        'What was meant to be a quick meetup turned into matcha lattes in Shibuya and a three-hour sunset walk—followed by planning a weekend trip to Kyoto and Mt. Fuji.',
+    };
+    final proposalAndWeddingParagraph1 = switch (region) {
+      AviajRegion.india =>
+        'One year after moving in together, $secondPartner proposed at sunrise overlooking Lake Pichola in Udaipur, and $firstPartner said yes. That “yes” turned into two unforgettable celebrations — first with a vibrant sangeet and traditional wedding in Jaipur, and then with an intimate coastal sundowner ceremony in South Goa.',
+      AviajRegion.middleEast =>
+        'One year after moving in together, $secondPartner proposed under the stars in AlUla, and $firstPartner said yes. That “yes” turned into two unforgettable celebrations — first with a traditional family celebration in Dubai, and then with an intimate cliffside ceremony overlooking Muscat.',
+      AviajRegion.americas =>
+        'One year after moving in together, $secondPartner proposed at sunset in Big Sur, and $firstPartner said yes. That “yes” turned into two unforgettable celebrations — first with a warm family celebration in Austin, and then with an intimate coastal ceremony in Maui.',
+      AviajRegion.europe =>
+        'One year after moving in together, $secondPartner proposed in Venice, and $firstPartner said yes. That “yes” turned into two unforgettable celebrations — first with a traditional family gathering, and then with an intimate coastal ceremony in Portugal.',
+      AviajRegion.asiaPacific =>
+        'One year after moving in together, $secondPartner proposed beneath the autumn maples in Kyoto, and $firstPartner said yes. That “yes” turned into two unforgettable celebrations — first in Tokyo, and then with an intimate cliffside ceremony in Uluwatu, Bali.',
+    };
+    final proposalAndWeddingParagraph2 = switch (region) {
+      AviajRegion.india =>
+        'From Himalayan treks in Kedarkantha and Spiti Valley to backwater houseboats in Kerala, forty-five of their closest friends from their Aviaj Departure Circles gathered to celebrate the journey that brought them together.',
+      _ =>
+        'Forty-five of their closest friends and fellow travellers gathered overlooking the coast to celebrate the shared itineraries and spontaneous detours that brought them together.',
+    };
 
     const bodyStyle = TextStyle(
       color: Color(0xFF2B2B2B),
@@ -5839,22 +6160,22 @@ class _AviajLandingPageState extends State<AviajLandingPage>
             children: [
               // Chapter 1: Opening & "The 10-Hour Second Date"
               Text(
-                'They say timing is everything — and in October 2020, timing was... complicated. Lockdowns meant dating looked a lot different, but that didn’t stop sparks from flying between $firstPartner and $secondPartner.',
+                'They say timing is everything — and when $firstPartner and $secondPartner matched on Aviaj, their overlapping travel routes made the first spark effortless.',
                 style: bodyStyle,
               ),
               const SizedBox(height: 22),
               Text(
-                'When they first matched on Aviaj, $firstPartner thought, “Let’s see what happens. It might be a bit of fun.” But as they started chatting, she quickly realized just how funny $secondPartner was.',
+                'When they first matched on Aviaj, $firstPartner thought, “Let’s see what happens. It might be a great travel connection.” But as they started chatting, she quickly realized just how warm and funny $secondPartner was.',
                 style: bodyStyle,
               ),
               const SizedBox(height: 22),
               Text(
-                'Then life got busy, and their conversation drifted. Three weeks later, $firstPartner opened Aviaj, delighted to see that $secondPartner hadn’t unmatched. She broke the silence with a simple question: “Do you want to go for a walk later?” $secondPartner said yes.',
+                'Then life got busy, and their conversation paused for a few days. When $firstPartner opened Aviaj again, she broke the ice with a simple question: “Do you want to grab coffee and go for a walk later?” $secondPartner immediately said yes.',
                 style: bodyStyle,
               ),
               const SizedBox(height: 22),
               Text(
-                'What was meant to be a quick meetup turned into hot chocolate at Butler’s Chocolate Café and a three-hour walk. “I was surprised by how well we got on together,” $secondPartner recalls. “It was really easy to just settle into meeting each other for the first time.” Once the date was over, $secondPartner immediately messaged $firstPartner asking for a second one.',
+                '$cafeAndWalkLine “I was surprised by how well we got on together,” $secondPartner recalls. “It was really easy to just settle into meeting each other for the first time.” Once the date was over, $secondPartner immediately messaged $firstPartner asking for a second one.',
                 style: bodyStyle,
               ),
               const SizedBox(height: 40),
@@ -5864,7 +6185,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               ),
               const SizedBox(height: 18),
               Text(
-                'With restaurants and bars still closed due to lockdown, $firstPartner invited $secondPartner to her apartment for their second date. When he arrived, she pulled out The New York Times’ “36 Questions That Lead to Love,” a game designed to accelerate closeness through shared vulnerability.',
+                'For their second date, $firstPartner brought along “36 Questions That Lead to Love,” a game designed to accelerate closeness through shared vulnerability and travel stories.',
                 style: bodyStyle,
               ),
               const SizedBox(height: 22),
@@ -5874,12 +6195,12 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               ),
               const SizedBox(height: 22),
               const Text(
-                'What started as curiosity turned into 10 hours of sharing stories and opening up in ways most people don’t in the first few weeks of dating. Thirty-six questions later, there was no denying their connection had shifted into something more.',
+                'What started as curiosity turned into 10 hours of sharing bucket-list routes and opening up in ways most people don’t in the first few weeks of dating. Thirty-six questions later, there was no denying their connection had shifted into something lasting.',
                 style: bodyStyle,
               ),
               const SizedBox(height: 22),
               Text(
-                '“After that, we just hung out all the time,” $firstPartner says. “He was always over every weekend.” A year later, they made it official and moved in together.',
+                '“After that, we started planning every long weekend trip together,” $firstPartner says. A year later, they made it official and moved in together.',
                 style: bodyStyle,
               ),
               const SizedBox(height: 52),
@@ -5932,7 +6253,7 @@ class _AviajLandingPageState extends State<AviajLandingPage>
                     ),
               const SizedBox(height: 56),
 
-              // Chapter 3: Giant Editorial Pull Quote + "Two Weddings, Two Cultures, One Love"
+              // Chapter 3: Giant Editorial Pull Quote + "Two Celebrations, One Shared Horizon"
               const Text(
                 '""',
                 style: TextStyle(
@@ -5965,27 +6286,17 @@ class _AviajLandingPageState extends State<AviajLandingPage>
               ),
               const SizedBox(height: 48),
               const Text(
-                'Two Weddings, Two Cultures, One Love',
+                'Two Celebrations, One Shared Horizon',
                 style: headingStyle,
               ),
               const SizedBox(height: 18),
               Text(
-                'One year after moving in together, $secondPartner proposed in Venice, and $firstPartner said yes. That “yes” would turn into two unforgettable celebrations — first with a Yoruba traditional Nigerian wedding in Atlanta around Christmas 2022, and then with a white dress and tuxedo ceremony in Portugal in June 2023.',
+                proposalAndWeddingParagraph1,
                 style: bodyStyle,
               ),
               const SizedBox(height: 22),
               Text(
-                'The Nigerian celebration was steeped in tradition. $firstPartner and $secondPartner wore custom-made attire. He danced in with her family behind him, knelt to ask her parents for permission to take her into his family, and brought a dowry filled with gifts.',
-                style: bodyStyle,
-              ),
-              const SizedBox(height: 22),
-              Text(
-                '“There was so much joy,” $firstPartner says. “Money spraying is a very common thing in Nigerian tradition — you just kind of spray [\$1 bills] on each other. It was amazing.”',
-                style: bodyStyle,
-              ),
-              const SizedBox(height: 22),
-              Text(
-                'Their Portugal ceremony was more intimate — just 45 guests gathered to watch them exchange vows overlooking the coast. “It was fun to have all of our favorite people together in Portugal to celebrate us in a different way as well,” says $firstPartner.',
+                proposalAndWeddingParagraph2,
                 style: bodyStyle,
               ),
               const SizedBox(height: 44),
