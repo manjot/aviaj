@@ -8,10 +8,47 @@ import '../services/ip_geo_stub.dart'
     if (dart.library.js_interop) '../services/ip_geo_web.dart'
     if (dart.library.io) '../services/ip_geo_io.dart';
 
+class TripExpenseItem {
+  final String id;
+  final String title;
+  final String category;
+  final double amountUsd;
+  final String paidByName;
+
+  const TripExpenseItem({
+    required this.id,
+    required this.title,
+    required this.category,
+    required this.amountUsd,
+    required this.paidByName,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'category': category,
+        'amountUsd': amountUsd,
+        'paidByName': paidByName,
+      };
+
+  factory TripExpenseItem.fromJson(Map<String, dynamic> json) {
+    return TripExpenseItem(
+      id: json['id'] as String? ?? 'exp_1',
+      title: json['title'] as String? ?? 'Shared Expense',
+      category: json['category'] as String? ?? 'Permits',
+      amountUsd: (json['amountUsd'] as num?)?.toDouble() ?? 0.0,
+      paidByName: json['paidByName'] as String? ?? 'Aarav',
+    );
+  }
+}
+
 class AviajState extends ChangeNotifier {
   static const String _likedIdsKey = 'aviaj_liked_ids';
   static const String _superLikedIdsKey = 'aviaj_super_liked_ids';
   static const String _passedIdsKey = 'aviaj_passed_ids';
+  static const String _blockedIdsKey = 'aviaj_blocked_ids';
+  static const String _checklistIdsKey = 'aviaj_checklist_ids';
+  static const String _expensesKey = 'aviaj_trip_expenses';
   static const String _joinedTripsKey = 'aviaj_joined_trips';
   static const String _darkModeKey = 'aviaj_dark_mode';
   static const String _privacyConsentKey = 'aviaj_privacy_consent_v1';
@@ -33,6 +70,44 @@ class AviajState extends ChangeNotifier {
   final Set<String> _likedProfileIds = {'p1', 'p2', 'p4'};
   final Set<String> _superLikedProfileIds = {'p1'};
   final Set<String> _passedProfileIds = {};
+  final Set<String> _blockedProfileIds = {};
+  final Set<String> _completedChecklistIds = {
+    'permit_forest',
+    'satellite_sos',
+    'oximeter_kit',
+    'offline_gpx',
+    'thermal_layers',
+  };
+  final List<TripExpenseItem> _tripExpenses = [
+    const TripExpenseItem(
+      id: 'exp_1',
+      title: 'Forest Entry, Sanctuary & Peak Permits (4 Crew)',
+      category: 'Permits & Fees',
+      amountUsd: 120.0,
+      paidByName: 'You',
+    ),
+    const TripExpenseItem(
+      id: 'exp_2',
+      title: 'Basecamp Alpine Homestay & Heated Cabins (3 Nights)',
+      category: 'Accommodation',
+      amountUsd: 360.0,
+      paidByName: 'Kavya Nair',
+    ),
+    const TripExpenseItem(
+      id: 'exp_3',
+      title: '4x4 Mountain Transfer & Trailhead Shuttle',
+      category: 'Transport',
+      amountUsd: 180.0,
+      paidByName: 'Rohan Verma',
+    ),
+    const TripExpenseItem(
+      id: 'exp_4',
+      title: 'Emergency Oxygen Cylinder, Pulse Oximeter & First-Aid',
+      category: 'Safety & Gear',
+      amountUsd: 100.0,
+      paidByName: 'You',
+    ),
+  ];
   final List<String> _swipeHistory = [];
 
   // Active filter state
@@ -53,14 +128,22 @@ class AviajState extends ChangeNotifier {
   AviajRegionalContentPack get regionalPack =>
       AviajRegionalCatalog.packFor(_activeRegion);
   TravellerProfile get currentUser => _currentUser;
-  List<TravellerProfile> get allProfiles => List.unmodifiable(_allProfiles);
+  List<TravellerProfile> get allProfiles => List.unmodifiable(
+        _allProfiles.where((p) => !_blockedProfileIds.contains(p.id)),
+      );
   List<GroupTrip> get trips => List.unmodifiable(_trips);
-  List<MatchConversation> get conversations =>
-      List.unmodifiable(_conversations);
+  List<MatchConversation> get conversations => List.unmodifiable(
+        _conversations
+            .where((c) => !_blockedProfileIds.contains(c.profileId)),
+      );
   Set<String> get likedProfileIds => Set.unmodifiable(_likedProfileIds);
   Set<String> get superLikedProfileIds =>
       Set.unmodifiable(_superLikedProfileIds);
   Set<String> get passedProfileIds => Set.unmodifiable(_passedProfileIds);
+  Set<String> get blockedProfileIds => Set.unmodifiable(_blockedProfileIds);
+  Set<String> get completedChecklistIds =>
+      Set.unmodifiable(_completedChecklistIds);
+  List<TripExpenseItem> get tripExpenses => List.unmodifiable(_tripExpenses);
 
   ConnectionIntent? get selectedIntentFilter => _selectedIntentFilter;
   TravelStyle? get selectedStyleFilter => _selectedStyleFilter;
@@ -93,6 +176,32 @@ class AviajState extends ChangeNotifier {
         _passedProfileIds
           ..clear()
           ..addAll(passed);
+      }
+
+      final blocked = prefs.getStringList(_blockedIdsKey);
+      if (blocked != null) {
+        _blockedProfileIds
+          ..clear()
+          ..addAll(blocked);
+      }
+
+      final checklist = prefs.getStringList(_checklistIdsKey);
+      if (checklist != null) {
+        _completedChecklistIds
+          ..clear()
+          ..addAll(checklist);
+      }
+
+      final expensesJson = prefs.getString(_expensesKey);
+      if (expensesJson != null) {
+        final decoded = jsonDecode(expensesJson) as List<dynamic>;
+        _tripExpenses
+          ..clear()
+          ..addAll(
+            decoded.map(
+              (e) => TripExpenseItem.fromJson(e as Map<String, dynamic>),
+            ),
+          );
       }
 
       final joinedTrips = prefs.getStringList(_joinedTripsKey);
@@ -174,6 +283,13 @@ class AviajState extends ChangeNotifier {
       await prefs.setStringList(
           _superLikedIdsKey, _superLikedProfileIds.toList());
       await prefs.setStringList(_passedIdsKey, _passedProfileIds.toList());
+      await prefs.setStringList(_blockedIdsKey, _blockedProfileIds.toList());
+      await prefs.setStringList(
+          _checklistIdsKey, _completedChecklistIds.toList());
+      await prefs.setString(
+        _expensesKey,
+        jsonEncode(_tripExpenses.map((e) => e.toJson()).toList()),
+      );
       final joinedTripIds = _trips
           .where((t) => t.participantProfileIds.contains('me'))
           .map((t) => t.id)
@@ -298,6 +414,9 @@ class AviajState extends ChangeNotifier {
   /// Filtered profiles for the Explorer Grid & Swipe Deck.
   List<TravellerProfile> get filteredProfiles {
     return _allProfiles.where((profile) {
+      if (_blockedProfileIds.contains(profile.id)) {
+        return false;
+      }
       if (_selectedIntentFilter != null &&
           !profile.intents.contains(_selectedIntentFilter)) {
         return false;
@@ -613,6 +732,72 @@ class AviajState extends ChangeNotifier {
       bucketList: bucketList,
     );
     _persistState();
+    notifyListeners();
+  }
+
+  void blockProfile(String profileId) {
+    _blockedProfileIds.add(profileId);
+    _likedProfileIds.remove(profileId);
+    _superLikedProfileIds.remove(profileId);
+    _passedProfileIds.add(profileId);
+    if (_selectedConversationProfileId == profileId) {
+      final remaining = conversations;
+      _selectedConversationProfileId =
+          remaining.isNotEmpty ? remaining.first.profileId : null;
+    }
+    _persistState();
+    notifyListeners();
+  }
+
+  void toggleChecklistItem(String itemId) {
+    if (_completedChecklistIds.contains(itemId)) {
+      _completedChecklistIds.remove(itemId);
+    } else {
+      _completedChecklistIds.add(itemId);
+    }
+    _persistState();
+    notifyListeners();
+  }
+
+  void addTripExpense({
+    required String title,
+    required String category,
+    required double amountUsd,
+    required String paidByName,
+  }) {
+    _tripExpenses.insert(
+      0,
+      TripExpenseItem(
+        id: 'exp_${DateTime.now().millisecondsSinceEpoch}',
+        title: title,
+        category: category,
+        amountUsd: amountUsd,
+        paidByName: paidByName,
+      ),
+    );
+    _persistState();
+    notifyListeners();
+  }
+
+  void removeTripExpense(String expenseId) {
+    _tripExpenses.removeWhere((e) => e.id == expenseId);
+    _persistState();
+    notifyListeners();
+  }
+
+  Future<void> deleteAccountAndResetData() async {
+    _blockedProfileIds.clear();
+    _passedProfileIds.clear();
+    _likedProfileIds
+      ..clear()
+      ..addAll(['p1', 'p2']);
+    _superLikedProfileIds.clear();
+    _swipeHistory.clear();
+    _currentUser = AviajMockData.initialCurrentUser;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+    } catch (_) {}
     notifyListeners();
   }
 }

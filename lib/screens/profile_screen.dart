@@ -403,6 +403,88 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 20),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(22),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            Icon(
+                              Icons.security_rounded,
+                              color: AviajTheme.loveRed,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Privacy, Community EULA & Account Controls',
+                              style: TextStyle(
+                                fontSize: 16.5,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'You have full control over your Aviaj Traveller Passport, blocked users, and local expedition data. Deleting your account permanently erases your profile, saved itineraries, and chat history.',
+                          style: TextStyle(fontSize: 13, height: 1.4),
+                        ),
+                        const SizedBox(height: 14),
+                        OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AviajTheme.loveRed,
+                            side: const BorderSide(color: AviajTheme.loveRed),
+                          ),
+                          onPressed: () {
+                            showDialog<void>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text(
+                                  'Delete Account & Erase Personal Data?',
+                                ),
+                                content: const Text(
+                                  'This will permanently delete your Aviaj Traveller Passport, custom itineraries, expense ledger, and local messages.',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(ctx).pop(),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  FilledButton(
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: AviajTheme.loveRed,
+                                    ),
+                                    onPressed: () async {
+                                      await state.deleteAccountAndResetData();
+                                      if (!ctx.mounted) return;
+                                      Navigator.of(ctx).pop();
+                                      if (!context.mounted) return;
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Account and local data erased.',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text('Delete Account'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.delete_forever_rounded),
+                          label: const Text(
+                            'Delete Account & Erase Personal Data',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

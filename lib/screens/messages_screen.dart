@@ -396,15 +396,56 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   ),
                 ],
               ),
-              FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: AviajTheme.loveCrimson,
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () =>
-                    _showProposeDateDialog(context, state, partner),
-                icon: const Icon(Icons.wine_bar_rounded, size: 17),
-                label: const Text('Propose Travel Date / Itinerary'),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AviajTheme.loveCrimson,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () =>
+                        _showProposeDateDialog(context, state, partner),
+                    icon: const Icon(Icons.map_rounded, size: 17),
+                    label: const Text('Propose Shared Itinerary'),
+                  ),
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AviajTheme.loveRed,
+                      side: const BorderSide(color: AviajTheme.loveRed),
+                    ),
+                    onPressed: () {
+                      showDialog<void>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: Text('Block or Report ${partner.name}?'),
+                          content: const Text(
+                            'Blocking immediately removes this user from your Crew Chat and Co-Pilot feed and submits an abuse report to Aviaj Trust & Safety.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(),
+                              child: const Text('Cancel'),
+                            ),
+                            FilledButton(
+                              style: FilledButton.styleFrom(
+                                backgroundColor: AviajTheme.loveRed,
+                              ),
+                              onPressed: () {
+                                state.blockProfile(partner.id);
+                                Navigator.of(ctx).pop();
+                              },
+                              child: const Text('Block & Report'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.flag_outlined, size: 16),
+                    label: const Text('Block / Report'),
+                  ),
+                ],
               ),
             ],
           ),

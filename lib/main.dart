@@ -2,15 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'screens/aviaj_landing_page.dart';
 import 'screens/discover_screen.dart';
-import 'screens/matchmaker_screen.dart';
+import 'screens/expedition_planner_screen.dart';
 import 'screens/messages_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/trips_screen.dart';
 import 'services/ad_service.dart';
-import 'services/stripe_service.dart';
 import 'state/aviaj_state.dart';
 import 'theme/app_theme.dart';
-import 'widgets/common_widgets.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -86,24 +84,24 @@ class AviajMobileAppShell extends StatelessWidget {
 
   static const _navItems = [
     (
-      icon: Icons.explore_outlined,
-      activeIcon: Icons.explore_rounded,
-      label: 'Discover',
+      icon: Icons.terrain_outlined,
+      activeIcon: Icons.terrain_rounded,
+      label: 'Expeditions',
     ),
     (
-      icon: Icons.luggage_outlined,
-      activeIcon: Icons.luggage_rounded,
-      label: 'Trips',
+      icon: Icons.calculate_outlined,
+      activeIcon: Icons.calculate_rounded,
+      label: 'Planner',
     ),
     (
-      icon: Icons.favorite_border_rounded,
-      activeIcon: Icons.favorite_rounded,
-      label: 'Co-Pilot',
+      icon: Icons.groups_outlined,
+      activeIcon: Icons.groups_rounded,
+      label: 'Co-Pilots',
     ),
     (
-      icon: Icons.chat_bubble_outline_rounded,
-      activeIcon: Icons.chat_bubble_rounded,
-      label: 'Lounge',
+      icon: Icons.forum_outlined,
+      activeIcon: Icons.forum_rounded,
+      label: 'Crew Chat',
     ),
     (
       icon: Icons.badge_outlined,
@@ -117,9 +115,9 @@ class AviajMobileAppShell extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final screens = [
-      DiscoverScreen(state: state),
       TripsScreen(state: state),
-      MatchmakerScreen(state: state),
+      ExpeditionPlannerScreen(state: state),
+      DiscoverScreen(state: state),
       MessagesScreen(state: state),
       ProfileScreen(state: state),
     ];
@@ -190,28 +188,19 @@ class AviajMobileAppShell extends StatelessWidget {
                 ),
                 const Spacer(),
                 IconButton(
-                  tooltip: 'Business Class™ • Stripe Checkout',
-                  onPressed: () => showStripeStorefrontModal(context),
+                  tooltip: 'Altitude & Expense Planner',
+                  onPressed: () => state.setActiveTab(1),
                   icon: const Icon(
-                    Icons.workspace_premium_rounded,
-                    color: AviajTheme.loveRed,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'Earn Free Priority Boarding Passes',
-                  onPressed: () =>
-                      AviajAdService.instance.showRewardedAd(context),
-                  icon: const Icon(
-                    Icons.card_giftcard_rounded,
-                    color: AviajTheme.compassAmber,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'Download on App Store & Google Play',
-                  onPressed: () => showMobileAppDownloadModal(context),
-                  icon: const Icon(
-                    Icons.phone_iphone_rounded,
+                    Icons.calculate_rounded,
                     color: AviajTheme.horizonTeal,
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Community Safety, UGC Policy & EULA',
+                  onPressed: () => _showCommunitySafetyDialog(context),
+                  icon: const Icon(
+                    Icons.verified_user_rounded,
+                    color: AviajTheme.loveRed,
                   ),
                 ),
                 IconButton(
@@ -236,10 +225,6 @@ class AviajMobileAppShell extends StatelessWidget {
               children: screens,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(12, 4, 12, 6),
-            child: AviajAdBannerWidget(placementLabel: 'App Mediation Bar'),
-          ),
         ],
       ),
       bottomNavigationBar: NavigationBar(
@@ -261,5 +246,53 @@ class AviajMobileAppShell extends StatelessWidget {
     );
 
     return mobileScaffold;
+  }
+
+  void _showCommunitySafetyDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.verified_user_rounded, color: AviajTheme.loveRed),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Aviaj Expedition Safety & Community EULA',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
+                ),
+              ),
+            ],
+          ),
+          content: const SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Zero Tolerance for Objectionable Content or Harassment',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  '• All expedition hosts and co-travellers must adhere to the Aviaj End-User License Agreement (EULA) and Community Guidelines.\n'
+                  '• You can immediately Report or Block any user from their Co-Pilot profile or Crew Chat header. Blocked users are permanently removed from your feed and conversations.\n'
+                  '• Reported content is reviewed by our Trust & Safety team within 24 hours, and offending accounts are ejected.\n'
+                  '• You can delete your account and erase all local data at any time in the Passport tab.',
+                  style: TextStyle(fontSize: 13, height: 1.45),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('I Understand & Agree'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

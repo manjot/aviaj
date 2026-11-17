@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
-import '../services/ad_service.dart';
-import '../services/stripe_service.dart';
 import '../state/aviaj_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -449,19 +447,60 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   ),
                 ),
                 _AviajRoundActionButton(
-                  icon: Icons.radar_rounded,
-                  tooltip: 'Watch Rewarded Ad for +3 Priority Passes & Boost',
+                  icon: Icons.flag_outlined,
+                  tooltip: 'Report or Block Traveller',
                   size: 42,
                   iconSize: 20,
-                  bgColor: AviajTheme.horizonTeal,
-                  fgColor: Colors.white,
-                  onTap: () => AviajAdService.instance.showRewardedAd(context),
+                  bgColor: const Color(0xFFFEE2E2),
+                  fgColor: AviajTheme.loveRed,
+                  onTap: () => _showReportOrBlockDialog(context, state, profile),
                 ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _showReportOrBlockDialog(
+    BuildContext context,
+    AviajState state,
+    TravellerProfile profile,
+  ) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text('Report or Block ${profile.name}?'),
+          content: const Text(
+            'Blocking immediately hides this traveller from your Co-Pilot feed and Crew Chat. Reporting notifies our 24/7 Trust & Safety team to review the profile under the Aviaj Community EULA.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: AviajTheme.loveRed,
+              ),
+              onPressed: () {
+                state.blockProfile(profile.id);
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      '${profile.name} has been blocked and reported to Aviaj Trust & Safety.',
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Block & Report'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -862,155 +901,80 @@ class _CleanBrandSideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final adService = AviajAdService.instance;
-    return ListenableBuilder(
-      listenable: adService,
-      builder: (context, _) {
-        return Column(
-          children: [
-            // Solid Aegean Teal Brand + Mobile App Store Card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AviajTheme.horizonTeal,
-                borderRadius: BorderRadius.circular(24),
+    final totalExpenses = state.tripExpenses.fold<double>(
+      0.0,
+      (sum, item) => sum + item.amountUsd,
+    );
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AviajTheme.horizonTeal,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: AviajTheme.compassAmber,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'AVIAJ • EXPEDITION & CO-PILOT LOGISTICS',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AviajTheme.compassAmber,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      'AVIAJ • TRAVEL & ROMANCE',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 10,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Meet Your Co-Pilot Before You Board.',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Destination Radar & Departure Lounge matching for solo & group travellers.',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.5,
-                      height: 1.35,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  const AppStoreDownloadBadges(
-                    lightOnDark: true,
-                    compact: true,
-                  ),
-                ],
+              const SizedBox(height: 10),
+              const Text(
+                'Plan Your Ascent & Crew Budget Before Takeoff.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  height: 1.2,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            // Compact Stripe Business Class + AdMob/Unity Reward Card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AviajTheme.midnightNavy,
-                borderRadius: BorderRadius.circular(22),
+              const SizedBox(height: 6),
+              Text(
+                'Shared Crew Pool: \$${totalExpenses.toStringAsFixed(0)} USD • ${state.completedChecklistIds.length}/8 Safety Checks Verified.',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12.5,
+                  height: 1.35,
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.workspace_premium_rounded,
-                        color: AviajTheme.compassAmber,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          '${adService.superBoardingPassCredits} Priority Passes • ${adService.spotlightBoostMinutes}m Radar',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 12.5,
-                          ),
-                        ),
-                      ),
-                    ],
+              const SizedBox(height: 14),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: () => state.setActiveTab(1),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AviajTheme.midnightNavy,
+                    foregroundColor: Colors.white,
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: () => showStripeStorefrontModal(context),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AviajTheme.loveRed,
-                        foregroundColor: Colors.white,
-                        visualDensity: VisualDensity.compact,
-                      ),
-                      icon: const Icon(Icons.credit_card_rounded, size: 15),
-                      label: const Text(
-                        'Business Class • Stripe (\$14.99)',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
+                  icon: const Icon(Icons.calculate_rounded, size: 16),
+                  label: const Text(
+                    'Open Altitude & Expense Planner',
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () => adService.showRewardedAd(context),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AviajTheme.compassAmber,
-                            side: const BorderSide(
-                              color: AviajTheme.compassAmber,
-                            ),
-                            visualDensity: VisualDensity.compact,
-                          ),
-                          icon: const Icon(
-                            Icons.play_circle_fill_rounded,
-                            size: 14,
-                          ),
-                          label: const Text(
-                            'Watch Ad (+3)',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 11.5,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
-        );
-      },
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

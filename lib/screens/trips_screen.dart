@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
-import '../services/ad_service.dart';
-import '../services/stripe_service.dart';
 import '../state/aviaj_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -31,8 +29,6 @@ class TripsScreen extends StatelessWidget {
               vertical: 20,
             ),
             children: [
-              const AviajAdBannerWidget(placementLabel: 'Trips Board'),
-              const SizedBox(height: 18),
               Wrap(
                 alignment: WrapAlignment.spaceBetween,
                 crossAxisAlignment: WrapCrossAlignment.center,
@@ -43,7 +39,7 @@ class TripsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Solo & Group Departures + Romantic Villas',
+                        'Himalayan Treks, Group Expeditions & Departures',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w900,
@@ -51,7 +47,7 @@ class TripsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Join a small crew of solo travellers, a singles dating villa, or propose a 1-on-1 co-pilot itinerary.',
+                        'Join a verified trekking squad, coordinate shared permits & homestays, or host your own departure.',
                         style: TextStyle(
                           color: Colors.grey.shade600,
                           fontSize: 13.5,
@@ -69,7 +65,7 @@ class TripsScreen extends StatelessWidget {
                       ),
                     ),
                     icon: const Icon(Icons.add_location_alt_rounded),
-                    label: const Text('Host a Trip / Find Co-Pilot'),
+                    label: const Text('Host Expedition / Departure'),
                   ),
                 ],
               ),
@@ -548,33 +544,16 @@ class _TripCard extends StatelessWidget {
               const SizedBox(width: 10),
               FilledButton.icon(
                 onPressed: () {
-                  if (joined) {
-                    state.toggleJoinTrip(trip.id);
-                  } else {
-                    showStripeStorefrontModal(
-                      context,
-                      customTripPlan: StripeProductPlan(
-                        id: 'trip_deposit_${trip.id}',
-                        name:
-                            'Trip Deposit: ${trip.destination} (${trip.durationDays} Days)',
-                        subtitle:
-                            'Refundable Escrow Spot • Est. Total Split \$${trip.estimatedCostUsd}',
-                        amountUsd: 199.00,
-                        interval: 'trip_deposit',
-                        badgeColor: AviajTheme.loveCrimson,
-                        perks: [
-                          'Guaranteed Spot on ${trip.title}',
-                          '100% Refundable up to 14 Days Before Departure',
-                          'Direct Group Lounge Chat & Villa Room Selection',
-                        ],
+                  state.toggleJoinTrip(trip.id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        state.isUserJoinedTrip(trip.id)
+                            ? 'You joined ${trip.title}! Open the Planner tab to review shared crew expenses & checklist.'
+                            : 'Left ${trip.title} crew.',
                       ),
-                      onCustomPlanPaid: () {
-                        if (!state.isUserJoinedTrip(trip.id)) {
-                          state.toggleJoinTrip(trip.id);
-                        }
-                      },
-                    );
-                  }
+                    ),
+                  );
                 },
                 style: FilledButton.styleFrom(
                   backgroundColor:
@@ -583,10 +562,10 @@ class _TripCard extends StatelessWidget {
                 icon: Icon(
                   joined
                       ? Icons.check_circle_rounded
-                      : Icons.credit_card_rounded,
+                      : Icons.group_add_rounded,
                   size: 17,
                 ),
-                label: Text(joined ? 'Spot Reserved ✓' : 'Book Spot • Stripe'),
+                label: Text(joined ? 'Spot Reserved ✓' : 'Join Expedition Crew'),
               ),
             ],
           ),
